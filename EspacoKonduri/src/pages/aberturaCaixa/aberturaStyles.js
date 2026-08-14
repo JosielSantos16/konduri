@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-export const Container = styled.SafeAreaView`
+export const Container = styled.View`
   flex: 1;
   background-color: #FAF8F5;
 `;
@@ -25,7 +25,7 @@ export const LogoCircle = styled.View`
   width: 36px;
   height: 36px;
   border-radius: 18px;
-  background-color: #0A3A2A;
+  background-color: #3D2C22;
   justify-content: center;
   align-items: center;
   margin-right: 10px;
@@ -34,30 +34,30 @@ export const LogoCircle = styled.View`
 export const BrandTitle = styled.Text`
   font-size: 18px;
   font-weight: bold;
-  color: #0A3A2A;
+  color: #3D2C22;
 `;
 
 export const NotificationButton = styled.TouchableOpacity`
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  background-color: #F0F4F1;
+  background-color: #F0EAE1;
   justify-content: center;
   align-items: center;
   border-width: 1px;
-  border-color: #DDE5E0;
+  border-color: #E6DFD5;
 `;
 
 export const MainTitle = styled.Text`
   font-size: 24px;
   font-weight: bold;
-  color: #0A3A2A;
+  color: #3D2C22;
   margin-bottom: 6px;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 13px;
-  color: #6B7C73;
+  color: #8C7355;
   margin-bottom: 20px;
   line-height: 18px;
 `;
@@ -67,7 +67,7 @@ export const Card = styled.View`
   border-radius: 20px;
   padding: 20px;
   border-width: 1px;
-  border-color: #E2EBE5;
+  border-color: #E6DFD5;
   margin-bottom: 16px;
   elevation: 1;
 `;
@@ -81,7 +81,7 @@ export const CardHeaderRow = styled.View`
 export const CardSectionTitle = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #0A3A2A;
+  color: #3D2C22;
   margin-left: 8px;
   letter-spacing: 0.5px;
 `;
@@ -93,7 +93,7 @@ export const InputGroup = styled.View`
 export const Label = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: #6B7C73;
+  color: #8C7355;
   margin-bottom: 6px;
   letter-spacing: 0.8px;
 `;
@@ -105,21 +105,21 @@ export const InputContainer = styled.View`
   background-color: #FAF8F5;
   border-radius: 12px;
   border-width: 1px;
-  border-color: #E2EBE5;
+  border-color: #E6DFD5;
   padding-horizontal: 14px;
   height: 50px;
 `;
 
 export const InputText = styled.Text`
   font-size: 14px;
-  color: #0A3A2A;
+  color: #3D2C22;
   font-weight: 500;
 `;
 
 export const StyledTextInput = styled.TextInput`
   flex: 1;
   font-size: 14px;
-  color: #0A3A2A;
+  color: #3D2C22;
 `;
 
 export const AlertBox = styled.View`
@@ -129,20 +129,20 @@ export const AlertBox = styled.View`
   border-radius: 14px;
   padding: 14px;
   border-width: 1px;
-  border-color: #FADBD8;
+  border-color: #F0DCC9;
   margin-bottom: 25px;
 `;
 
 export const AlertText = styled.Text`
   flex: 1;
   font-size: 13px;
-  color: #B03A2E;
+  color: #8C5A2E;
   margin-left: 10px;
   line-height: 18px;
 `;
 
 export const StartButton = styled.TouchableOpacity`
-  background-color: #0A3A2A;
+  background-color: #3D2C22;
   border-radius: 14px;
   height: 56px;
   flex-direction: row;

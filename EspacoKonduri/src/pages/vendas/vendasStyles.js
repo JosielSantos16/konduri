@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-export const Container = styled.SafeAreaView`
+export const Container = styled.View`
   flex: 1;
   background-color: #FAF8F5;
 `;
@@ -158,4 +158,18 @@ export const NavText = styled.Text`
   font-weight: bold;
   color: ${props => (props.active ? '#E67E22' : '#8C7355')};
   margin-top: 4px;
+`;
+
+export const EmptyState = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+`;
+
+export const EmptyStateText = styled.Text`
+  font-size: 14px;
+  color: #8C7355;
+  text-align: center;
+  margin-top: 12px;
 `;

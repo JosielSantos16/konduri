@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useEstoque } from '../../contexts/EstoqueContext';
 import {
   Container,
   Header,
@@ -19,29 +21,30 @@ import {
   StockActions,
   ActionButtonMinus,
   ActionButtonPlus,
+  EmptyState,
+  EmptyStateText,
   BottomNavBar,
   NavItem,
   NavText,
 } from './estoqueStyle';
-
-const INITIAL_STOCK = [
-  { id: '1', title: 'Cerveja Gelada (Garrafa)', qty: 'Qtd: 45 un.', status: 'ok', statusText: 'OK' },
-  { id: '2', title: 'Refrigerante Can', qty: 'Qtd: 12 un.', status: 'baixo', statusText: 'Baixo' },
-  { id: '3', title: 'Água Mineral 500ml', qty: 'Qtd: 30 un.', status: 'ok', statusText: 'OK' },
-  { id: '4', title: 'Galinha Caipira', qty: 'Qtd: 5 porções', status: 'critico', statusText: 'Crítico' },
-  { id: '5', title: 'Ingresso Entrada Box', qty: 'Qtd: 200 un.', status: 'ok', statusText: 'OK' },
-];
+import NavBar from '../../components/painel/navBar/NavBar';
 
 export default function Estoque() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [search, setSearch] = useState('');
+  const { stock, increase, decrease } = useEstoque();
+
+  const filteredStock = stock.filter(item =>
+    item.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   const renderItem = ({ item }) => (
     <StockCard>
       <StockInfo>
         <StockItemTitle>{item.title}</StockItemTitle>
         <StockDetailsRow>
-          <StockQuantityText>{item.qty}</StockQuantityText>
+          <StockQuantityText>Qtd: {item.qty} {item.unit}</StockQuantityText>
           <StatusBadge status={item.status}>
             <StatusText status={item.status}>{item.statusText}</StatusText>
           </StatusBadge>
@@ -49,10 +52,14 @@ export default function Estoque() {
       </StockInfo>
 
       <StockActions>
-        <ActionButtonMinus onPress={() => alert(`Remover unidade de ${item.title}`)}>
+        <ActionButtonMinus
+          disabled={item.qty === 0}
+          style={{ opacity: item.qty === 0 ? 0.4 : 1 }}
+          onPress={() => decrease(item.id)}
+        >
           <Ionicons name="remove" size={18} color="#3D2C22" />
         </ActionButtonMinus>
-        <ActionButtonPlus onPress={() => alert(`Adicionar unidade de ${item.title}`)}>
+        <ActionButtonPlus onPress={() => increase(item.id)}>
           <Ionicons name="add" size={18} color="#FFFFFF" />
         </ActionButtonPlus>
       </StockActions>
@@ -60,7 +67,7 @@ export default function Estoque() {
   );
 
   return (
-    <Container>
+    <Container style={{ paddingTop: insets.top }}>
       <Header>
         <Title>Controle de Estoque</Title>
         <Subtitle>Gerenciamento físico do Boteco</Subtitle>
@@ -76,34 +83,23 @@ export default function Estoque() {
         </SearchContainer>
       </Header>
 
-      <StockList
-        data={INITIAL_STOCK}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        showsVerticalScrollIndicator={false}
-      />
+      {filteredStock.length === 0 ? (
+        <EmptyState>
+          <Ionicons name="cube-outline" size={40} color="#C9BBAC" />
+          <EmptyStateText>
+            {search ? 'Nenhum item encontrado.' : 'Nenhum item cadastrado no estoque.'}
+          </EmptyStateText>
+        </EmptyState>
+      ) : (
+        <StockList
+          data={filteredStock}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
 
-      <BottomNavBar>
-        <NavItem active={false} onPress={() => router.push('/painel')}>
-          <Ionicons name="grid-outline" size={22} color="#8C7355" />
-          <NavText active={false}>Painel</NavText>
-        </NavItem>
-
-        <NavItem active={false} onPress={() => router.push('/vendas')}>
-          <Ionicons name="receipt-outline" size={22} color="#8C7355" />
-          <NavText active={false}>Vendas</NavText>
-        </NavItem>
-
-        <NavItem active={true}>
-          <Ionicons name="cube-outline" size={22} color="#E67E22" />
-          <NavText active={true}>Estoque</NavText>
-        </NavItem>
-
-        <NavItem active={false} onPress={() => alert('Indo para aba Perfil...')}>
-          <Ionicons name="person-outline" size={22} color="#8C7355" />
-          <NavText active={false}>Perfil</NavText>
-        </NavItem>
-      </BottomNavBar>
+      <NavBar/>
     </Container>
   );
 }

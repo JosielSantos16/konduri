@@ -1,6 +1,8 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { formatPrice } from '../../utils/formatPrice';
+import { formatDataHoraComprovante } from '../../utils/formatDateTime';
 import {
   Container,
   SuccessIconContainer,
@@ -19,14 +21,15 @@ import {
 
 export default function StatusVenda() {
   const router = useRouter();
+  const { total, metodo, comprovante, data } = useLocalSearchParams();
 
-  const handleNewSale = () => {
-    router.replace('/pdv');
-  };
+  const valorPago = Number(total) || 0;
+  const metodoLabel = metodo === 'pix' ? 'PIX' : 'Dinheiro';
+  const dataFormatada = data ? formatDataHoraComprovante(data) : '';
+  const numeroComprovante = comprovante ? comprovante.slice(-4) : '0000';
 
-  const handlePrint = () => {
-    alert('Enviando comando de impressão térmica para o PDA...');
-  };
+  const handleNewSale = () => router.replace('/pdv');
+  const handlePrint = () => alert('Enviando comando de impressão térmica para o PDA...');
 
   return (
     <Container>
@@ -35,19 +38,19 @@ export default function StatusVenda() {
       </SuccessIconContainer>
 
       <Title>Venda Realizada com Sucesso!</Title>
-      <Subtitle>Comprovante #0042 — 13/08/2026 às 14:32</Subtitle>
+      <Subtitle>Comprovante #{numeroComprovante} — {dataFormatada}</Subtitle>
 
       <DetailsCard>
         <DetailRow>
           <DetailLabel>MÉTODO DE PAGAMENTO</DetailLabel>
-          <DetailValue>Dinheiro</DetailValue>
+          <DetailValue>{metodoLabel}</DetailValue>
         </DetailRow>
 
         <Divider />
 
         <DetailRow>
           <DetailLabel>Valor Pago:</DetailLabel>
-          <DetailValue style={{ color: '#E67E22', fontSize: 18 }}>R$ 47,00</DetailValue>
+          <DetailValue style={{ color: '#E67E22', fontSize: 18 }}>{formatPrice(valorPago)}</DetailValue>
         </DetailRow>
       </DetailsCard>
 

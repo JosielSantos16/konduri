@@ -7,6 +7,10 @@
     "icon": "./assets/images/icon.png",
     "scheme": "espacokonduri",
     "userInterfaceStyle": "automatic",
+    "androidNavigationBar": {
+      "backgroundColor": "#FAF8F5",
+      "barStyle": "dark-content"
+    },
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -38,7 +42,8 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,

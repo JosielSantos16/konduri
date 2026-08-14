@@ -1,129 +1,135 @@
-import React, { useState } from 'react';
-import { Text } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import {
-  Container,
-  Header,
-  UserInfo,
-  UserName,
-  UserRole,
-  HeaderRight,
-  StatusBadge,
-  StatusDot,
-  StatusText,
-  UserAvatar,
-  TabContainer,
-  TabButton,
-  TabText,
-  ProductList,
-  ProductCard,
-  ProductImage,
-  ProductTitle,
-  ProductFooter,
-  ProductPrice,
-  CartBadge,
-  CartBadgeText,
-  AddButton,
-  CartBar,
-  CartBarInfo,
-  CartItemsText,
-  CartTotalText,
-  FinalizeButton,
-  FinalizeButtonText,
-} from './pdvStyles';
-import SafeContainer from '../../styles/SafeContainer';
+import React, { useState } from "react";
+import { useRouter } from "expo-router";
+import SafeContainer from "../../styles/SafeContainer";
+import { Container, ProductList } from "./pdvStyles";
+import { useCart } from "../../hooks/useCart";
+import CardProd from "../../components/PDV/cardsProdutos/CardProdutos";
+import PdvHeader from "../../components/PDV/pdvHeader/PdvHeader";
+import TabSelector from "../../components/PDV/tabSelector/TabSelector";
+import CartBar from "../../components/PDV/cartBar/CartBar";
 
 const PRODUCTS = [
-  { id: '1', title: 'Cerveja Gelada', price: 'R$ 8.00', qty: 2, image: 'https://via.placeholder.com/150' },
-  { id: '2', title: 'Refrigerante', price: 'R$ 6.00', qty: 1, image: 'https://via.placeholder.com/150' },
-  { id: '3', title: 'Água Mineral', price: 'R$ 4.00', qty: 0, image: 'https://via.placeholder.com/150' },
-  { id: '4', title: 'Galinha Caipira', price: 'R$ 25.00', qty: 0, image: 'https://via.placeholder.com/150' },
-  { id: '5', title: 'Porção de Batata', price: 'R$ 20.00', qty: 0, image: 'https://via.placeholder.com/150' },
-  { id: '6', title: 'Espetinho Misto', price: 'R$ 10.00', qty: 0, image: 'https://via.placeholder.com/150' },
+  {
+    id: "1",
+    title: "Cerveja Gelada",
+    price: 8.0,
+    image: "https://via.placeholder.com/150",
+    category: "produtos",
+  },
+  {
+    id: "2",
+    title: "Refrigerante",
+    price: 6.0,
+    image: "https://via.placeholder.com/150",
+    category: "produtos",
+  },
+  {
+    id: "3",
+    title: "Água Mineral",
+    price: 4.0,
+    image: "https://via.placeholder.com/150",
+    category: "produtos",
+  },
+  {
+    id: "4",
+    title: "Galinha Caipira",
+    price: 25.0,
+    image: "https://via.placeholder.com/150",
+    category: "produtos",
+  },
+  {
+    id: "5",
+    title: "Porção de Batata",
+    price: 20.0,
+    image: "https://via.placeholder.com/150",
+    category: "produtos",
+  },
+  {
+    id: "6",
+    title: "Espetinho Misto",
+    price: 10.0,
+    image: "https://via.placeholder.com/150",
+    category: "produtos",
+  },
+  {
+    id: "7",
+    title: "Ingresso Inteira",
+    price: 15.0,
+    image: "https://via.placeholder.com/150",
+    category: "ingressos",
+  },
+  {
+    id: "8",
+    title: "Ingresso Meia",
+    price: 7.5,
+    image: "https://via.placeholder.com/150",
+    category: "ingressos",
+  },
+  {
+    id: "9",
+    title: "Ingresso VIP",
+    price: 30.0,
+    image: "https://via.placeholder.com/150",
+    category: "ingressos",
+  },
 ];
 
 export default function PDV() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('produtos');
+  const [activeTab, setActiveTab] = useState("produtos");
+  const { cart, handleIncrease, handleDecrease, totalItems, totalPrice } =
+    useCart(PRODUCTS);
 
-  const renderItem = ({ item }) => (
-    <ProductCard onPress={() => alert(`Adicionado: ${item.title}`)}>
-      <ProductImage source={{ uri: item.image }} />
-      <ProductTitle numberOfLines={1}>{item.title}</ProductTitle>
-      <ProductFooter>
-        <ProductPrice>{item.price}</ProductPrice>
-        {item.qty > 0 ? (
-          <CartBadge>
-            <CartBadgeText>{item.qty}x</CartBadgeText>
-          </CartBadge>
-        ) : (
-          <AddButton>
-            <Ionicons name="add" size={16} color="#D35400" />
-          </AddButton>
-        )}
-      </ProductFooter>
-    </ProductCard>
+  const filteredProducts = PRODUCTS.filter(
+    (item) => item.category === activeTab,
   );
 
   return (
     <SafeContainer>
       <Container>
-        <Header>
-          <UserInfo>
-            <UserName>Maria Silva</UserName>
-            <UserRole>PDV Operacional</UserRole>
-          </UserInfo>
-          <HeaderRight>
-            <StatusBadge>
-              <StatusDot />
-              <StatusText>Caixa Aberto</StatusText>
-            </StatusBadge>
-            <UserAvatar source={{ uri: 'https://via.placeholder.com/40' }} />
-          </HeaderRight>
-        </Header>
+        <PdvHeader
+          name="Maria Silva"
+          role="PDV Operacional"
+          statusLabel="Caixa Aberto"
+          avatarUri="https://via.placeholder.com/40"
+        />
 
-        <TabContainer>
-          <TabButton
-            active={activeTab === 'produtos'}
-            onPress={() => setActiveTab('produtos')}
-          >
-            <Ionicons name="basket-outline" size={18} color={activeTab === 'produtos' ? '#FFF' : '#8C7355'} />
-            <TabText active={activeTab === 'produtos'}>Produtos</TabText>
-          </TabButton>
-
-          <TabButton
-            active={activeTab === 'ingressos'}
-            onPress={() => setActiveTab('ingressos')}
-          >
-            <Ionicons name="ticket-outline" size={18} color={activeTab === 'ingressos' ? '#FFF' : '#8C7355'} />
-            <TabText active={activeTab === 'ingressos'}>Entradas/Ingressos</TabText>
-          </TabButton>
-        </TabContainer>
+        <TabSelector activeTab={activeTab} onChange={setActiveTab} />
 
         <ProductList
-          data={PRODUCTS}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
+          data={filteredProducts}
+          renderItem={({ item }) => (
+            <CardProd
+              item={item}
+              qty={cart[item.id] || 0}
+              onIncrease={() => handleIncrease(item.id)}
+              onDecrease={() => handleDecrease(item.id)}
+            />
+          )}
+          keyExtractor={(item) => item.id}
           numColumns={2}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}
         />
 
-        <CartBar>
-          <CartBarInfo>
-            <CartItemsText>
-              Carrinho Atual{'\n'}
-              <Text style={{ fontWeight: 'bold', color: '#3D2C22' }}>3 itens selecionados</Text>
-            </CartItemsText>
-            <CartTotalText>R$ 22,00</CartTotalText>
-          </CartBarInfo>
+        <CartBar
+          totalItems={totalItems}
+          totalPrice={totalPrice}
+         onFinalize={() => {
+  const itens = Object.entries(cart).map(([id, qty]) => {
+    const produto = PRODUCTS.find(p => p.id === id);
+    return { title: produto.title, qty, price: produto.price };
+  });
 
-          <FinalizeButton onPress={() => router.push('/pagamento')}>
-            <FinalizeButtonText>FINALIZAR VENDA  →</FinalizeButtonText>
-          </FinalizeButton>
-        </CartBar>
+  router.push({
+    pathname: '/pagamento',
+    params: {
+      total: totalPrice.toFixed(2),
+      itens: JSON.stringify(itens),
+    },
+  });
+}}
+        />
       </Container>
     </SafeContainer>
   );
