@@ -1,36 +1,37 @@
 import styled from 'styled-components/native';
 
 export const ProductCard = styled.View`
-  flex: 1;
+  width: 48%;
   background-color: #FFFFFF;
   border-radius: 16px;
-  margin: 6px;
-  padding: 10px;
+  margin-bottom: 12px;
   border-width: 1px;
   border-color: #E6DFD5;
   elevation: 1;
+  overflow: hidden;
 `;
 
 export const ProductImage = styled.Image`
   width: 100%;
-  height: 100px;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  background-color: #F0EAE1; 
+  height: 110px;
+  background-color: #F0EAE1;
+`;
+
+export const CardContent = styled.View`
+  padding: 10px;
 `;
 
 export const ProductTitle = styled.Text`
   font-size: 14px;
   font-weight: bold;
   color: #3D2C22;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 `;
 
 export const ProductFooter = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: 4px;
 `;
 
 export const ProductPrice = styled.Text`
@@ -54,9 +55,9 @@ export const CartBadgeText = styled.Text`
 
 export const AddButton = styled.TouchableOpacity`
   background-color: #FAF0E6;
-  width: 26px;
-  height: 26px;
-  border-radius: 13px;
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
   justify-content: center;
   align-items: center;
 `;
@@ -64,10 +65,12 @@ export const AddButton = styled.TouchableOpacity`
 export const QtyControls = styled.View`
   flex-direction: row;
   align-items: center;
+  background-color: #FAF0E6;
+  border-radius: 14px;
+  padding: 2px;
 `;
 
 export const QtyButton = styled.TouchableOpacity`
-  background-color: #FAF0E6;
   width: 24px;
   height: 24px;
   border-radius: 12px;
@@ -76,10 +79,10 @@ export const QtyButton = styled.TouchableOpacity`
 `;
 
 export const QtyText = styled.Text`
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
   color: #3D2C22;
-  margin-horizontal: 8px;
-  min-width: 16px;
+  margin-horizontal: 6px;
+  min-width: 14px;
   text-align: center;
 `;

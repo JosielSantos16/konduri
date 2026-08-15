@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouter } from "expo-router";
+import { useRouter, usePathname } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -8,33 +8,39 @@ import {
   NavText,
 } from "./navBarStyle";
 
+const TABS = [
+  { key: "painel", label: "Painel", icon: "grid-outline", route: "/painel" },
+  { key: "vendas", label: "Vendas", icon: "receipt-outline", route: "/vendas" },
+  { key: "estoque", label: "Estoque", icon: "cube-outline", route: "/estoque" },
+  { key: "controle", label: "Controle", icon: "clipboard-outline", route: "/abertura" },
+];
+
 export default function NavBar() {
   const router = useRouter();
+  const pathname = usePathname();
   const insets = useSafeAreaInsets();
 
   return (
-    <>
-      <BottomNavBar style={{ paddingBottom: 10 + insets.bottom }}>
-        <NavItem active={true} onPress={() => router.push("/painel")}>
-          <Ionicons name="grid-outline" size={22} color="#E67E22" />
-          <NavText active={true}>Painel</NavText>
-        </NavItem>
+    <BottomNavBar style={{ paddingBottom: 10 + insets.bottom }}>
+      {TABS.map((tab) => {
+        // "Controle" cobre tanto /abertura quanto /controle, já que o fluxo
+        // passa por essas duas rotas mas pertence à mesma aba visualmente
+        const isActive =
+          tab.key === "controle"
+            ? pathname.startsWith("/abertura") || pathname.startsWith("/controle")
+            : pathname.startsWith(tab.route);
 
-        <NavItem active={false} onPress={() => router.push("/vendas")}>
-          <Ionicons name="receipt-outline" size={22} color="#8C7355" />
-          <NavText active={false}>Vendas</NavText>
-        </NavItem>
-
-        <NavItem active={false} onPress={() => router.push("/estoque")}>
-          <Ionicons name="cube-outline" size={22} color="#8C7355" />
-          <NavText active={false}>Estoque</NavText>
-        </NavItem>
-
-        <NavItem active={false} onPress={() => router.push("/abertura")}>
-          <Ionicons name="receipt-outline" size={22} color="#8C7355" />
-          <NavText active={false}>Controle</NavText>
-        </NavItem>
-      </BottomNavBar>
-    </>
+        return (
+          <NavItem key={tab.key} active={isActive} onPress={() => router.push(tab.route)}>
+            <Ionicons
+              name={tab.icon}
+              size={22}
+              color={isActive ? "#E67E22" : "#8C7355"}
+            />
+            <NavText active={isActive}>{tab.label}</NavText>
+          </NavItem>
+        );
+      })}
+    </BottomNavBar>
   );
 }

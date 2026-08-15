@@ -100,36 +100,36 @@ export const ProfileButtonText = styled.Text`
   color: ${props => (props.selected ? '#B85D00' : '#8C7355')};
 `;
 
-export const EnterButton = styled.TouchableOpacity`
+export const CreateButton = styled.TouchableOpacity`
+  background-color: #3D2C22;
+  border-radius: 12px;
+  height: 52px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+`;
+
+export const CreateButtonText = styled.Text`
+  font-size: 16px;
+  font-weight: bold;
+  color: #FFFFFF;
+  letter-spacing: 0.5px;
+`;
+
+export const BackButton = styled.TouchableOpacity`
   border-width: 1.5px;
   border-color: #3D2C22;
   border-radius: 12px;
   height: 52px;
   justify-content: center;
   align-items: center;
-  margin-bottom: 12px;
   background-color: transparent;
 `;
 
-export const EnterButtonText = styled.Text`
+export const BackButtonText = styled.Text`
   font-size: 16px;
   font-weight: bold;
   color: #3D2C22;
-  letter-spacing: 0.5px;
-`;
-
-export const CreateAccountButton = styled.TouchableOpacity`
-  background-color: #3D2C22;
-  border-radius: 12px;
-  height: 52px;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const CreateAccountButtonText = styled.Text`
-  font-size: 16px;
-  font-weight: bold;
-  color: #FFFFFF;
   letter-spacing: 0.5px;
 `;
 

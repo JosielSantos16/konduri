@@ -1,10 +1,13 @@
 import React from "react";
+import { Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { formatPrice } from "../../utils/formatPrice";
 import { getSaudacaoData } from "../../utils/formatDateTime";
 import { useVendas } from "../../contexts/VendasContext";
+import { useAuth } from "../../hooks/useAuth";
+import { deslogarUsuario } from "../../services/queries/usuariosQueries";
 import {
   Container,
   ScrollContainer,
@@ -40,17 +43,39 @@ import NavBar from "../../components/painel/navBar/NavBar";
 const RANK_COLORS = ["#F39C12", "#E67E22", "#27AE60"];
 
 export default function Painel() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { usuario } = useAuth();
   const { faturamentoDia, totalPix, totalDinheiro, maisVendidos } = useVendas();
 
   const top3 = maisVendidos.slice(0, 3);
+
+  const primeiroNome = usuario?.nome ? usuario.nome.split(' ')[0] : 'Admin';
+
+  const handleSair = () => {
+    Alert.alert(
+      'Sair da conta',
+      'Deseja realmente sair?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Sair',
+          style: 'destructive',
+          onPress: async () => {
+            await deslogarUsuario();
+            router.replace('/login');
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <Container style={{ paddingTop: insets.top }}>
       <ScrollContainer showsVerticalScrollIndicator={false}>
         <Header>
           <GreetingContainer>
-            <GreetingTitle>Olá, Bosco!</GreetingTitle>
+            <GreetingTitle>Olá, {primeiroNome}!</GreetingTitle>
             <GreetingSubtitle>{getSaudacaoData()}</GreetingSubtitle>
           </GreetingContainer>
 
@@ -59,7 +84,9 @@ export default function Painel() {
               <Ionicons name="notifications-outline" size={20} color="#3D2C22" />
               <NotificationBadgeDot />
             </NotificationButton>
-            <UserAvatar source={{ uri: "https://via.placeholder.com/42" }} />
+            <UserAvatar onPress={handleSair}>
+              <Ionicons name="log-out-outline" size={20} color="#C0392B" />
+            </UserAvatar>
           </HeaderActions>
         </Header>
 

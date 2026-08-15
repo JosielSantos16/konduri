@@ -9,49 +9,11 @@ export const ScrollContainer = styled.ScrollView`
   padding: 20px;
 `;
 
-export const Header = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-`;
-
-export const LogoRow = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const LogoCircle = styled.View`
-  width: 36px;
-  height: 36px;
-  border-radius: 18px;
-  background-color: #3D2C22;
-  justify-content: center;
-  align-items: center;
-  margin-right: 10px;
-`;
-
-export const BrandTitle = styled.Text`
-  font-size: 18px;
-  font-weight: bold;
-  color: #3D2C22;
-`;
-
-export const NotificationButton = styled.TouchableOpacity`
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  background-color: #F0EAE1;
-  justify-content: center;
-  align-items: center;
-  border-width: 1px;
-  border-color: #E6DFD5;
-`;
-
 export const MainTitle = styled.Text`
   font-size: 24px;
   font-weight: bold;
   color: #3D2C22;
+  margin-top: 60px;
   margin-bottom: 6px;
 `;
 

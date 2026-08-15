@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { formatDataExtenso, formatDataHoraComprovante } from '../../utils/formatDateTime';
-import { useCaixa } from '../../contexts/CaixaContext';
-import Calendario from '../../components/painel/calendario/Calendario';
+import { TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import NavBar from "../../components/painel/navBar/NavBar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  formatDataExtenso,
+  formatDataHoraComprovante,
+} from "../../utils/formatDateTime";
+import { useCaixa } from "../../contexts/CaixaContext";
+import Calendario from "../../components/painel/calendario/Calendario";
 import {
   Container,
   ScrollContainer,
-  Header,
-  LogoRow,
-  LogoCircle,
-  BrandTitle,
-  NotificationButton,
   MainTitle,
   Subtitle,
   Card,
@@ -28,29 +26,41 @@ import {
   AlertText,
   StartButton,
   StartButtonText,
-} from './aberturaStyles';
-import NavBar from '../../components/painel/navBar/NavBar';
+} from "./aberturaStyles";
 
 export default function AberturaCaixa() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+
   const {
     dataOperacao,
     setDataOperacao,
     responsavel,
-    setResponsavel,
     local,
     setLocal,
     ultimoFechamento,
     abrirCaixa,
+    abrindoCaixa,
+    erroAbertura,
   } = useCaixa();
 
-  const podeIniciar = responsavel.trim().length > 0 && local.trim().length > 0;
+  const podeIniciar =
+    responsavel.trim().length > 0 && local.trim().length > 0 && !abrindoCaixa;
 
-  const handleStartOperation = () => {
+  const handleStartOperation = async () => {
     if (!podeIniciar) return;
-    abrirCaixa();
-    router.push('/pdv'); // troque pra rota da nova tela quando ela existir
+
+    const operacaoId = await abrirCaixa();
+    if (!operacaoId) return;
+
+    router.push({
+      pathname: "/controle",
+      params: {
+        operacaoId,
+        responsavelNome: responsavel,
+        data: formatDataExtenso(dataOperacao),
+      },
+    });
   };
 
   return (
@@ -59,22 +69,10 @@ export default function AberturaCaixa() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
       >
-        <Header>
-          <LogoRow>
-            <LogoCircle>
-              <Ionicons name="leaf" size={18} color="#FFFFFF" />
-            </LogoCircle>
-            <BrandTitle>Espaço Konduri</BrandTitle>
-          </LogoRow>
-
-          <NotificationButton onPress={() => alert('Notificações do sistema')}>
-            <Ionicons name="notifications-outline" size={18} color="#3D2C22" />
-          </NotificationButton>
-        </Header>
-
-        <MainTitle>Abertura de Caixa & Estoque</MainTitle>
+        <MainTitle>Controle de Vendas e Estoque</MainTitle>
         <Subtitle>
-          Registre a identificação do dia para iniciar o controle e fluxo de produtos no Espaço Konduri.
+          Registre a identificação do dia para iniciar o controle e fluxo de
+          produtos no Espaço Konduri.
         </Subtitle>
 
         <Card>
@@ -92,7 +90,11 @@ export default function AberturaCaixa() {
                 <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
                   <InputContainer pointerEvents="none">
                     <InputText>{formatDataExtenso(dataOperacao)}</InputText>
-                    <Ionicons name="calendar-outline" size={18} color="#D35400" />
+                    <Ionicons
+                      name="calendar-outline"
+                      size={18}
+                      color="#D35400"
+                    />
                   </InputContainer>
                 </TouchableOpacity>
               )}
@@ -102,12 +104,7 @@ export default function AberturaCaixa() {
           <InputGroup>
             <Label>RESPONSÁVEL</Label>
             <InputContainer>
-              <StyledTextInput
-                placeholder="Nome do operador de caixa"
-                placeholderTextColor="#A99B8F"
-                value={responsavel}
-                onChangeText={setResponsavel}
-              />
+              <InputText>{responsavel || "Carregando..."}</InputText>
               <Ionicons name="person-outline" size={18} color="#A99B8F" />
             </InputContainer>
           </InputGroup>
@@ -128,10 +125,22 @@ export default function AberturaCaixa() {
 
         {ultimoFechamento && (
           <AlertBox>
-            <Ionicons name="information-circle-outline" size={20} color="#8C5A2E" />
+            <Ionicons
+              name="information-circle-outline"
+              size={20}
+              color="#8C5A2E"
+            />
             <AlertText>
-              Os dados de {formatDataHoraComprovante(ultimoFechamento)} foram consolidados com sucesso.
+              Os dados de {formatDataHoraComprovante(ultimoFechamento)} foram
+              consolidados com sucesso.
             </AlertText>
+          </AlertBox>
+        )}
+
+        {erroAbertura && (
+          <AlertBox style={{ backgroundColor: '#FDEDEC', borderColor: '#F5B7B1' }}>
+            <Ionicons name="alert-circle-outline" size={20} color="#C0392B" />
+            <AlertText style={{ color: '#C0392B' }}>{erroAbertura}</AlertText>
           </AlertBox>
         )}
 
@@ -140,7 +149,9 @@ export default function AberturaCaixa() {
           style={{ opacity: podeIniciar ? 1 : 0.5 }}
           onPress={handleStartOperation}
         >
-          <StartButtonText>Iniciar Operação</StartButtonText>
+          <StartButtonText>
+            {abrindoCaixa ? "Abrindo..." : "Iniciar Operação"}
+          </StartButtonText>
           <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
         </StartButton>
       </ScrollContainer>

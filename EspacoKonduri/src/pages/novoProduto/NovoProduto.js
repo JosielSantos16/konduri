@@ -1,0 +1,336 @@
+import React, { useState } from 'react';
+import { ActivityIndicator, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useProdutos } from '../../contexts/ProdutosContext';
+import {
+  Container,
+  ScrollContainer,
+  Header,
+  BackButton,
+  HeaderTitle,
+  PhotoPicker,
+  PhotoPreview,
+  PhotoPickerText,
+  InputGroup,
+  Label,
+  InputContainer,
+  Input,
+  Row,
+  ErrorText,
+  CategoryOptions,
+  CategoryButton,
+  CategoryButtonText,
+  SaveButton,
+  SaveButtonText,
+  ErrorBox,
+  GeneralErrorText,
+  TextArea,
+  TextAreaContainer,
+  PreviewBox,
+  PreviewLabel,
+  PreviewValue,
+} from './novoProdutoStyle';
+
+const UNIDADES = ['un', 'kg', 'L'];
+
+export default function NovoProduto() {
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const { criarProduto } = useProdutos();
+
+  const [foto, setFoto] = useState(null);
+  const [nome, setNome] = useState('');
+  const [categoria, setCategoria] = useState('produtos');
+  const [preco, setPreco] = useState('');
+  const [unidade, setUnidade] = useState('un');
+  const [estoqueInicial, setEstoqueInicial] = useState('');
+  const [entradaQtd, setEntradaQtd] = useState('');
+  const [saidaQtd, setSaidaQtd] = useState('');
+  const [valorEntradas, setValorEntradas] = useState('');
+  const [valorSaidas, setValorSaidas] = useState('');
+  const [observacoes, setObservacoes] = useState('');
+
+  const [salvando, setSalvando] = useState(false);
+  const [erros, setErros] = useState({});
+  const [erroGeral, setErroGeral] = useState(null);
+
+  const escolherFoto = async () => {
+    const permissao = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissao.granted) {
+      Alert.alert('Permissão necessária', 'Precisamos de acesso às fotos para escolher uma imagem.');
+      return;
+    }
+
+    const resultado = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+
+    if (!resultado.canceled) {
+      setFoto(resultado.assets[0].uri);
+    }
+  };
+
+  const parseNumero = (valor) => Number((valor || '0').replace(',', '.')) || 0;
+
+  const estoqueInicialNumero = parseNumero(estoqueInicial);
+  const entradaQtdNumero = parseNumero(entradaQtd);
+  const saidaQtdNumero = parseNumero(saidaQtd);
+  const saldoPrevisto = estoqueInicialNumero + entradaQtdNumero - saidaQtdNumero;
+
+  const validarNumero = (valor) => {
+    const numero = parseNumero(valor);
+    return valor && (isNaN(numero) || numero < 0);
+  };
+
+  const validar = () => {
+    const novosErros = {};
+
+    if (!nome.trim()) novosErros.nome = 'Informe o nome do produto.';
+
+    const precoNumero = Number(preco.replace(',', '.'));
+    if (!preco || isNaN(precoNumero) || precoNumero <= 0) {
+      novosErros.preco = 'Informe um preço válido.';
+    }
+
+    if (validarNumero(estoqueInicial)) novosErros.estoqueInicial = 'Informe uma quantidade válida.';
+    if (validarNumero(entradaQtd)) novosErros.entradaQtd = 'Informe uma quantidade válida.';
+    if (validarNumero(saidaQtd)) novosErros.saidaQtd = 'Informe uma quantidade válida.';
+    if (validarNumero(valorEntradas)) novosErros.valorEntradas = 'Informe um valor válido.';
+    if (validarNumero(valorSaidas)) novosErros.valorSaidas = 'Informe um valor válido.';
+
+    setErros(novosErros);
+    return Object.keys(novosErros).length === 0;
+  };
+
+  const handleSalvar = async () => {
+    if (!validar()) return;
+
+    setSalvando(true);
+    setErroGeral(null);
+
+    try {
+      await criarProduto(
+        {
+          title: nome.trim(),
+          price: Number(preco.replace(',', '.')),
+          category: categoria,
+          unidade,
+          estoqueInicial: estoqueInicialNumero,
+          entradaQtd: entradaQtdNumero,
+          saidaQtd: saidaQtdNumero,
+          valorEntradas: parseNumero(valorEntradas),
+          valorSaidas: parseNumero(valorSaidas),
+          observacoes: observacoes.trim(),
+        },
+        foto
+      );
+
+      router.back();
+    } catch (erro) {
+      console.error('Erro ao criar produto:', erro);
+      setErroGeral('Não foi possível salvar o produto. Tente novamente.');
+    } finally {
+      setSalvando(false);
+    }
+  };
+
+  return (
+    <Container style={{ paddingTop: insets.top }}>
+      <ScrollContainer showsVerticalScrollIndicator={false}>
+        <Header>
+          <BackButton onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={22} color="#2E5A1E" />
+          </BackButton>
+          <HeaderTitle>Novo Produto</HeaderTitle>
+        </Header>
+
+        <PhotoPicker onPress={escolherFoto}>
+          {foto ? (
+            <PhotoPreview source={{ uri: foto }} />
+          ) : (
+            <>
+              <Ionicons name="camera-outline" size={28} color="#8C7355" />
+              <PhotoPickerText>Adicionar{'\n'}foto</PhotoPickerText>
+            </>
+          )}
+        </PhotoPicker>
+
+        {/* 1. Nome do produto */}
+        <InputGroup>
+          <Label>Nome do produto</Label>
+          <InputContainer hasError={!!erros.nome}>
+            <Input
+              value={nome}
+              onChangeText={setNome}
+              placeholder="Ex: Cerveja Gelada"
+              placeholderTextColor="#A99B8F"
+            />
+          </InputContainer>
+          {erros.nome && <ErrorText>{erros.nome}</ErrorText>}
+        </InputGroup>
+
+        {/* 2. Categoria */}
+        <InputGroup>
+          <Label>Categoria</Label>
+          <CategoryOptions>
+            <CategoryButton selected={categoria === 'produtos'} onPress={() => setCategoria('produtos')}>
+              <CategoryButtonText selected={categoria === 'produtos'}>Produtos</CategoryButtonText>
+            </CategoryButton>
+            <CategoryButton selected={categoria === 'ingressos'} onPress={() => setCategoria('ingressos')}>
+              <CategoryButtonText selected={categoria === 'ingressos'}>Ingressos</CategoryButtonText>
+            </CategoryButton>
+          </CategoryOptions>
+        </InputGroup>
+
+        {/* 3. Preço + 4. Unidade */}
+        <Row>
+          <InputGroup style={{ flex: 1, marginRight: 10 }}>
+            <Label>Preço (R$)</Label>
+            <InputContainer hasError={!!erros.preco}>
+              <Input
+                value={preco}
+                onChangeText={setPreco}
+                placeholder="0,00"
+                keyboardType="decimal-pad"
+                placeholderTextColor="#A99B8F"
+              />
+            </InputContainer>
+            {erros.preco && <ErrorText>{erros.preco}</ErrorText>}
+          </InputGroup>
+
+          <InputGroup style={{ flex: 1 }}>
+            <Label>Unidade</Label>
+            <CategoryOptions>
+              {UNIDADES.map((u) => (
+                <CategoryButton key={u} selected={unidade === u} onPress={() => setUnidade(u)}>
+                  <CategoryButtonText selected={unidade === u}>{u}</CategoryButtonText>
+                </CategoryButton>
+              ))}
+            </CategoryOptions>
+          </InputGroup>
+        </Row>
+
+        {/* 5. Estoque Inicial + 6. Entrada (Qtd.) */}
+        <Row>
+          <InputGroup style={{ flex: 1, marginRight: 10 }}>
+            <Label>Estoque Inicial</Label>
+            <InputContainer hasError={!!erros.estoqueInicial}>
+              <Input
+                value={estoqueInicial}
+                onChangeText={setEstoqueInicial}
+                placeholder="0"
+                keyboardType="decimal-pad"
+                placeholderTextColor="#A99B8F"
+              />
+            </InputContainer>
+            {erros.estoqueInicial && <ErrorText>{erros.estoqueInicial}</ErrorText>}
+          </InputGroup>
+
+          <InputGroup style={{ flex: 1 }}>
+            <Label>Entrada (Qtd.)</Label>
+            <InputContainer hasError={!!erros.entradaQtd}>
+              <Input
+                value={entradaQtd}
+                onChangeText={setEntradaQtd}
+                placeholder="0"
+                keyboardType="decimal-pad"
+                placeholderTextColor="#A99B8F"
+              />
+            </InputContainer>
+            {erros.entradaQtd && <ErrorText>{erros.entradaQtd}</ErrorText>}
+          </InputGroup>
+        </Row>
+
+        {/* 7. Saída/Venda (Qtd.) + 8. Valor das Entradas (R$) */}
+        <Row>
+          <InputGroup style={{ flex: 1, marginRight: 10 }}>
+            <Label>Saída / Venda (Qtd.)</Label>
+            <InputContainer hasError={!!erros.saidaQtd}>
+              <Input
+                value={saidaQtd}
+                onChangeText={setSaidaQtd}
+                placeholder="0"
+                keyboardType="decimal-pad"
+                placeholderTextColor="#A99B8F"
+              />
+            </InputContainer>
+            {erros.saidaQtd && <ErrorText>{erros.saidaQtd}</ErrorText>}
+          </InputGroup>
+
+          <InputGroup style={{ flex: 1 }}>
+            <Label>Valor Entradas (R$)</Label>
+            <InputContainer hasError={!!erros.valorEntradas}>
+              <Input
+                value={valorEntradas}
+                onChangeText={setValorEntradas}
+                placeholder="0,00"
+                keyboardType="decimal-pad"
+                placeholderTextColor="#A99B8F"
+              />
+            </InputContainer>
+            {erros.valorEntradas && <ErrorText>{erros.valorEntradas}</ErrorText>}
+          </InputGroup>
+        </Row>
+
+        {/* 9. Valor das Saídas (R$) */}
+        <InputGroup>
+          <Label>Valor das Saídas (R$)</Label>
+          <InputContainer hasError={!!erros.valorSaidas}>
+            <Input
+              value={valorSaidas}
+              onChangeText={setValorSaidas}
+              placeholder="0,00"
+              keyboardType="decimal-pad"
+              placeholderTextColor="#A99B8F"
+            />
+          </InputContainer>
+          {erros.valorSaidas && <ErrorText>{erros.valorSaidas}</ErrorText>}
+        </InputGroup>
+
+        {/* 10. Saldo em Estoque (calculado, não editável) */}
+        <PreviewBox>
+          <PreviewLabel>SALDO EM ESTOQUE</PreviewLabel>
+          <PreviewValue>{saldoPrevisto} {unidade}</PreviewValue>
+        </PreviewBox>
+
+        {/* 11. Observações */}
+        <InputGroup>
+          <Label>Observações</Label>
+          <TextAreaContainer>
+            <TextArea
+              value={observacoes}
+              onChangeText={setObservacoes}
+              placeholder="Ex: 2 unidades amassadas na entrega"
+              placeholderTextColor="#A99B8F"
+              multiline
+              numberOfLines={3}
+            />
+          </TextAreaContainer>
+        </InputGroup>
+
+        {erroGeral && (
+          <ErrorBox>
+            <GeneralErrorText>{erroGeral}</GeneralErrorText>
+          </ErrorBox>
+        )}
+
+        <SaveButton onPress={handleSalvar} disabled={salvando}>
+          {salvando ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <>
+              <Ionicons name="checkmark-circle-outline" size={18} color="#FFFFFF" />
+              <SaveButtonText>Salvar Produto</SaveButtonText>
+            </>
+          )}
+        </SaveButton>
+      </ScrollContainer>
+    </Container>
+  );
+}

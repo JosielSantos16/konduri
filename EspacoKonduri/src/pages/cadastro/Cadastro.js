@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Platform, ActivityIndicator } from 'react-native';
+import { Platform, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import Logo from '../../assets/logo.jpg';
-import { loginUsuario } from '../../services/queries/usuariosQueries';
-import { validateEmail, validatePasswordRequired } from '../../utils/validators';
+import { cadastrarUsuario } from '../../services/queries/usuariosQueries';
+import { validateEmail, validatePasswordStrength, validateName } from '../../utils/validators';
 import {
   Container,
   LogoContainer,
@@ -17,19 +17,25 @@ import {
   ErrorText,
   GeneralErrorBox,
   GeneralErrorText,
-  EnterButton,
-  EnterButtonText,
-  CreateAccountButton,
-  CreateAccountButtonText,
-} from './loginStyle';
+  CreateButton,
+  CreateButtonText,
+  BackButton,
+  BackButtonText,
+} from './cadastroStyle';
 
-export default function Login() {
+export default function Cadastro() {
   const router = useRouter();
+  const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [carregando, setCarregando] = useState(false);
 
-  const [erros, setErros] = useState({ email: null, senha: null, geral: null });
+  const [erros, setErros] = useState({ nome: null, email: null, senha: null, geral: null });
+
+  const handleChangeNome = (value) => {
+    setNome(value);
+    if (erros.nome) setErros(prev => ({ ...prev, nome: null }));
+  };
 
   const handleChangeEmail = (value) => {
     setEmail(value);
@@ -43,32 +49,32 @@ export default function Login() {
 
   const validarFormulario = () => {
     const novosErros = {
+      nome: validateName(nome),
       email: validateEmail(email),
-      senha: validatePasswordRequired(senha),
+      senha: validatePasswordStrength(senha),
       geral: null,
     };
     setErros(novosErros);
-    return !novosErros.email && !novosErros.senha;
+    return !novosErros.nome && !novosErros.email && !novosErros.senha;
   };
 
-  const handleLogin = async () => {
+  const handleCadastrar = async () => {
     if (!validarFormulario()) return;
 
     setCarregando(true);
     setErros(prev => ({ ...prev, geral: null }));
 
     try {
-      const usuario = await loginUsuario({ email, senha });
-      router.push(usuario.perfil === 'adm' ? '/painel' : '/pdv');
+     
+      await cadastrarUsuario({ nome, email, senha });
+
+      Alert.alert('Sucesso', 'Conta criada com sucesso!');
+      router.push('/pdv');
     } catch (erro) {
       setErros(prev => ({ ...prev, geral: mensagemDeErro(erro) }));
     } finally {
       setCarregando(false);
     }
-  };
-
-  const handleCreateAccount = () => {
-    router.push('/cadastro');
   };
 
   return (
@@ -77,8 +83,21 @@ export default function Login() {
         <LogoImage source={Logo} />
       </LogoContainer>
 
-      <Title>LOGIN</Title>
-      <Subtitle>Autentique-se para acessar o Espaço Konduri</Subtitle>
+      <Title>CRIAR CONTA</Title>
+      <Subtitle>Cadastre-se para acessar o Espaço Konduri</Subtitle>
+
+      <InputGroup>
+        <Label>Nome</Label>
+        <InputContainer hasError={!!erros.nome}>
+          <Input
+            value={nome}
+            onChangeText={handleChangeNome}
+            placeholder="Digite seu nome"
+            placeholderTextColor="#A99B8F"
+          />
+        </InputContainer>
+        {erros.nome && <ErrorText>{erros.nome}</ErrorText>}
+      </InputGroup>
 
       <InputGroup>
         <Label>E-mail</Label>
@@ -102,7 +121,7 @@ export default function Login() {
             secureTextEntry
             value={senha}
             onChangeText={handleChangeSenha}
-            placeholder="Digite a sua senha"
+            placeholder="Digite sua senha"
             placeholderTextColor="#A99B8F"
           />
         </InputContainer>
@@ -115,32 +134,30 @@ export default function Login() {
         </GeneralErrorBox>
       )}
 
-      <EnterButton onPress={handleLogin} disabled={carregando}>
+      <CreateButton onPress={handleCadastrar} disabled={carregando}>
         {carregando ? (
-          <ActivityIndicator color="#3D2C22" />
+          <ActivityIndicator color="#FFFFFF" />
         ) : (
-          <EnterButtonText>ENTRAR</EnterButtonText>
+          <CreateButtonText>CRIAR CONTA</CreateButtonText>
         )}
-      </EnterButton>
+      </CreateButton>
 
-      <CreateAccountButton onPress={handleCreateAccount}>
-        <CreateAccountButtonText>CRIAR CONTA</CreateAccountButtonText>
-      </CreateAccountButton>
+      <BackButton onPress={() => router.back()}>
+        <BackButtonText>ENTRAR</BackButtonText>
+      </BackButton>
     </Container>
   );
 }
 
 function mensagemDeErro(erro) {
   switch (erro?.code) {
+    case 'auth/email-already-in-use':
+      return 'Este e-mail já está cadastrado.';
     case 'auth/invalid-email':
       return 'E-mail inválido.';
-    case 'auth/user-not-found':
-    case 'auth/wrong-password':
-    case 'auth/invalid-credential':
-      return 'E-mail ou senha incorretos.';
-    case 'auth/too-many-requests':
-      return 'Muitas tentativas. Tente novamente mais tarde.';
+    case 'auth/weak-password':
+      return 'A senha precisa ter pelo menos 8 caracteres.';
     default:
-      return erro?.message || 'Não foi possível entrar. Tente novamente.';
+      return erro?.message || 'Não foi possível criar a conta. Tente novamente.';
   }
 }

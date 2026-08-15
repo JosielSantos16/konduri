@@ -59,10 +59,13 @@ export const NotificationBadgeDot = styled.View`
   background-color: #E74C3C;
 `;
 
-export const UserAvatar = styled.Image`
+export const UserAvatar = styled.TouchableOpacity`
   width: 42px;
   height: 42px;
   border-radius: 21px;
+  background-color: #FFFFFF;
+  justify-content: center;
+  align-items: center;
   border-width: 1px;
   border-color: #E6DFD5;
 `;

@@ -6,21 +6,24 @@ import theme from "../styles/theme";
 import { VendasProvider } from "../contexts/VendasContext";
 import { EstoqueProvider } from '../contexts/EstoqueContext';
 import { CaixaProvider } from "../contexts/CaixaContext";
+import { ProdutosProvider } from "../contexts/ProdutosContext";
 
 export default function RootLayout() {
   return (
-    <CaixaProvider>
-      <VendasProvider>
-      <EstoqueProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <SafeAreaProvider>
-            <ThemeProvider theme={theme}>
-              <Stack screenOptions={{ headerShown: false }} />
-            </ThemeProvider>
-          </SafeAreaProvider>
-        </GestureHandlerRootView>
-      </EstoqueProvider>
-    </VendasProvider>
-    </CaixaProvider>
+    <ProdutosProvider>
+      <CaixaProvider>
+        <VendasProvider>
+          <EstoqueProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <SafeAreaProvider>
+                <ThemeProvider theme={theme}>
+                  <Stack screenOptions={{ headerShown: false, animation: 'none' }} />
+                </ThemeProvider>
+              </SafeAreaProvider>
+            </GestureHandlerRootView>
+          </EstoqueProvider>
+        </VendasProvider>
+      </CaixaProvider>
+    </ProdutosProvider>
   );
 }
