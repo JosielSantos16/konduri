@@ -115,40 +115,6 @@ export const CategoryButtonText = styled.Text`
   color: ${props => (props.selected ? '#B85D00' : '#8C7355')};
 `;
 
-export const SaveButton = styled.TouchableOpacity`
-  background-color: #3D2C22;
-  border-radius: 12px;
-  height: 54px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-  margin-bottom: 30px;
-`;
-
-export const SaveButtonText = styled.Text`
-  font-size: 16px;
-  font-weight: bold;
-  color: #FFFFFF;
-  margin-left: 8px;
-  letter-spacing: 0.5px;
-`;
-
-export const ErrorBox = styled.View`
-  background-color: #FDEDEC;
-  border-width: 1px;
-  border-color: #F5B7B1;
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-bottom: 16px;
-`;
-
-export const GeneralErrorText = styled.Text`
-  color: #C0392B;
-  font-size: 13px;
-  text-align: center;
-`;
-
 export const TextArea = styled.TextInput`
   font-size: 15px;
   color: #3D2C22;
@@ -183,4 +149,38 @@ export const PreviewValue = styled.Text`
   font-weight: bold;
   color: #2E5A1E;
   margin-top: 4px;
+`;
+
+export const SaveButton = styled.TouchableOpacity`
+  background-color: #3D2C22;
+  border-radius: 12px;
+  height: 54px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 30px;
+`;
+
+export const SaveButtonText = styled.Text`
+  font-size: 16px;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-left: 8px;
+  letter-spacing: 0.5px;
+`;
+
+export const ErrorBox = styled.View`
+  background-color: #FDEDEC;
+  border-width: 1px;
+  border-color: #F5B7B1;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+`;
+
+export const GeneralErrorText = styled.Text`
+  color: #C0392B;
+  font-size: 13px;
+  text-align: center;
 `;

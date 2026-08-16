@@ -34,7 +34,13 @@ import {
   PreviewValue,
 } from './novoProdutoStyle';
 
-const UNIDADES = ['un', 'kg', 'L'];
+function aplicarMascaraMoeda(textoDigitado) {
+  const apenasNumeros = textoDigitado.replace(/\D/g, '');
+  const centavos = parseInt(apenasNumeros || '0', 10);
+  return (centavos / 100).toFixed(2).replace('.', ',');
+}
+
+const UNIDADE_PADRAO = 'un';
 
 export default function NovoProduto() {
   const router = useRouter();
@@ -45,13 +51,13 @@ export default function NovoProduto() {
   const [nome, setNome] = useState('');
   const [categoria, setCategoria] = useState('produtos');
   const [preco, setPreco] = useState('');
-  const [unidade, setUnidade] = useState('un');
   const [estoqueInicial, setEstoqueInicial] = useState('');
   const [entradaQtd, setEntradaQtd] = useState('');
-  const [saidaQtd, setSaidaQtd] = useState('');
   const [valorEntradas, setValorEntradas] = useState('');
+  const [saidaQtd, setSaidaQtd] = useState('');
   const [valorSaidas, setValorSaidas] = useState('');
   const [observacoes, setObservacoes] = useState('');
+  const [limiteEstoqueBaixo, setLimiteEstoqueBaixo] = useState('5');
 
   const [salvando, setSalvando] = useState(false);
   const [erros, setErros] = useState({});
@@ -76,6 +82,21 @@ export default function NovoProduto() {
     }
   };
 
+  const handleChangePreco = (texto) => {
+    setPreco(aplicarMascaraMoeda(texto));
+    if (erros.preco) setErros((prev) => ({ ...prev, preco: null }));
+  };
+
+  const handleChangeValorEntradas = (texto) => {
+    setValorEntradas(aplicarMascaraMoeda(texto));
+    if (erros.valorEntradas) setErros((prev) => ({ ...prev, valorEntradas: null }));
+  };
+
+  const handleChangeValorSaidas = (texto) => {
+    setValorSaidas(aplicarMascaraMoeda(texto));
+    if (erros.valorSaidas) setErros((prev) => ({ ...prev, valorSaidas: null }));
+  };
+
   const parseNumero = (valor) => Number((valor || '0').replace(',', '.')) || 0;
 
   const estoqueInicialNumero = parseNumero(estoqueInicial);
@@ -93,16 +114,13 @@ export default function NovoProduto() {
 
     if (!nome.trim()) novosErros.nome = 'Informe o nome do produto.';
 
-    const precoNumero = Number(preco.replace(',', '.'));
-    if (!preco || isNaN(precoNumero) || precoNumero <= 0) {
-      novosErros.preco = 'Informe um preço válido.';
-    }
+    const precoNumero = parseNumero(preco);
+    if (!preco || precoNumero <= 0) novosErros.preco = 'Informe um preço válido.';
 
     if (validarNumero(estoqueInicial)) novosErros.estoqueInicial = 'Informe uma quantidade válida.';
     if (validarNumero(entradaQtd)) novosErros.entradaQtd = 'Informe uma quantidade válida.';
     if (validarNumero(saidaQtd)) novosErros.saidaQtd = 'Informe uma quantidade válida.';
-    if (validarNumero(valorEntradas)) novosErros.valorEntradas = 'Informe um valor válido.';
-    if (validarNumero(valorSaidas)) novosErros.valorSaidas = 'Informe um valor válido.';
+    if (validarNumero(limiteEstoqueBaixo)) novosErros.limiteEstoqueBaixo = 'Informe um número válido.';
 
     setErros(novosErros);
     return Object.keys(novosErros).length === 0;
@@ -118,15 +136,16 @@ export default function NovoProduto() {
       await criarProduto(
         {
           title: nome.trim(),
-          price: Number(preco.replace(',', '.')),
+          price: parseNumero(preco),
           category: categoria,
-          unidade,
+          unidade: UNIDADE_PADRAO,
           estoqueInicial: estoqueInicialNumero,
           entradaQtd: entradaQtdNumero,
           saidaQtd: saidaQtdNumero,
           valorEntradas: parseNumero(valorEntradas),
           valorSaidas: parseNumero(valorSaidas),
           observacoes: observacoes.trim(),
+          limiteEstoqueBaixo: Number(limiteEstoqueBaixo) || 5,
         },
         foto
       );
@@ -161,7 +180,6 @@ export default function NovoProduto() {
           )}
         </PhotoPicker>
 
-        {/* 1. Nome do produto */}
         <InputGroup>
           <Label>Nome do produto</Label>
           <InputContainer hasError={!!erros.nome}>
@@ -175,7 +193,6 @@ export default function NovoProduto() {
           {erros.nome && <ErrorText>{erros.nome}</ErrorText>}
         </InputGroup>
 
-        {/* 2. Categoria */}
         <InputGroup>
           <Label>Categoria</Label>
           <CategoryOptions>
@@ -188,16 +205,15 @@ export default function NovoProduto() {
           </CategoryOptions>
         </InputGroup>
 
-        {/* 3. Preço + 4. Unidade */}
         <Row>
           <InputGroup style={{ flex: 1, marginRight: 10 }}>
             <Label>Preço (R$)</Label>
             <InputContainer hasError={!!erros.preco}>
               <Input
                 value={preco}
-                onChangeText={setPreco}
+                onChangeText={handleChangePreco}
                 placeholder="0,00"
-                keyboardType="decimal-pad"
+                keyboardType="numeric"
                 placeholderTextColor="#A99B8F"
               />
             </InputContainer>
@@ -205,20 +221,6 @@ export default function NovoProduto() {
           </InputGroup>
 
           <InputGroup style={{ flex: 1 }}>
-            <Label>Unidade</Label>
-            <CategoryOptions>
-              {UNIDADES.map((u) => (
-                <CategoryButton key={u} selected={unidade === u} onPress={() => setUnidade(u)}>
-                  <CategoryButtonText selected={unidade === u}>{u}</CategoryButtonText>
-                </CategoryButton>
-              ))}
-            </CategoryOptions>
-          </InputGroup>
-        </Row>
-
-        {/* 5. Estoque Inicial + 6. Entrada (Qtd.) */}
-        <Row>
-          <InputGroup style={{ flex: 1, marginRight: 10 }}>
             <Label>Estoque Inicial</Label>
             <InputContainer hasError={!!erros.estoqueInicial}>
               <Input
@@ -231,8 +233,10 @@ export default function NovoProduto() {
             </InputContainer>
             {erros.estoqueInicial && <ErrorText>{erros.estoqueInicial}</ErrorText>}
           </InputGroup>
+        </Row>
 
-          <InputGroup style={{ flex: 1 }}>
+        <Row>
+          <InputGroup style={{ flex: 1, marginRight: 10 }}>
             <Label>Entrada (Qtd.)</Label>
             <InputContainer hasError={!!erros.entradaQtd}>
               <Input
@@ -245,9 +249,22 @@ export default function NovoProduto() {
             </InputContainer>
             {erros.entradaQtd && <ErrorText>{erros.entradaQtd}</ErrorText>}
           </InputGroup>
+
+          <InputGroup style={{ flex: 1 }}>
+            <Label>Valor Entradas (R$)</Label>
+            <InputContainer hasError={!!erros.valorEntradas}>
+              <Input
+                value={valorEntradas}
+                onChangeText={handleChangeValorEntradas}
+                placeholder="0,00"
+                keyboardType="numeric"
+                placeholderTextColor="#A99B8F"
+              />
+            </InputContainer>
+            {erros.valorEntradas && <ErrorText>{erros.valorEntradas}</ErrorText>}
+          </InputGroup>
         </Row>
 
-        {/* 7. Saída/Venda (Qtd.) + 8. Valor das Entradas (R$) */}
         <Row>
           <InputGroup style={{ flex: 1, marginRight: 10 }}>
             <Label>Saída / Venda (Qtd.)</Label>
@@ -264,42 +281,39 @@ export default function NovoProduto() {
           </InputGroup>
 
           <InputGroup style={{ flex: 1 }}>
-            <Label>Valor Entradas (R$)</Label>
-            <InputContainer hasError={!!erros.valorEntradas}>
+            <Label>Valor Saídas (R$)</Label>
+            <InputContainer hasError={!!erros.valorSaidas}>
               <Input
-                value={valorEntradas}
-                onChangeText={setValorEntradas}
+                value={valorSaidas}
+                onChangeText={handleChangeValorSaidas}
                 placeholder="0,00"
-                keyboardType="decimal-pad"
+                keyboardType="numeric"
                 placeholderTextColor="#A99B8F"
               />
             </InputContainer>
-            {erros.valorEntradas && <ErrorText>{erros.valorEntradas}</ErrorText>}
+            {erros.valorSaidas && <ErrorText>{erros.valorSaidas}</ErrorText>}
           </InputGroup>
         </Row>
 
-        {/* 9. Valor das Saídas (R$) */}
+        <PreviewBox>
+          <PreviewLabel>SALDO EM ESTOQUE</PreviewLabel>
+          <PreviewValue>{saldoPrevisto}</PreviewValue>
+        </PreviewBox>
+
         <InputGroup>
-          <Label>Valor das Saídas (R$)</Label>
-          <InputContainer hasError={!!erros.valorSaidas}>
+          <Label>Avisar quando o estoque for menor que</Label>
+          <InputContainer hasError={!!erros.limiteEstoqueBaixo}>
             <Input
-              value={valorSaidas}
-              onChangeText={setValorSaidas}
-              placeholder="0,00"
+              value={limiteEstoqueBaixo}
+              onChangeText={setLimiteEstoqueBaixo}
+              placeholder="5"
               keyboardType="decimal-pad"
               placeholderTextColor="#A99B8F"
             />
           </InputContainer>
-          {erros.valorSaidas && <ErrorText>{erros.valorSaidas}</ErrorText>}
+          {erros.limiteEstoqueBaixo && <ErrorText>{erros.limiteEstoqueBaixo}</ErrorText>}
         </InputGroup>
 
-        {/* 10. Saldo em Estoque (calculado, não editável) */}
-        <PreviewBox>
-          <PreviewLabel>SALDO EM ESTOQUE</PreviewLabel>
-          <PreviewValue>{saldoPrevisto} {unidade}</PreviewValue>
-        </PreviewBox>
-
-        {/* 11. Observações */}
         <InputGroup>
           <Label>Observações</Label>
           <TextAreaContainer>

@@ -68,8 +68,6 @@ export const SectionTitle = styled.Text`
   letter-spacing: 0.5px;
 `;
 
-export const AddButton = styled.TouchableOpacity``;
-
 export const ProductsList = styled.ScrollView`
   flex: 1;
   padding-horizontal: 20px;
@@ -103,4 +101,34 @@ export const FecharCaixaButtonText = styled.Text`
   color: #FFFFFF;
   letter-spacing: 0.5px;
   margin-left: 8px;
+`;
+
+export const FAB = styled.TouchableOpacity`
+  position: absolute;
+  bottom: 100px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background-color: #3D2C22;
+  justify-content: center;
+  align-items: center;
+  elevation: 6;
+  shadow-color: #000;
+  shadow-offset: 0px 4px;
+  shadow-opacity: 0.3;
+  shadow-radius: 6px;
+`;
+
+export const FABLabel = styled.Text`
+  position: absolute;
+  bottom: 168px;
+  right: 20px;
+  background-color: #3D2C22;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 8px;
+  overflow: hidden;
 `;

@@ -5,10 +5,12 @@ export const ProductCard = styled.View`
   background-color: #FFFFFF;
   border-radius: 16px;
   margin-bottom: 12px;
-  border-width: 1px;
-  border-color: #E6DFD5;
+  border-width: ${props => (props.semEstoque || props.estoqueBaixo ? 2 : 1)}px;
+  border-color: ${props =>
+    props.semEstoque ? '#C0392B' : props.estoqueBaixo ? '#E67E22' : '#E6DFD5'};
   elevation: 1;
   overflow: hidden;
+  opacity: ${props => (props.semEstoque ? 0.6 : 1)};
 `;
 
 export const ProductImage = styled.Image`
@@ -25,6 +27,13 @@ export const ProductTitle = styled.Text`
   font-size: 14px;
   font-weight: bold;
   color: #3D2C22;
+  margin-bottom: 2px;
+`;
+
+export const StockText = styled.Text`
+  font-size: 11px;
+  font-weight: bold;
+  color: ${props => (props.semEstoque ? '#C0392B' : props.estoqueBaixo ? '#D35400' : '#8C7355')};
   margin-bottom: 6px;
 `;
 
@@ -40,21 +49,8 @@ export const ProductPrice = styled.Text`
   color: #D35400;
 `;
 
-export const CartBadge = styled.View`
-  background-color: #E67E22;
-  padding-horizontal: 8px;
-  padding-vertical: 3px;
-  border-radius: 8px;
-`;
-
-export const CartBadgeText = styled.Text`
-  font-size: 12px;
-  font-weight: bold;
-  color: #FFFFFF;
-`;
-
 export const AddButton = styled.TouchableOpacity`
-  background-color: #FAF0E6;
+  background-color: ${props => (props.disabled ? '#E6DFD5' : '#FAF0E6')};
   width: 28px;
   height: 28px;
   border-radius: 14px;
@@ -85,4 +81,17 @@ export const QtyText = styled.Text`
   margin-horizontal: 6px;
   min-width: 14px;
   text-align: center;
+`;
+
+export const EsgotadoBadge = styled.View`
+  background-color: #C0392B;
+  padding-horizontal: 8px;
+  padding-vertical: 4px;
+  border-radius: 8px;
+`;
+
+export const EsgotadoText = styled.Text`
+  font-size: 11px;
+  font-weight: bold;
+  color: #FFFFFF;
 `;

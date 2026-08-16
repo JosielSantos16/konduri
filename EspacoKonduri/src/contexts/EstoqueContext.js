@@ -1,49 +1,72 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useCallback } from 'react';
+import { useProdutos } from './ProdutosContext';
+import { atualizarProduto } from '../services/queries/productsQueries';
 
 const EstoqueContext = createContext(null);
 
-const ESTOQUE_INICIAL = [
-  { id: '1', title: 'Cerveja Gelada (Garrafa)', qty: 45, unit: 'un.', baixoAt: 15, criticoAt: 5 },
-  { id: '2', title: 'Refrigerante Can', qty: 12, unit: 'un.', baixoAt: 15, criticoAt: 5 },
-  { id: '3', title: 'Água Mineral 500ml', qty: 30, unit: 'un.', baixoAt: 15, criticoAt: 5 },
-  { id: '4', title: 'Galinha Caipira', qty: 5, unit: 'porções', baixoAt: 10, criticoAt: 5 },
-  { id: '5', title: 'Ingresso Entrada Box', qty: 200, unit: 'un.', baixoAt: 30, criticoAt: 10 },
-];
+// Limites padrão de alerta, usados quando o produto não define os próprios
+const BAIXO_PADRAO = 10;
+const CRITICO_PADRAO = 3;
 
-const getStatus = (qty, item) => {
-  if (qty <= item.criticoAt) return { status: 'critico', statusText: 'Crítico' };
-  if (qty <= item.baixoAt) return { status: 'baixo', statusText: 'Baixo' };
+function getStatus(qty, item) {
+  const criticoAt = item.criticoAt ?? CRITICO_PADRAO;
+  const baixoAt = item.baixoAt ?? BAIXO_PADRAO;
+
+  if (qty <= criticoAt) return { status: 'critico', statusText: 'Crítico' };
+  if (qty <= baixoAt) return { status: 'baixo', statusText: 'Baixo' };
   return { status: 'ok', statusText: 'OK' };
-};
+}
 
 export function EstoqueProvider({ children }) {
-  const [stock, setStock] = useState(ESTOQUE_INICIAL);
+  const { produtos } = useProdutos();
 
-  const increase = useCallback((id) => {
-    setStock(prev => prev.map(item => (item.id === id ? { ...item, qty: item.qty + 1 } : item)));
-  }, []);
+  const increase = useCallback(
+    async (id) => {
+      const produto = produtos.find((p) => p.id === id);
+      if (!produto) return;
+      await atualizarProduto(id, { estoque: (produto.estoque || 0) + 1 });
+    },
+    [produtos]
+  );
 
-  const decrease = useCallback((id) => {
-    setStock(prev =>
-      prev.map(item => (item.id === id ? { ...item, qty: Math.max(0, item.qty - 1) } : item))
-    );
-  }, []);
+  const decrease = useCallback(
+    async (id) => {
+      const produto = produtos.find((p) => p.id === id);
+      if (!produto) return;
+      await atualizarProduto(id, { estoque: Math.max(0, (produto.estoque || 0) - 1) });
+    },
+    [produtos]
+  );
 
-  // Usado na finalização da venda para abater o estoque pelo nome do produto vendido
-  const decreaseByTitle = useCallback((title, amount) => {
-    setStock(prev =>
-      prev.map(item => {
-        const nomeBase = item.title.split(' (')[0].toLowerCase();
-        const match = title.toLowerCase().includes(nomeBase) || nomeBase.includes(title.toLowerCase());
-        return match ? { ...item, qty: Math.max(0, item.qty - amount) } : item;
-      })
-    );
-  }, []);
+  /**
+   * Abate o estoque real do produto no Firestore após uma venda.
+   * Prioriza casar pelo id (mais confiável); se não vier, tenta pelo nome.
+   */
+  const decreaseByTitle = useCallback(
+    async (title, amount, produtoId) => {
+      const produto = produtoId
+        ? produtos.find((p) => p.id === produtoId)
+        : produtos.find((p) => p.title.toLowerCase() === title.toLowerCase());
 
-  const stockComStatus = stock.map(item => ({ ...item, ...getStatus(item.qty, item) }));
+      if (!produto) return;
+
+      await atualizarProduto(produto.id, {
+        estoque: Math.max(0, (produto.estoque || 0) - amount),
+      });
+    },
+    [produtos]
+  );
+
+  const stock = produtos.map((item) => ({
+    id: item.id,
+    title: item.title,
+    qty: item.estoque || 0,
+    unit: item.unidade || 'un.',
+    ...getStatus(item.estoque || 0, item),
+  }));
 
   return (
-    <EstoqueContext.Provider value={{ stock: stockComStatus, increase, decrease, decreaseByTitle }}>
+    <EstoqueContext.Provider value={{ stock, increase, decrease, decreaseByTitle }}>
       {children}
     </EstoqueContext.Provider>
   );

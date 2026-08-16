@@ -15,15 +15,19 @@ export default function PDV() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("produtos");
   const { produtos } = useProdutos();
-  const { cart, handleIncrease, handleDecrease, totalItems, totalPrice } = useCart(produtos);
+  const { cart, handleIncrease, handleDecrease, totalItems, totalPrice } =
+    useCart(produtos);
   const { usuario, carregando } = useAuth();
 
-  const filteredProducts = produtos.filter((item) => item.category === activeTab);
+  const filteredProducts = produtos.filter(
+    (item) => item.category === activeTab,
+  );
 
   const statusCaixa = getStatusCaixa();
 
-  const nomeExibido = carregando ? "Carregando..." : (usuario?.nome || "Usuário");
-  const cargoExibido = usuario?.perfil === "adm" ? "Administrador" : "PDV Operacional";
+  const nomeExibido = carregando ? "Carregando..." : usuario?.nome || "Usuário";
+  const cargoExibido =
+    usuario?.perfil === "adm" ? "Administrador" : "PDV Operacional";
 
   return (
     <SafeContainer>
@@ -39,21 +43,21 @@ export default function PDV() {
         <TabSelector activeTab={activeTab} onChange={setActiveTab} />
 
         <ProductList
-  data={filteredProducts}
-  renderItem={({ item }) => (
-    <CardProd
-      item={item}
-      qty={cart[item.id] || 0}
-      onIncrease={() => handleIncrease(item.id)}
-      onDecrease={() => handleDecrease(item.id)}
-    />
-  )}
-  keyExtractor={(item) => item.id}
-  numColumns={2}
-  columnWrapperStyle={{ justifyContent: 'space-between' }}
-  showsVerticalScrollIndicator={false}
-  contentContainerStyle={{ paddingBottom: 20 }}
-/>
+          data={filteredProducts}
+          renderItem={({ item }) => (
+            <CardProd
+              item={item}
+              qty={cart[item.id] || 0}
+              onIncrease={() => handleIncrease(item.id)}
+              onDecrease={() => handleDecrease(item.id)}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          columnWrapperStyle={{ justifyContent: "space-between" }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        />
 
         <CartBar
           totalItems={totalItems}
@@ -61,7 +65,12 @@ export default function PDV() {
           onFinalize={() => {
             const itens = Object.entries(cart).map(([id, qty]) => {
               const produto = produtos.find((p) => p.id === id);
-              return { title: produto.title, qty, price: produto.price };
+              return {
+                id: produto.id,
+                title: produto.title,
+                qty,
+                price: produto.price,
+              };
             });
 
             router.push({

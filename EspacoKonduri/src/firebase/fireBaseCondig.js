@@ -1,7 +1,12 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import {
+  initializeAuth,
+  getReactNativePersistence,
+  browserLocalPersistence,
+} from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -16,6 +21,12 @@ const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
 
+// Na web, usa a persistência padrão do navegador (localStorage).
+// No mobile (iOS/Android), usa AsyncStorage — getReactNativePersistence
+// só existe nesse ambiente, por isso a checagem de plataforma.
 export const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage),
+  persistence:
+    Platform.OS === 'web'
+      ? browserLocalPersistence
+      : getReactNativePersistence(AsyncStorage),
 });

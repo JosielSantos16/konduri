@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { abrirOperacao, fecharOperacao } from '../services/queries/operacoesQueries';
+import { abrirOperacao, fecharOperacao, buscarOperacaoAtiva } from '../services/queries/operacoesQueries';
 import { useProdutos } from './ProdutosContext';
 
 const CaixaContext = createContext(null);
@@ -16,8 +16,37 @@ export function CaixaProvider({ children }) {
   const [operacaoId, setOperacaoId] = useState(null);
   const [abrindoCaixa, setAbrindoCaixa] = useState(false);
   const [erroAbertura, setErroAbertura] = useState(null);
+  const [restaurandoOperacao, setRestaurandoOperacao] = useState(true);
 
   const responsavel = usuario?.nome || '';
+
+  // Ao logar (ou recarregar o app), verifica se já existe uma operação
+  // aberta no Firestore e restaura o estado local a partir dela —
+  // evita perder a referência da operação após um reload/Fast Refresh.
+  useEffect(() => {
+    async function restaurar() {
+      if (!usuario) {
+        setRestaurandoOperacao(false);
+        return;
+      }
+
+      setRestaurandoOperacao(true);
+      try {
+        const operacaoAtiva = await buscarOperacaoAtiva();
+        if (operacaoAtiva) {
+          setOperacaoId(operacaoAtiva.id);
+          setCaixaAberto(true);
+          if (operacaoAtiva.local) setLocal(operacaoAtiva.local);
+        }
+      } catch (erro) {
+        console.error('Erro ao restaurar operação ativa:', erro);
+      } finally {
+        setRestaurandoOperacao(false);
+      }
+    }
+
+    restaurar();
+  }, [usuario]);
 
   const abrirCaixa = useCallback(async () => {
     if (!usuario) {
@@ -76,6 +105,7 @@ export function CaixaProvider({ children }) {
         operacaoId,
         abrindoCaixa,
         erroAbertura,
+        restaurandoOperacao,
         abrirCaixa,
         fecharCaixa,
       }}

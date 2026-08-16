@@ -3,24 +3,16 @@ import {
   doc,
   setDoc,
   updateDoc,
+  deleteDoc,
+  getDoc,
   onSnapshot,
   query,
   orderBy,
 } from 'firebase/firestore';
 import { db } from '../../firebase/fireBaseCondig';
-import { deleteDoc } from 'firebase/firestore';
 
 const COLECAO_PRODUTOS = 'products';
 
-/**
- * Escuta a coleção de produtos em tempo real. Toda vez que um produto
- * é criado ou editado no Firestore (em qualquer tela, por qualquer usuário),
- * o callback é chamado de novo com a lista atualizada — automaticamente,
- * sem precisar recarregar nada.
- *
- * Retorna uma função de "unsubscribe" para parar de escutar quando o
- * componente que usa isso for desmontado.
- */
 export function subscribeToProducts(callback) {
   const q = query(collection(db, COLECAO_PRODUTOS), orderBy('criadoEm', 'asc'));
 
@@ -33,9 +25,12 @@ export function subscribeToProducts(callback) {
   });
 }
 
-/**
- * Cria um novo produto no Firestore.
- */
+export async function buscarProdutoPorId(produtoId) {
+  const snapshot = await getDoc(doc(db, COLECAO_PRODUTOS, produtoId));
+  if (!snapshot.exists()) return null;
+  return { id: snapshot.id, ...snapshot.data() };
+}
+
 export async function criarProduto({
   title,
   price,
@@ -48,6 +43,7 @@ export async function criarProduto({
   valorEntradas,
   valorSaidas,
   observacoes,
+  limiteEstoqueBaixo,
 }) {
   const produtoRef = doc(collection(db, COLECAO_PRODUTOS));
 
@@ -59,13 +55,14 @@ export async function criarProduto({
     image: image || null,
     category,
     unidade,
-    estoque: saldoEstoque, // saldo real, usado pelo PDV e pelas operações
+    estoque: saldoEstoque,
     estoqueInicial,
     entradaQtd,
     saidaQtd,
     valorEntradas,
     valorSaidas,
     observacoes: observacoes || '',
+    limiteEstoqueBaixo: limiteEstoqueBaixo || 5,
     criadoEm: new Date().toISOString(),
   });
 

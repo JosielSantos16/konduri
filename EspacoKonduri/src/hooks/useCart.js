@@ -1,18 +1,27 @@
 import { useState } from 'react';
 
-export function useCart(products) {
+export function useCart(allProducts) {
   const [cart, setCart] = useState({});
 
   const handleIncrease = (id) => {
-    setCart(prev => ({
-      ...prev,
-      [id]: (prev[id] || 0) + 1,
-    }));
+    const produto = allProducts.find((p) => p.id === id);
+    const estoqueDisponivel = produto?.estoque ?? 0;
+
+    setCart((prev) => {
+      const qtyAtual = prev[id] || 0;
+
+      // Não deixa adicionar além do que existe em estoque
+      if (qtyAtual >= estoqueDisponivel) return prev;
+
+      return {
+        ...prev,
+        [id]: qtyAtual + 1,
+      };
+    });
   };
 
-  // Diminui a quantidade do item; remove a chave quando chega a 0
   const handleDecrease = (id) => {
-    setCart(prev => {
+    setCart((prev) => {
       const currentQty = prev[id] || 0;
       if (currentQty <= 1) {
         const updated = { ...prev };
@@ -28,10 +37,19 @@ export function useCart(products) {
 
   const totalItems = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
 
-  const totalPrice = products.reduce((sum, item) => {
+  const totalPrice = allProducts.reduce((sum, item) => {
     const qty = cart[item.id] || 0;
     return sum + qty * item.price;
   }, 0);
 
-  return { cart, handleIncrease, handleDecrease, totalItems, totalPrice };
+  const getQty = (id) => cart[id] || 0;
+
+  return {
+    cart,
+    getQty,
+    handleIncrease,
+    handleDecrease,
+    totalItems,
+    totalPrice,
+  };
 }
