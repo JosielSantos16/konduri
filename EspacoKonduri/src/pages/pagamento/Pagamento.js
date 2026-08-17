@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { useCaixa } from '../../contexts/CaixaContext';
-import { useEstoque } from '../../contexts/EstoqueContext';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import SafeContainer from '../../styles/SafeContainer';
-import { Container, FinalizeButton, FinalizeButtonText } from './pagamentoStyles';
-import { useTroco } from '../../hooks/useTroco';
-import { useVendas } from '../../contexts/VendasContext';
-import { registrarVendaNaOperacao } from '../../services/queries/operacoesQueries';
-import PagamentoHeader from '../../components/pagamento/header/Header';
-import VendaTotalCard from '../../components/pagamento/totalCard/TotalCard';
-import PaymentMethodSelector from '../../components/pagamento/formaPagamento/FormaPagamento';
-import TrocoCalculator from '../../components/pagamento/trocoCalculo/TrocoCalculo';
+import React, { useState } from "react";
+import { Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useCaixa } from "../../contexts/CaixaContext";
+import { useEstoque } from "../../contexts/EstoqueContext";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import SafeContainer from "../../styles/SafeContainer";
+import { formatPrice } from "../../utils/formatPrice";
+import {
+  Container,
+  FinalizeButton,
+  FinalizeButtonText,
+} from "./pagamentoStyles";
+import { useTroco } from "../../hooks/useTroco";
+import { useVendas } from "../../contexts/VendasContext";
+import { registrarVendaNaOperacao } from "../../services/queries/operacoesQueries";
+import PagamentoHeader from "../../components/pagamento/header/Header";
+import VendaTotalCard from "../../components/pagamento/totalCard/TotalCard";
+import PaymentMethodSelector from "../../components/pagamento/formaPagamento/FormaPagamento";
+import TrocoCalculator from "../../components/pagamento/trocoCalculo/TrocoCalculo";
 
 export default function Pagamento() {
   const router = useRouter();
@@ -22,46 +28,52 @@ export default function Pagamento() {
   const { registrarVenda } = useVendas();
   const { decreaseByTitle } = useEstoque();
   const { responsavel, operacaoId } = useCaixa();
-  const [selectedMethod, setSelectedMethod] = useState('pix');
-  const { valorRecebido, setValorRecebido, troco, insuficiente } = useTroco(totalVenda);
+  const [selectedMethod, setSelectedMethod] = useState("pix");
+  const { valorRecebido, setValorRecebido, troco, insuficiente } =
+    useTroco(totalVenda);
   const [finalizando, setFinalizando] = useState(false);
 
-  const podeFinalizar = (selectedMethod === 'pix' || !insuficiente) && !finalizando;
+  const podeFinalizar =
+    (selectedMethod === "pix" || !insuficiente) && !finalizando;
 
-  const handleFinalizar = async () => {
-  if (!podeFinalizar) return;
-  setFinalizando(true);
+  const handleFinalizar = () => {
+    if (!podeFinalizar) return;
 
-  console.log('🔍 operacaoId no momento da venda:', operacaoId);
-  console.log('🔍 itens sendo vendidos:', JSON.stringify(itensVenda, null, 2));
-
-  try {
-    const venda = await registrarVenda({
-      total: totalVenda,
-      metodo: selectedMethod,
-      itens: itensVenda,
-    });
-
-    console.log('✅ Venda registrada no Firestore, id:', venda.id);
-
-    await Promise.all(
-      itensVenda.map((item) => decreaseByTitle(item.title, item.qty, item.id))
+    Alert.alert(
+      "Confirmar venda",
+      `Confirma a venda de ${formatPrice(totalVenda)} via ${
+        selectedMethod === "pix" ? "Pix" : "Dinheiro"
+      }?`,
+      [
+        { text: "Cancelar", style: "cancel" },
+        { text: "Confirmar", onPress: executarFinalizacao },
+      ]
     );
+  };
 
-    console.log('✅ Estoque do catálogo abatido');
+  const executarFinalizacao = async () => {
+    if (finalizando) return;
+    setFinalizando(true);
 
-    if (operacaoId) {
-      console.log('🔍 Chamando registrarVendaNaOperacao...');
-      await registrarVendaNaOperacao(operacaoId, itensVenda);
-      console.log('✅ registrarVendaNaOperacao concluído sem erro');
-    } else {
-      console.log('❌ operacaoId está NULO — não vai atualizar o Controle do Dia');
-    }
+    try {
+      const venda = await registrarVenda({
+        total: totalVenda,
+        metodo: selectedMethod,
+        itens: itensVenda,
+      });
 
-    // resto do código continua igual...
+      await Promise.all(
+        itensVenda.map((item) =>
+          decreaseByTitle(item.title, item.qty, item.id)
+        )
+      );
+
+      if (operacaoId) {
+        await registrarVendaNaOperacao(operacaoId, itensVenda);
+      }
 
       router.push({
-        pathname: '/status',
+        pathname: "/status",
         params: {
           total: totalVenda.toFixed(2),
           metodo: selectedMethod,
@@ -70,9 +82,9 @@ export default function Pagamento() {
         },
       });
     } catch (erro) {
-      console.error('Erro ao finalizar venda:', erro);
+      console.error("Erro ao finalizar venda:", erro);
       router.push({
-        pathname: '/status',
+        pathname: "/status",
         params: {
           total: totalVenda.toFixed(2),
           metodo: selectedMethod,
@@ -88,11 +100,18 @@ export default function Pagamento() {
       <Container>
         <PagamentoHeader onBack={() => router.back()} />
 
-        <VendaTotalCard total={totalVenda} atendente={responsavel || 'Operador'} caixaId="04" />
+        <VendaTotalCard
+          total={totalVenda}
+          atendente={responsavel || "Operador"}
+          caixaId="04"
+        />
 
-        <PaymentMethodSelector selected={selectedMethod} onSelect={setSelectedMethod} />
+        <PaymentMethodSelector
+          selected={selectedMethod}
+          onSelect={setSelectedMethod}
+        />
 
-        {selectedMethod === 'dinheiro' && (
+        {selectedMethod === "dinheiro" && (
           <TrocoCalculator
             valorRecebido={valorRecebido}
             onChangeValorRecebido={setValorRecebido}
@@ -108,7 +127,7 @@ export default function Pagamento() {
         >
           <Ionicons name="checkmark-circle-outline" size={22} color="#FFFFFF" />
           <FinalizeButtonText>
-            {finalizando ? 'Registrando...' : 'Finalizar e Emitir Comprovante'}
+            {finalizando ? "Registrando..." : "Finalizar e Emitir Comprovante"}
           </FinalizeButtonText>
         </FinalizeButton>
       </Container>

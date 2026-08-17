@@ -25,3 +25,10 @@ export const TabText = styled.Text`
   color: ${props => (props.active ? '#FFFFFF' : '#8C7355')};
   margin-left: 6px;
 `;
+
+export const TabCount = styled.Text`
+  font-size: 12px;
+  font-weight: bold;
+  color: ${props => (props.active ? 'rgba(255,255,255,0.8)' : '#A99B8F')};
+  margin-left: 4px;
+`;

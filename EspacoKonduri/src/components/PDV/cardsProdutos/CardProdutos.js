@@ -15,17 +15,40 @@ import {
   QtyText,
   EsgotadoBadge,
   EsgotadoText,
+  DestaqueBadge,
+  DestaqueText,
 } from './cardStyle';
 
-export default function CardProd({ item, qty, onIncrease, onDecrease }) {
+const HIT_SLOP = { top: 8, bottom: 8, left: 8, right: 8 };
+
+export default function CardProd({ item, qty, onIncrease, onDecrease, destaque }) {
   const estoqueDisponivel = item.estoque ?? 0;
   const limiteBaixo = item.limiteEstoqueBaixo ?? 5;
   const semEstoque = estoqueDisponivel <= 0;
   const estoqueBaixo = !semEstoque && estoqueDisponivel <= limiteBaixo;
   const atingiuLimite = qty >= estoqueDisponivel;
+  const selecionado = qty > 0;
+
+  const handlePressCard = () => {
+    if (semEstoque || atingiuLimite) return;
+    onIncrease();
+  };
 
   return (
-    <ProductCard semEstoque={semEstoque} estoqueBaixo={estoqueBaixo}>
+    <ProductCard
+      semEstoque={semEstoque}
+      estoqueBaixo={estoqueBaixo}
+      selecionado={selecionado}
+      onPress={handlePressCard}
+      activeOpacity={0.7}
+    >
+      {destaque && !semEstoque && (
+        <DestaqueBadge>
+          <Ionicons name="flame" size={10} color="#FFFFFF" />
+          <DestaqueText>MAIS PEDIDO</DestaqueText>
+        </DestaqueBadge>
+      )}
+
       <ProductImage source={{ uri: item.image }} resizeMode="cover" />
 
       <CardContent>
@@ -44,16 +67,16 @@ export default function CardProd({ item, qty, onIncrease, onDecrease }) {
             </EsgotadoBadge>
           ) : qty > 0 ? (
             <QtyControls>
-              <QtyButton onPress={onDecrease}>
+              <QtyButton onPress={onDecrease} hitSlop={HIT_SLOP}>
                 <Ionicons name="remove" size={14} color="#D35400" />
               </QtyButton>
               <QtyText>{qty}</QtyText>
-              <QtyButton onPress={onIncrease} disabled={atingiuLimite}>
+              <QtyButton onPress={onIncrease} disabled={atingiuLimite} hitSlop={HIT_SLOP}>
                 <Ionicons name="add" size={14} color={atingiuLimite ? '#C9BBA8' : '#D35400'} />
               </QtyButton>
             </QtyControls>
           ) : (
-            <AddButton onPress={onIncrease}>
+            <AddButton hitSlop={HIT_SLOP} pointerEvents="none">
               <Ionicons name="add" size={16} color="#D35400" />
             </AddButton>
           )}

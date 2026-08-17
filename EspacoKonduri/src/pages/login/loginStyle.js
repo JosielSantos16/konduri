@@ -63,41 +63,20 @@ export const Input = styled.TextInput`
   color: #3D2C22;
 `;
 
-export const ProfileSelectorContainer = styled.View`
-  margin-top: 10px;
-  margin-bottom: 25px;
-  align-items: center;
-`;
-
-export const ProfileLabel = styled.Text`
-  font-size: 11px;
-  font-weight: bold;
-  color: #8C7355;
-  margin-bottom: 10px;
-  letter-spacing: 0.8px;
-`;
-
-export const ProfileOptions = styled.View`
-  flex-direction: row;
-  background-color: #F0EAE1;
-  border-radius: 12px;
+export const EyeButton = styled.TouchableOpacity`
   padding: 4px;
-  width: 100%;
+  margin-left: 6px;
 `;
 
-export const ProfileButton = styled.TouchableOpacity`
-  flex: 1;
-  padding-vertical: 10px;
-  align-items: center;
-  border-radius: 10px;
-  background-color: ${props => (props.selected ? '#FFFFFF' : 'transparent')};
-  elevation: ${props => (props.selected ? 2 : 0)};
+export const ForgotPasswordButton = styled.TouchableOpacity`
+  align-self: flex-end;
+  margin-bottom: 20px;
 `;
 
-export const ProfileButtonText = styled.Text`
-  font-size: 14px;
+export const ForgotPasswordText = styled.Text`
+  font-size: 13px;
   font-weight: bold;
-  color: ${props => (props.selected ? '#B85D00' : '#8C7355')};
+  color: #D35400;
 `;
 
 export const EnterButton = styled.TouchableOpacity`

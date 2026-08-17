@@ -11,11 +11,16 @@ export const CartBar = styled.View`
   elevation: 10;
 `;
 
-export const CartBarInfo = styled.View`
+export const CartBarTouchable = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+`;
+
+export const CartBarInfo = styled.View`
+  flex-direction: row;
+  align-items: center;
 `;
 
 export const CartItemsText = styled.Text`
@@ -23,13 +28,36 @@ export const CartItemsText = styled.Text`
   color: #7A6555;
 `;
 
+export const CartTotalRow = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
 export const CartTotalText = styled.Text`
   font-size: 20px;
   font-weight: bold;
   color: #D35400;
+  margin-right: 6px;
+`;
+
+export const ActionsRow = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const ClearButton = styled.TouchableOpacity`
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border-width: 1.5px;
+  border-color: #E6DFD5;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
 `;
 
 export const FinalizeButton = styled.TouchableOpacity`
+  flex: 1;
   background-color: #3D2C22;
   border-radius: 12px;
   height: 52px;

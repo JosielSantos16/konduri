@@ -5,6 +5,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../../hooks/useAuth';
 import { useCaixa } from '../../contexts/CaixaContext';
+import { exportarFechamentoPDF } from '../../services/queries/pdfQueries';
 import { listarProdutosDaOperacao } from '../../services/queries/operacoesQueries';
 import {
   Container,
@@ -178,6 +179,7 @@ export default function FechamentoCaixa() {
           </ErrorBox>
         )}
 
+        
         <FinalizeButton onPress={handleFinalizar} disabled={salvando}>
           {salvando ? (
             <ActivityIndicator color="#FFFFFF" />

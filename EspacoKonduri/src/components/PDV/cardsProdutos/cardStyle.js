@@ -1,13 +1,20 @@
 import styled from 'styled-components/native';
 
-export const ProductCard = styled.View`
+export const ProductCard = styled.TouchableOpacity`
   width: 48%;
   background-color: #FFFFFF;
   border-radius: 16px;
   margin-bottom: 12px;
-  border-width: ${props => (props.semEstoque || props.estoqueBaixo ? 2 : 1)}px;
+  border-width: ${props =>
+    props.semEstoque || props.selecionado || props.estoqueBaixo ? 2 : 1}px;
   border-color: ${props =>
-    props.semEstoque ? '#C0392B' : props.estoqueBaixo ? '#E67E22' : '#E6DFD5'};
+    props.semEstoque
+      ? '#C0392B'
+      : props.selecionado
+      ? '#5C4033'
+      : props.estoqueBaixo
+      ? '#E67E22'
+      : '#E6DFD5'};
   elevation: 1;
   overflow: hidden;
   opacity: ${props => (props.semEstoque ? 0.6 : 1)};
@@ -94,4 +101,24 @@ export const EsgotadoText = styled.Text`
   font-size: 11px;
   font-weight: bold;
   color: #FFFFFF;
+`;
+
+export const DestaqueBadge = styled.View`
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: #2E5A1E;
+  padding-horizontal: 8px;
+  padding-vertical: 3px;
+  border-radius: 8px;
+  flex-direction: row;
+  align-items: center;
+  z-index: 1;
+`;
+
+export const DestaqueText = styled.Text`
+  font-size: 10px;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-left: 3px;
 `;

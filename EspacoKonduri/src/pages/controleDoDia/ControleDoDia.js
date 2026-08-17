@@ -1,11 +1,12 @@
-import React, { useState, useCallback } from 'react';
-import { RefreshControl } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter, useFocusEffect } from 'expo-router';
-import SafeContainer from '../../styles/SafeContainer';
-import { useCaixa } from '../../contexts/CaixaContext';
-import { listarProdutosDaOperacao } from '../../services/queries/operacoesQueries';
-import ProdutoControleCard from '../../components/controleDoDia/ProdutoControleCard';
+import React, { useState, useCallback } from "react";
+import { RefreshControl } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter, useFocusEffect } from "expo-router";
+import SafeContainer from "../../styles/SafeContainer";
+import { useCaixa } from "../../contexts/CaixaContext";
+import { Alert } from "react-native";
+import { listarProdutosDaOperacao } from "../../services/queries/operacoesQueries";
+import ProdutoControleCard from "../../components/controleDoDia/ProdutoControleCard";
 import {
   Container,
   Header,
@@ -25,12 +26,25 @@ import {
   FecharCaixaButtonText,
   FAB,
   FABLabel,
-} from './controleDoDiaStyle';
+} from "./controleDoDiaStyle";
 
 function formatarDataHoje() {
   const hoje = new Date();
-  const dia = String(hoje.getDate()).padStart(2, '0');
-  const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  const dia = String(hoje.getDate()).padStart(2, "0");
+  const meses = [
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
+  ];
   return `${dia} ${meses[hoje.getMonth()]} ${hoje.getFullYear()}`;
 }
 
@@ -51,10 +65,9 @@ export default function ControleDoDia() {
       const lista = await listarProdutosDaOperacao(operacaoId);
       setProdutos(lista);
     } catch (erro) {
-      console.error('Erro ao carregar produtos da operação:', erro);
+      console.error("Erro ao carregar produtos da operação:", erro);
     }
   }, [operacaoId]);
-
 
   useFocusEffect(
     useCallback(() => {
@@ -71,40 +84,56 @@ export default function ControleDoDia() {
       return () => {
         ativo = false;
       };
-    }, [carregarProdutos])
+    }, [carregarProdutos]),
   );
 
   const handleRefresh = async () => {
-  console.log('🔄 Pull-to-refresh disparado!');
-  setAtualizando(true);
-  await carregarProdutos();
-  setAtualizando(false);
-};
+    console.log("🔄 Pull-to-refresh disparado!");
+    setAtualizando(true);
+    await carregarProdutos();
+    setAtualizando(false);
+  };
 
   const primeiroNome = responsavel
-    ? responsavel.split(' ')[0] + (responsavel.split(' ')[1] ? ' ' + responsavel.split(' ')[1][0] + '.' : '')
-    : '';
+    ? responsavel.split(" ")[0] +
+      (responsavel.split(" ")[1]
+        ? " " + responsavel.split(" ")[1][0] + "."
+        : "")
+    : "";
 
   const handleEditarProduto = (produto) => {
     router.push({
-      pathname: '/controle-do-dia/editar-produto',
+      pathname: "/controle-do-dia/editar-produto",
       params: { operacaoId, produtoId: produto.id },
     });
   };
 
   const handleAdicionarProduto = () => {
     router.push({
-      pathname: '/novo-produto',
+      pathname: "/novo-produto",
       params: { operacaoId },
     });
   };
 
   const handleFecharCaixa = () => {
-    router.push({
-      pathname: '/fechamento',
-      params: { operacaoId, data: formatarDataHoje() },
-    });
-  };
+  Alert.alert(
+    'Fechar Caixa do Dia',
+    'Tem certeza que deseja fechar o caixa? Essa ação encerra a operação atual.',
+    [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Fechar Caixa',
+        style: 'destructive',
+        onPress: () => {
+          router.push({
+            pathname: '/fechamento',
+            params: { operacaoId, data: formatarDataHoje() },
+          });
+        },
+      },
+    ]
+  );
+};
 
   return (
     <SafeContainer>
@@ -137,7 +166,7 @@ export default function ControleDoDia() {
             <RefreshControl
               refreshing={atualizando}
               onRefresh={handleRefresh}
-              colors={['#2E5A1E']}
+              colors={["#2E5A1E"]}
               tintColor="#2E5A1E"
             />
           }
@@ -146,7 +175,8 @@ export default function ControleDoDia() {
             <EmptyState>
               <Ionicons name="cube-outline" size={40} color="#C9BBA8" />
               <EmptyStateText>
-                Nenhum produto na operação ainda.{'\n'}Toque no botão + para adicionar.
+                Nenhum produto na operação ainda.{"\n"}Toque no botão + para
+                adicionar.
               </EmptyStateText>
             </EmptyState>
           )}

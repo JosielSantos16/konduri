@@ -14,8 +14,6 @@ export default function SafeContainer({ children, style }) {
     <StyledView
       style={[
         {
-          // Único lugar responsável pela safe area inteira (topo, base e laterais).
-          // Não duplique isso em outros componentes (ex: CartBar, Header).
           paddingTop: insets.top,
           paddingBottom: Math.max(insets.bottom, 20),
           paddingLeft: insets.left,

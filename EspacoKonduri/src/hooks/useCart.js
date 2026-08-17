@@ -9,14 +9,8 @@ export function useCart(allProducts) {
 
     setCart((prev) => {
       const qtyAtual = prev[id] || 0;
-
-      // Não deixa adicionar além do que existe em estoque
       if (qtyAtual >= estoqueDisponivel) return prev;
-
-      return {
-        ...prev,
-        [id]: qtyAtual + 1,
-      };
+      return { ...prev, [id]: qtyAtual + 1 };
     });
   };
 
@@ -28,11 +22,22 @@ export function useCart(allProducts) {
         delete updated[id];
         return updated;
       }
-      return {
-        ...prev,
-        [id]: currentQty - 1,
-      };
+      return { ...prev, [id]: currentQty - 1 };
     });
+  };
+
+  // Remove um item por completo do carrinho, independente da quantidade
+  const removeItem = (id) => {
+    setCart((prev) => {
+      const updated = { ...prev };
+      delete updated[id];
+      return updated;
+    });
+  };
+
+  // Esvazia o carrinho inteiro de uma vez
+  const clearCart = () => {
+    setCart({});
   };
 
   const totalItems = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
@@ -49,6 +54,8 @@ export function useCart(allProducts) {
     getQty,
     handleIncrease,
     handleDecrease,
+    removeItem,
+    clearCart,
     totalItems,
     totalPrice,
   };

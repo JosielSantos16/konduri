@@ -66,3 +66,7 @@ export const AvatarRow = styled.View`
   flex-direction: row;
   align-items: center;
 `;
+
+export const SummaryButton = styled.TouchableOpacity`
+  margin-left: 10px;
+`;

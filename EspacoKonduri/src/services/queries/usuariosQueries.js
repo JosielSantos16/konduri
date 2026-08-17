@@ -1,10 +1,11 @@
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../../firebase/fireBaseCondig';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../../firebase/fireBaseCondig';
-import { signOut } from 'firebase/auth';
 
 const COLECAO_USUARIOS = 'usuarios';
 
@@ -45,4 +46,8 @@ export async function buscarPerfilUsuario(uid) {
 
 export async function deslogarUsuario() {
   await signOut(auth);
+}
+
+export async function enviarRecuperacaoSenha(email) {
+  await sendPasswordResetEmail(auth, email);
 }
