@@ -126,7 +126,7 @@ export default function PDV() {
         itensSemEstoqueSuficiente.push({ title: produto?.title, qty, estoqueAtual });
       }
 
-      return { id: produto.id, title: produto.title, qty, price: produto.price, image: produto.image };
+      return { id: produto.id, title: produto.title, qty, price: produto.price, image: produto.image, category: produto.category };
     });
 
     if (itensSemEstoqueSuficiente.length > 0) {

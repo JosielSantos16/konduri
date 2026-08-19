@@ -1,6 +1,7 @@
 import React from 'react';
-import { Modal, FlatList } from 'react-native';
+import { Modal, FlatList, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import styled from 'styled-components/native';
 import { formatPrice } from '../../../utils/formatPrice';
 import {
   Overlay,
@@ -25,6 +26,30 @@ import {
   ProceedButtonText,
 } from './cartReviewModalStyle';
 
+const ObservacaoContainer = styled.View`
+  margin-top: 4px;
+  margin-bottom: 6px;
+`;
+
+const ObservacaoLabel = styled.Text`
+  font-size: 12px;
+  font-weight: bold;
+  color: #8C7355;
+  margin-bottom: 6px;
+`;
+
+const ObservacaoInput = styled.TextInput`
+  background-color: #FAF8F5;
+  border-radius: 10px;
+  border-width: 1px;
+  border-color: #E6DFD5;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #3D2C22;
+  min-height: 60px;
+  text-align-vertical: top;
+`;
+
 export default function CartReviewModal({
   visible,
   onClose,
@@ -34,6 +59,10 @@ export default function CartReviewModal({
   onDecrease,
   onRemove,
   onProceed,
+  proceedLabel = 'Continuar para Pagamento',
+  observacoes,
+  onChangeObservacoes,
+  mostrarObservacoes = false, // só a tela do cliente precisa disso, o PDV não
 }) {
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
@@ -77,6 +106,20 @@ export default function CartReviewModal({
             showsVerticalScrollIndicator={false}
           />
 
+          {mostrarObservacoes && (
+            <ObservacaoContainer>
+              <ObservacaoLabel>Observações (opcional)</ObservacaoLabel>
+              <ObservacaoInput
+                placeholder="Ex: sem gelo, embalar pra viagem..."
+                placeholderTextColor="#A99B8F"
+                value={observacoes}
+                onChangeText={onChangeObservacoes}
+                multiline
+                numberOfLines={3}
+              />
+            </ObservacaoContainer>
+          )}
+
           <TotalRow>
             <TotalLabel>Total</TotalLabel>
             <TotalValue>{formatPrice(totalPrice)}</TotalValue>
@@ -84,7 +127,7 @@ export default function CartReviewModal({
 
           <ProceedButton onPress={onProceed}>
             <Ionicons name="arrow-forward-circle-outline" size={20} color="#FFFFFF" />
-            <ProceedButtonText>Continuar para Pagamento</ProceedButtonText>
+            <ProceedButtonText>{proceedLabel}</ProceedButtonText>
           </ProceedButton>
         </ModalContent>
       </Overlay>

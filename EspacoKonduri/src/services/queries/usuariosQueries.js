@@ -9,22 +9,17 @@ import {
 
 const COLECAO_USUARIOS = 'usuarios';
 
-const PERFIL_PADRAO = 'Atendente';
-
-export async function cadastrarUsuario({ nome, email, senha }) {
+export async function cadastrarUsuario({ nome, email, senha, perfil = 'cliente' }) {
   const credenciais = await createUserWithEmailAndPassword(auth, email, senha);
-  const uid = credenciais.user.uid;
 
-  const dadosUsuario = {
+  await setDoc(doc(db, 'usuarios', credenciais.user.uid), {
     nome,
     email,
-    perfil: PERFIL_PADRAO,
+    perfil, // 'cliente' (padrão) | 'atendente' | 'adm' — definidos manualmente por você no Firestore
     criadoEm: new Date().toISOString(),
-  };
+  });
 
-  await setDoc(doc(db, COLECAO_USUARIOS, uid), dadosUsuario);
-
-  return { uid, ...dadosUsuario };
+  return credenciais.user;
 }
 
 export async function loginUsuario({ email, senha }) {

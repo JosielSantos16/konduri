@@ -110,7 +110,7 @@ export default function Cadastro() {
       await cadastrarUsuario({ nome: nome.trim(), email: email.trim(), senha });
 
       Alert.alert('Sucesso', 'Conta criada com sucesso!');
-      router.push('/pdv');
+      router.push('/cliente-home');
     } catch (erro) {
       setErros((prev) => ({ ...prev, geral: mensagemDeErro(erro) }));
     } finally {

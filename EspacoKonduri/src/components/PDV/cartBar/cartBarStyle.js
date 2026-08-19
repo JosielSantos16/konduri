@@ -72,3 +72,18 @@ export const FinalizeButtonText = styled.Text`
   color: #FFFFFF;
   letter-spacing: 0.5px;
 `;
+
+export const ObservacaoRow = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  padding-vertical: 8px;
+  margin-bottom: 8px;
+`;
+
+export const ObservacaoText = styled.Text`
+  flex: 1;
+  font-size: 12px;
+  color: ${(props) => (props.temTexto ? '#3D2C22' : '#A99B8F')};
+  font-weight: ${(props) => (props.temTexto ? 'bold' : 'normal')};
+  margin-left: 6px;
+`;

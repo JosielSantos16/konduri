@@ -11,9 +11,20 @@ import {
   ClearButton,
   FinalizeButton,
   FinalizeButtonText,
+  ObservacaoRow,
+  ObservacaoText,
 } from './cartBarStyle';
 
-export default function CartBar({ totalItems, totalPrice, onFinalize, onReview, onClear }) {
+export default function CartBar({
+  totalItems,
+  totalPrice,
+  onFinalize,
+  onReview,
+  onClear,
+  finalizeLabel = 'FINALIZAR VENDA',
+  observacoes,
+  onPressObservacao, // só passado pela tela do cliente
+}) {
   if (totalItems === 0) return null;
 
   const handleClear = () => {
@@ -41,6 +52,16 @@ export default function CartBar({ totalItems, totalPrice, onFinalize, onReview, 
         <Ionicons name="chevron-up-outline" size={20} color="#8C7355" />
       </CartBarTouchable>
 
+      {onPressObservacao && (
+        <ObservacaoRow onPress={onPressObservacao}>
+          <Ionicons name="chatbubble-ellipses-outline" size={16} color="#8C7355" />
+          <ObservacaoText temTexto={!!observacoes} numberOfLines={1}>
+            {observacoes ? observacoes : 'Adicionar observação (opcional)'}
+          </ObservacaoText>
+          <Ionicons name="chevron-forward" size={14} color="#A99B8F" />
+        </ObservacaoRow>
+      )}
+
       <ActionsRow>
         <ClearButton onPress={handleClear}>
           <Ionicons name="trash-outline" size={20} color="#C0392B" />
@@ -48,7 +69,7 @@ export default function CartBar({ totalItems, totalPrice, onFinalize, onReview, 
 
         <FinalizeButton onPress={onFinalize}>
           <FinalizeButtonText>
-            FINALIZAR VENDA · {formatPrice(totalPrice)}
+            {finalizeLabel} · {formatPrice(totalPrice)}
           </FinalizeButtonText>
         </FinalizeButton>
       </ActionsRow>

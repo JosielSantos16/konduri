@@ -1,3 +1,6 @@
+import { db } from "../../firebase/fireBaseCondig";
+import { atualizarProduto } from "./productsQueries";
+import { deleteDoc } from "firebase/firestore";
 import {
   collection,
   doc,
@@ -10,9 +13,6 @@ import {
   orderBy,
   limit,
 } from "firebase/firestore";
-import { db } from "../../firebase/fireBaseCondig";
-import { atualizarProduto } from "./productsQueries";
-import { deleteDoc } from "firebase/firestore";
 
 const COLECAO_OPERACOES = "operacoes";
 
@@ -85,10 +85,19 @@ export async function listarProdutosDaOperacao(operacaoId) {
   }));
 }
 
-export async function buscarOperacaoPorId(operacaoId) {
-  const snapshot = await getDoc(doc(db, COLECAO_OPERACOES, operacaoId));
-  if (!snapshot.exists()) return null;
-  return { id: snapshot.id, ...snapshot.data() };
+export async function buscarOperacaoPorData(dataISO) {
+  const q = query(
+    collection(db, COLECAO_OPERACOES),
+    where('data', '==', dataISO),
+  );
+
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) return null;
+
+  const docs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  docs.sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm));
+
+  return docs[0];
 }
 
 export async function fecharOperacao(operacaoId) {
@@ -176,7 +185,7 @@ export async function adicionarProdutoAOperacao(operacaoId, produto) {
     produtoId: produto.id,
     nome: produto.title,
     unidade: produto.unidade || "un",
-    image: produto.image || null, // ← adiciona essa linha
+    image: produto.image || null, 
     estoqueInicial,
     entradaQtd,
     saidaQtd,

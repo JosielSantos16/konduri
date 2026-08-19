@@ -26,7 +26,6 @@ export function useCart(allProducts) {
     });
   };
 
-  // Remove um item por completo do carrinho, independente da quantidade
   const removeItem = (id) => {
     setCart((prev) => {
       const updated = { ...prev };
@@ -35,7 +34,6 @@ export function useCart(allProducts) {
     });
   };
 
-  // Esvazia o carrinho inteiro de uma vez
   const clearCart = () => {
     setCart({});
   };
@@ -51,6 +49,7 @@ export function useCart(allProducts) {
 
   return {
     cart,
+    setCart,
     getQty,
     handleIncrease,
     handleDecrease,

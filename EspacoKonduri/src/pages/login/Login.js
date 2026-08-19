@@ -67,7 +67,13 @@ export default function Login() {
 
     try {
       const usuario = await loginUsuario({ email: email.trim(), senha });
-      router.push(usuario.perfil === 'adm' ? '/painel' : '/pdv');
+      if (usuario.perfil === 'adm') {
+  router.replace('/painel');
+} else if (usuario.perfil === 'atendente') {
+  router.replace('/pdv');
+} else {
+  router.replace('/cliente-home');
+}
     } catch (erro) {
       setErros((prev) => ({ ...prev, geral: mensagemDeErro(erro) }));
     } finally {

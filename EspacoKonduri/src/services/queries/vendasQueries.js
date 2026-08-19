@@ -1,3 +1,5 @@
+import { paraDataISOLocal } from '../../utils/dataLocal';
+
 import {
   collection,
   doc,
@@ -13,7 +15,7 @@ import { db } from '../../firebase/fireBaseCondig';
 const COLECAO_VENDAS = 'vendas';
 
 function dataDeHoje() {
-  return new Date().toISOString().split('T')[0];
+  return paraDataISOLocal();
 }
 
 export async function registrarVendaFirestore({

@@ -43,8 +43,10 @@ import {
   LogoutButtonText,
 } from './resumoDiaStyle';
 
+import { paraDataISOLocal } from "../../utils/dataLocal";
+
 function paraDataISO(data) {
-  return data.toISOString().split('T')[0];
+  return paraDataISOLocal(data);
 }
 
 export default function ResumoDia() {

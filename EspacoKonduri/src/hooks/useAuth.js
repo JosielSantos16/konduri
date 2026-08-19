@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase/fireBaseCondig';
-import { buscarPerfilUsuario } from '../services/queries/usuariosQueries';
+import { useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase/fireBaseCondig";
+import { buscarPerfilUsuario } from "../services/queries/usuariosQueries";
+import { registrarPushToken } from "../services/notificacoes/registrarPushToken";
 
 export function useAuth() {
   const [usuario, setUsuario] = useState(null);
@@ -15,11 +16,15 @@ export function useAuth() {
         return;
       }
 
+      if (usuario?.uid) {
+        registrarPushToken(usuario.uid);
+      }
+
       try {
         const perfil = await buscarPerfilUsuario(firebaseUser.uid);
         setUsuario(perfil);
       } catch (erro) {
-        console.error('Erro ao buscar perfil do usuário:', erro);
+        console.error("Erro ao buscar perfil do usuário:", erro);
         setUsuario(null);
       } finally {
         setCarregando(false);

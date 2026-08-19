@@ -1,5 +1,6 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import {
   SectionTitle,
   PaymentMethodsContainer,
@@ -14,16 +15,24 @@ const METHODS = [
   { key: 'dinheiro', title: 'Dinheiro', subtitle: 'Espécie em Mãos', icon: 'cash-outline', color: '#137333' },
 ];
 
-export default function PaymentMethodSelector({ selected, onSelect }) {
+export default function PaymentMethodSelector({ selected, onSelect, disabled }) {
+  const handleSelect = (key) => {
+    if (disabled) return;
+    Haptics.selectionAsync();
+    onSelect(key);
+  };
+
   return (
     <>
       <SectionTitle>Selecione o Método de Pagamento</SectionTitle>
       <PaymentMethodsContainer>
-        {METHODS.map(method => (
+        {METHODS.map((method) => (
           <MethodCard
             key={method.key}
             selected={selected === method.key}
-            onPress={() => onSelect(method.key)}
+            onPress={() => handleSelect(method.key)}
+            disabled={disabled}
+            style={{ opacity: disabled ? 0.5 : 1 }}
           >
             <MethodIconContainer>
               <Ionicons name={method.icon} size={22} color={method.color} />

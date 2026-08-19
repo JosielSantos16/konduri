@@ -8,14 +8,20 @@ export default function Index() {
   const { usuario, carregando } = useAuth();
 
   useEffect(() => {
-    if (carregando) return; 
+    if (carregando) return;
 
     if (!usuario) {
       router.replace('/login');
       return;
     }
 
-    router.replace(usuario.perfil === 'adm' ? '/painel' : '/pdv');
+    if (usuario.perfil === 'adm') {
+      router.replace('/painel');
+    } else if (usuario.perfil === 'atendente') {
+      router.replace('/pdv');
+    } else {
+      router.replace('/cliente-home');
+    }
   }, [usuario, carregando]);
 
   return (
