@@ -32,7 +32,13 @@ export const PedidoCard = styled.View`
   padding: 16px;
   margin-bottom: 14px;
   border-width: 1.5px;
-  border-color: ${(props) => (props.status === 'pendente' ? '#E67E22' : '#E6DFD5')};
+  border-color: ${(props) =>
+    props.status === 'pendente'
+      ? '#E67E22'
+      : props.status === 'cancelado'
+      ? '#C0392B'
+      : '#E6DFD5'};
+  opacity: ${(props) => (props.status === 'cancelado' ? 0.7 : 1)};
 `;
 
 export const PedidoHeader = styled.View`
@@ -72,6 +78,7 @@ export const STATUS_CORES = {
   aceito: { bg: '#E8F4FD', text: '#1A73C0' },
   preparando: { bg: '#FDEBD3', text: '#D35400' },
   pronto: { bg: '#E6F4EA', text: '#2E5A1E' },
+  cancelado: { bg: '#FDEDEC', text: '#C0392B' }, // ← adiciona essa linha
 };
 
 export const ItemRow = styled.View`

@@ -13,28 +13,17 @@ import { db } from '../../firebase/fireBaseCondig';
 
 const COLECAO_NOTIFICACOES = 'notificacoes';
 
-/**
- * Cria uma notificação pessoal (só um destinatário específico vê).
- */
-export async function criarNotificacaoPessoal({ destinatarioUid, tipo, titulo, mensagem, pedidoId }) {
-  const ref = doc(collection(db, COLECAO_NOTIFICACOES));
-  await setDoc(ref, {
-    destinatarioUid,
-    paraPerfis: [],
-    tipo,
-    titulo,
-    mensagem,
-    pedidoId: pedidoId || null,
-    lidaPor: [],
-    criadoEm: new Date().toISOString(),
-  });
-}
-
-/**
- * Cria uma notificação pra todo mundo que tiver um dos perfis informados
- * (ex: ['atendente', 'adm']) — usado pra avisos que interessam à equipe.
- */
-export async function criarNotificacaoPorPerfil({ paraPerfis, tipo, titulo, mensagem, pedidoId }) {
+export async function criarNotificacaoPorPerfil({
+  paraPerfis,
+  tipo,
+  titulo,
+  mensagem,
+  pedidoId,
+  imagens,
+  total,
+  clienteNome,
+  rota,
+}) {
   const ref = doc(collection(db, COLECAO_NOTIFICACOES));
   await setDoc(ref, {
     destinatarioUid: null,
@@ -43,15 +32,42 @@ export async function criarNotificacaoPorPerfil({ paraPerfis, tipo, titulo, mens
     titulo,
     mensagem,
     pedidoId: pedidoId || null,
+    imagens: imagens || [],
+    total: total ?? null,
+    clienteNome: clienteNome || null,
+    rota: rota || null,
     lidaPor: [],
     criadoEm: new Date().toISOString(),
   });
 }
 
-/**
- * Escuta em tempo real as notificações relevantes pro usuário logado —
- * combina as pessoais (por uid) com as do perfil dele (por cargo).
- */
+export async function criarNotificacaoPessoal({
+  destinatarioUid,
+  tipo,
+  titulo,
+  mensagem,
+  pedidoId,
+  imagem,
+  total,
+  rota,
+}) {
+  const ref = doc(collection(db, COLECAO_NOTIFICACOES));
+  await setDoc(ref, {
+    destinatarioUid,
+    paraPerfis: [],
+    tipo,
+    titulo,
+    mensagem,
+    pedidoId: pedidoId || null,
+    imagem: imagem || null,
+    total: total ?? null,
+    clienteNome: null,
+    rota: rota || null,
+    lidaPor: [],
+    criadoEm: new Date().toISOString(),
+  });
+}
+
 export function subscribeToNotificacoes(usuario, callback) {
   if (!usuario?.uid) return () => {};
 
@@ -93,9 +109,6 @@ export function subscribeToNotificacoes(usuario, callback) {
   };
 }
 
-/**
- * Marca uma notificação como lida pelo usuário atual.
- */
 export async function marcarNotificacaoComoLida(notifId, uid) {
   await updateDoc(doc(db, COLECAO_NOTIFICACOES, notifId), {
     lidaPor: arrayUnion(uid),

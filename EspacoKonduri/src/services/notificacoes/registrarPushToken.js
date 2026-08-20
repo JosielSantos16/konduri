@@ -1,18 +1,27 @@
-import * as Notifications from 'expo-notifications';
-import * as Device from 'expo-device';
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/fireBaseCondig';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-  }),
-});
+const rodandoNoExpoGo = Constants.executionEnvironment === 'storeClient';
 
 export async function registrarPushToken(usuarioUid) {
+  if (rodandoNoExpoGo) {
+    console.log('Notificação push desativada: só funciona em Development Build, não no Expo Go.');
+    return null;
+  }
+
+  const Notifications = await import('expo-notifications');
+  const Device = await import('expo-device');
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  });
+
   if (!Device.isDevice) {
     console.log('Notificações push só funcionam em aparelho físico, não em emulador.');
     return null;

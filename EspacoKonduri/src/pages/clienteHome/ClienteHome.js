@@ -4,13 +4,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "../../hooks/useAuth";
+import NotificacoesBell from "../../components/notificacoes/NotificacoesBell";
 import { useProdutos } from "../../contexts/ProdutosContext";
 import { useCart } from "../../hooks/useCart";
-import NavBarCliente from '../../components/cliente/navBar/NavBarCliente';
+import NavBarCliente from "../../components/cliente/navBar/NavBarCliente";
 import CardProd from "../../components/PDV/cardsProdutos/CardProdutos";
 import CartBar from "../../components/PDV/cartBar/CartBar";
-import CartReviewModal from "../../components/PDV/cartReview/cartReviewModal";
-import ObservacaoModal from '../../components/cliente/observacaoModal/ObservacaoModal';
+import ObservacaoModal from "../../components/cliente/observacaoModal/ObservacaoModal";
 import {
   Container,
   Header,
@@ -57,15 +57,16 @@ export default function ClienteHome() {
     return unsubscribe;
   }, []);
 
-  const quantidadeReservadaPorProduto = pedidosAtivosGeral.reduce((acc, pedido) => {
-    (pedido.itens || []).forEach((item) => {
-      acc[item.id] = (acc[item.id] || 0) + item.qty;
-    });
-    return acc;
-  }, {});
+  const quantidadeReservadaPorProduto = pedidosAtivosGeral.reduce(
+    (acc, pedido) => {
+      (pedido.itens || []).forEach((item) => {
+        acc[item.id] = (acc[item.id] || 0) + item.qty;
+      });
+      return acc;
+    },
+    {},
+  );
 
-  // Só produtos de categoria "produtos", com estoque (já descontando
-  // o que está reservado em pedidos ativos) maior que zero
   const produtosDisponiveis = produtos
     .filter((item) => item.category === "produtos")
     .map((item) => {
@@ -83,8 +84,6 @@ export default function ClienteHome() {
 
   const handleRefresh = async () => {
     setAtualizando(true);
-    // Produtos e pedidos já são tempo real (onSnapshot) — isso serve
-    // principalmente como feedback visual e reconexão em caso de instabilidade
     await new Promise((resolve) => setTimeout(resolve, 600));
     setAtualizando(false);
   };
@@ -128,7 +127,9 @@ export default function ClienteHome() {
   };
 
   const itensCarrinhoDetalhados = Object.entries(cart).map(([id, qty]) => {
-    const produto = produtosDisponiveis.find((p) => p.id === id) || produtos.find((p) => p.id === id);
+    const produto =
+      produtosDisponiveis.find((p) => p.id === id) ||
+      produtos.find((p) => p.id === id);
     return { ...produto, qty };
   });
 
@@ -137,6 +138,7 @@ export default function ClienteHome() {
       <Header>
         <HeaderTop>
           <Greeting>Olá, {primeiroNome}!</Greeting>
+             <NotificacoesBell />
         </HeaderTop>
         <Subtitle>O que você quer pedir hoje?</Subtitle>
 
@@ -187,22 +189,22 @@ export default function ClienteHome() {
       />
 
       <CartBar
-  totalItems={totalItems}
-  totalPrice={totalPrice}
-  onFinalize={handleEnviarPedido}
-  onReview={() => setModalRevisaoVisivel(true)}
-  onClear={clearCart}
-  finalizeLabel="ENVIAR PEDIDO"
-  observacoes={observacoes}
-  onPressObservacao={() => setObservacaoModalVisivel(true)}
-/>
+        totalItems={totalItems}
+        totalPrice={totalPrice}
+        onFinalize={handleEnviarPedido}
+        onReview={() => setModalRevisaoVisivel(true)}
+        onClear={clearCart}
+        finalizeLabel="ENVIAR PEDIDO"
+        observacoes={observacoes}
+        onPressObservacao={() => setObservacaoModalVisivel(true)}
+      />
 
       <ObservacaoModal
-  visible={observacaoModalVisivel}
-  onClose={() => setObservacaoModalVisivel(false)}
-  value={observacoes}
-  onChangeText={setObservacoes}
-/>
+        visible={observacaoModalVisivel}
+        onClose={() => setObservacaoModalVisivel(false)}
+        value={observacoes}
+        onChangeText={setObservacoes}
+      />
       <NavBarCliente />
     </Container>
   );

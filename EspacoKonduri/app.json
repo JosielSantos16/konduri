@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "EspacoKonduri",
-    "slug": "EspacoKonduri",
+    "slug": "konduri",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -23,7 +23,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.espacokonduri.konduri"
     },
     "web": {
       "output": "static",
@@ -43,11 +44,19 @@
           }
         }
       ],
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c8849f44-d914-47a0-b63d-8f2ee6b98ecc"
+      }
+    },
+    "owner": "espaco-konduri"
   }
 }

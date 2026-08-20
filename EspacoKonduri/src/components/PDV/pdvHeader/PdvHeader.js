@@ -1,21 +1,12 @@
-import React from 'react';
 import { Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { deslogarUsuario } from '../../../services/queries/usuariosQueries';
+import NotificacoesBell from '../../../components/notificacoes/NotificacoesBell';
 import {
   Header,
   UserInfo,
   UserName,
-  UserRole,
   HeaderRight,
-  StatusBadge,
-  StatusDot,
-  StatusText,
-  UserAvatar,
-  LogoutButton,
-  AvatarRow,
-  SummaryButton,
 } from './pdvHeaderStyle';
 
 export default function PdvHeader({ name, role, statusLabel, aberto, avatarUri }) {
@@ -39,14 +30,14 @@ export default function PdvHeader({ name, role, statusLabel, aberto, avatarUri }
     <Header>
       <UserInfo>
         <UserName>{name}</UserName>
-        <UserRole>{role}</UserRole>
       </UserInfo>
+       
       <HeaderRight>
-        <StatusBadge aberto={aberto}>
+        <NotificacoesBell />
+         {/* <StatusBadge aberto={aberto}>
           <StatusDot aberto={aberto} />
           <StatusText aberto={aberto}>{statusLabel}</StatusText>
-        </StatusBadge>
-        
+        </StatusBadge> */}
       </HeaderRight>
     </Header>
   );

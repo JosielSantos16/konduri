@@ -1,5 +1,6 @@
 import { doc, setDoc, onSnapshot, collection, query, where, getDocs} from 'firebase/firestore';
 import { db } from '../../firebase/fireBaseCondig';
+import { criarNotificacaoPessoal } from './notificacoesQueries';
 
 const COLECAO_COMISSOES = 'comissoes';
 
@@ -28,6 +29,13 @@ export async function salvarComissao({
     definidoPorUid,
     atualizadoEm: new Date().toISOString(),
   });
+
+  await criarNotificacaoPessoal({
+  destinatarioUid: responsavelUid,
+  tipo: 'comissao_definida',
+  titulo: 'Comissão definida',
+  mensagem: `Sua comissão de ${dataISO} foi definida em ${percentual}%.`,
+});
 
   return { id, valorComissao };
 }

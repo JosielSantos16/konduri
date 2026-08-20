@@ -1,53 +1,84 @@
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const PALAVRAS_PROIBIDAS = [
-  'piroca', 'buceta', 'caralho', 'porra', 'puta', 'putz', 'merda',
-  'cacete', 'foda', 'fdp', 'arrombado', 'desgraca', 'viado', 'corno',
-  'otario', 'idiota', 'burro', 'imbecil',
+  "piroca",
+  "buceta",
+  "caralho",
+  "porra",
+  "puta",
+  "putz",
+  "merda",
+  "cacete",
+  "foda",
+  "fdp",
+  "arrombado",
+  "desgraca",
+  "viado",
+  "corno",
+  "otario",
+  "idiota",
+  "burro",
+  "imbecil",
 ];
 
 const SENHAS_FRACAS_COMUNS = [
-  '12345678', '123456789', '87654321', 'password', 'senha123',
-  'qwertyui', 'abcdefgh', '11111111', '00000000', 'admin123',
+  "12345678",
+  "123456789",
+  "87654321",
+  "password",
+  "senha123",
+  "qwertyui",
+  "abcdefgh",
+  "11111111",
+  "00000000",
+  "admin123",
 ];
 
 const LEETSPEAK_MAP = {
-  '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't',
-  '@': 'a', '$': 's', '!': 'i',
+  0: "o",
+  1: "i",
+  3: "e",
+  4: "a",
+  5: "s",
+  7: "t",
+  "@": "a",
+  $: "s",
+  "!": "i",
 };
 
 function normalizarParaFiltro(texto) {
   let normalizado = texto
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
 
   normalizado = normalizado
-    .split('')
+    .split("")
     .map((char) => LEETSPEAK_MAP[char] || char)
-    .join('');
+    .join("");
 
-  normalizado = normalizado.replace(/[\s._\-]/g, '');
-  normalizado = normalizado.replace(/(.)\1+/g, '$1');
+  normalizado = normalizado.replace(/[\s._\-]/g, "");
+  normalizado = normalizado.replace(/(.)\1+/g, "$1");
 
   return normalizado;
 }
 
-const PALAVRAS_PROIBIDAS_NORMALIZADAS = PALAVRAS_PROIBIDAS.map(normalizarParaFiltro);
+const PALAVRAS_PROIBIDAS_NORMALIZADAS =
+  PALAVRAS_PROIBIDAS.map(normalizarParaFiltro);
 
 export function validateEmail(email) {
-  if (!email || !email.trim()) return 'Informe seu e-mail.';
-  if (!EMAIL_REGEX.test(email.trim())) return 'E-mail inválido.';
+  if (!email || !email.trim()) return "Informe seu e-mail.";
+  if (!EMAIL_REGEX.test(email.trim())) return "E-mail inválido.";
   return null;
 }
 
 export function validatePasswordRequired(senha) {
-  if (!senha) return 'Informe sua senha.';
+  if (!senha) return "Informe sua senha.";
   return null;
 }
 
 function isSequenciaNumerica(senha) {
-  const apenasNumeros = senha.replace(/\D/g, '');
+  const apenasNumeros = senha.replace(/\D/g, "");
   if (apenasNumeros.length < 4) return false;
 
   let crescente = true;
@@ -65,7 +96,7 @@ function isSequenciaNumerica(senha) {
 }
 
 export function getPasswordChecks(senha) {
-  const valor = senha || '';
+  const valor = senha || "";
 
   return {
     minLength: valor.length >= 8,
@@ -73,51 +104,58 @@ export function getPasswordChecks(senha) {
     hasUpper: /[A-Z]/.test(valor),
     hasNumber: /[0-9]/.test(valor),
     semSequenciaOuRepeticao:
-      valor.length > 0 && !isSequenciaNumerica(valor) && !/^(.)\1+$/.test(valor),
-    naoEhComum: valor.length > 0 && !SENHAS_FRACAS_COMUNS.includes(valor.toLowerCase()),
+      valor.length > 0 &&
+      !isSequenciaNumerica(valor) &&
+      !/^(.)\1+$/.test(valor),
+    naoEhComum:
+      valor.length > 0 && !SENHAS_FRACAS_COMUNS.includes(valor.toLowerCase()),
   };
 }
 
 export function validatePasswordStrength(senha) {
-  if (!senha) return 'Informe uma senha.';
+  if (!senha) return "Informe uma senha.";
 
   const checks = getPasswordChecks(senha);
 
-  if (!checks.minLength) return 'A senha precisa ter no mínimo 8 caracteres.';
-  if (!checks.hasLower) return 'A senha precisa ter pelo menos uma letra minúscula.';
-  if (!checks.hasUpper) return 'A senha precisa ter pelo menos uma letra maiúscula.';
-  if (!checks.hasNumber) return 'A senha precisa ter pelo menos um número.';
+  if (!checks.minLength) return "A senha precisa ter no mínimo 8 caracteres.";
+  if (!checks.hasLower)
+    return "A senha precisa ter pelo menos uma letra minúscula.";
+  if (!checks.hasUpper)
+    return "A senha precisa ter pelo menos uma letra maiúscula.";
+  if (!checks.hasNumber) return "A senha precisa ter pelo menos um número.";
   if (!checks.semSequenciaOuRepeticao) {
-    return 'Evite sequências ou repetições óbvias, como 12345678.';
+    return "Evite sequências ou repetições óbvias, como 12345678.";
   }
-  if (!checks.naoEhComum) return 'Essa senha é muito comum. Escolha uma mais segura.';
+  if (!checks.naoEhComum)
+    return "Essa senha é muito comum. Escolha uma mais segura.";
 
   return null;
 }
 
 export function validatePasswordConfirmacao(senha, confirmacao) {
-  if (!confirmacao) return 'Confirme sua senha.';
-  if (senha !== confirmacao) return 'As senhas não coincidem.';
+  if (!confirmacao) return "Confirme sua senha.";
+  if (senha !== confirmacao) return "As senhas não coincidem.";
   return null;
 }
 
 export function validateName(nome) {
-  if (!nome || !nome.trim()) return 'Informe seu nome.';
+  if (!nome || !nome.trim()) return "Informe seu nome.";
 
   const nomeLimpo = nome.trim();
 
-  if (nomeLimpo.length < 3) return 'O nome precisa ter no mínimo 3 caracteres.';
+  if (nomeLimpo.length < 3) return "O nome precisa ter no mínimo 3 caracteres.";
+  if (nomeLimpo.length > 60) return "O nome pode ter no máximo 60 caracteres."; // ← adiciona essa linha
 
   if (!/^[A-Za-zÀ-ÿ0-9\s'.\-_@$!]+$/.test(nomeLimpo)) {
-    return 'O nome contém caracteres não permitidos.';
+    return "O nome contém caracteres não permitidos.";
   }
 
   const nomeNormalizado = normalizarParaFiltro(nomeLimpo);
-  const contemPalavraProibida = PALAVRAS_PROIBIDAS_NORMALIZADAS.some((palavra) =>
-    nomeNormalizado.includes(palavra)
+  const contemPalavraProibida = PALAVRAS_PROIBIDAS_NORMALIZADAS.some(
+    (palavra) => nomeNormalizado.includes(palavra),
   );
 
-  if (contemPalavraProibida) return 'Esse nome contém termos não permitidos.';
+  if (contemPalavraProibida) return "Esse nome contém termos não permitidos.";
 
   return null;
 }

@@ -3,7 +3,7 @@ import { Alert, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  subscribeToPedidosAtivos,
+  subscribeToPedidosDoAtendente,
   atualizarStatusPedido,
   atualizarPagamentoPedido,
 } from '../../services/queries/pedidosQueries';
@@ -47,10 +47,9 @@ const STATUS_LABEL = {
   aceito: 'Aceito',
   preparando: 'Preparando',
   pronto: 'Pronto',
+  cancelado: 'Cancelado pelo cliente',
 };
 
-// Define qual é o próximo status e o texto do botão principal,
-// dependendo de onde o pedido está agora
 const PROXIMO_STATUS = {
   pendente: { status: 'aceito', label: 'Aceitar Pedido', icon: 'checkmark-circle-outline' },
   aceito: { status: 'preparando', label: 'Iniciar Preparo', icon: 'flame-outline' },
@@ -64,7 +63,7 @@ export default function Pedido() {
   const [processandoId, setProcessandoId] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = subscribeToPedidosAtivos(setPedidos);
+    const unsubscribe = subscribeToPedidosDoAtendente(setPedidos);
     return unsubscribe;
   }, []);
 
@@ -74,7 +73,7 @@ export default function Pedido() {
 
     setProcessandoId(pedido.id);
     try {
-      await atualizarStatusPedido(pedido.id, proximo.status);
+      await atualizarStatusPedido(pedido.id, proximo.status, pedido.clienteUid);
     } catch (erro) {
       console.error('Erro ao avançar status do pedido:', erro);
       Alert.alert('Erro', 'Não foi possível atualizar o pedido. Tente novamente.');
@@ -82,7 +81,6 @@ export default function Pedido() {
       setProcessandoId(null);
     }
   };
-
 
   const handleTogglePagamento = async (pedido) => {
     try {
@@ -94,7 +92,6 @@ export default function Pedido() {
   };
 
   const pedidosOrdenados = [...pedidos].sort((a, b) => {
-    // Pendentes primeiro (precisam de ação urgente), depois por horário
     if (a.status === 'pendente' && b.status !== 'pendente') return -1;
     if (b.status === 'pendente' && a.status !== 'pendente') return 1;
     return new Date(a.criadoEm) - new Date(b.criadoEm);
@@ -104,7 +101,7 @@ export default function Pedido() {
     <Container style={{ paddingTop: insets.top }}>
       <Header>
         <Title>Pedidos</Title>
-        <Subtitle>{pedidos.length} {pedidos.length === 1 ? 'pedido ativo' : 'pedidos ativos'}</Subtitle>
+        <Subtitle>{pedidos.length} {pedidos.length === 1 ? 'pedido' : 'pedidos'}</Subtitle>
       </Header>
 
       {pedidos.length === 0 ? (
@@ -123,7 +120,7 @@ export default function Pedido() {
               <PedidoCard key={pedido.id} status={pedido.status}>
                 <PedidoHeader>
                   <View>
-                    <ClienteNome>{pedido.clienteNome || 'Cliente'}</ClienteNome>
+                    <ClienteNome numberOfLines={1}>{pedido.clienteNome || 'Cliente'}</ClienteNome>
                     <PedidoHora>{formatHora(pedido.criadoEm)}</PedidoHora>
                   </View>
                   <StatusBadge status={pedido.status}>
@@ -161,28 +158,29 @@ export default function Pedido() {
                   <TotalValue>{formatPrice(pedido.total)}</TotalValue>
                 </TotalRow>
 
-                <PagamentoRow pago={pedido.pago} onPress={() => handleTogglePagamento(pedido)}>
-                  <Ionicons
-                    name={pedido.pago ? 'checkmark-circle' : 'time-outline'}
-                    size={16}
-                    color={pedido.pago ? '#2E5A1E' : '#C0392B'}
-                  />
-                  <PagamentoText pago={pedido.pago}>
-                    {pedido.pago ? 'Pago — toque para desmarcar' : 'Aguardando pagamento — toque para marcar como pago'}
-                  </PagamentoText>
-                </PagamentoRow>
+                {pedido.status !== 'cancelado' && (
+                  <PagamentoRow pago={pedido.pago} onPress={() => handleTogglePagamento(pedido)}>
+                    <Ionicons
+                      name={pedido.pago ? 'checkmark-circle' : 'time-outline'}
+                      size={16}
+                      color={pedido.pago ? '#2E5A1E' : '#C0392B'}
+                    />
+                    <PagamentoText pago={pedido.pago}>
+                      {pedido.pago ? 'Pago — toque para desmarcar' : 'Aguardando pagamento — toque para marcar como pago'}
+                    </PagamentoText>
+                  </PagamentoRow>
+                )}
 
-                <ActionsRow>
-
-                  {proximo && (
+                {proximo && (
+                  <ActionsRow>
                     <ActionButton onPress={() => handleAvancarStatus(pedido)} disabled={processando}>
                       <Ionicons name={proximo.icon} size={16} color="#FFFFFF" />
                       <ActionButtonText>
                         {processando ? 'Atualizando...' : proximo.label}
                       </ActionButtonText>
                     </ActionButton>
-                  )}
-                </ActionsRow>
+                  </ActionsRow>
+                )}
               </PedidoCard>
             );
           })}

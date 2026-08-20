@@ -15,7 +15,7 @@ export async function cadastrarUsuario({ nome, email, senha, perfil = 'cliente' 
   await setDoc(doc(db, 'usuarios', credenciais.user.uid), {
     nome,
     email,
-    perfil, // 'cliente' (padrão) | 'atendente' | 'adm' — definidos manualmente por você no Firestore
+    perfil, 
     criadoEm: new Date().toISOString(),
   });
 
@@ -45,4 +45,20 @@ export async function deslogarUsuario() {
 
 export async function enviarRecuperacaoSenha(email) {
   await sendPasswordResetEmail(auth, email);
+}
+
+export async function garantirUsuarioNoFirestore({ uid, nome, email }) {
+  const ref = doc(db, COLECAO_USUARIOS, uid);
+  const snapshot = await getDoc(ref);
+
+  if (!snapshot.exists()) {
+    await setDoc(ref, {
+      nome,
+      email,
+      perfil: 'cliente',
+      criadoEm: new Date().toISOString(),
+    });
+  }
+
+  return buscarPerfilUsuario(uid);
 }

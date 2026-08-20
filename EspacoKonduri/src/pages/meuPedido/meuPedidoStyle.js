@@ -174,3 +174,20 @@ export const ItemImagePlaceholder = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
+export const RefazerButton = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: #E67E22;
+  border-radius: 10px;
+  padding-vertical: 10px;
+  margin-top: 10px;
+`;
+
+export const RefazerButtonText = styled.Text`
+  font-size: 13px;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-left: 6px;
+`;

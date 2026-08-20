@@ -5,13 +5,10 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useProdutos } from "../../contexts/ProdutosContext";
 import { useCart } from "../../hooks/useCart";
-import {
-  buscarPedidoPorId,
-  atualizarItensPedido,
-  subscribeToPedidosAtivos,
-} from "../../services/queries/pedidosQueries";
 import CardProd from "../../components/PDV/cardsProdutos/CardProdutos";
 import CartBar from "../../components/PDV/cartBar/CartBar";
+import { criarNotificacaoPorPerfil } from "../../services/queries/notificacoesQueries";
+import { useAuth } from "../../hooks/useAuth";
 import CartReviewModal from "../../components/PDV/cartReview/cartReviewModal";
 import ObservacaoModal from "../../components/cliente/observacaoModal/ObservacaoModal";
 import {
@@ -25,11 +22,18 @@ import {
   LoadingContainer,
 } from "./editarPedidoStyle";
 
+import {
+  buscarPedidoPorId,
+  atualizarItensPedido,
+  subscribeToPedidosAtivos,
+} from "../../services/queries/pedidosQueries";
+
 export default function EditarPedido() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { pedidoId } = useLocalSearchParams();
   const { produtos } = useProdutos();
+  const { usuario } = useAuth();
 
   const [pedidoOriginal, setPedidoOriginal] = useState(null);
   const [carregando, setCarregando] = useState(true);
@@ -73,8 +77,6 @@ export default function EditarPedido() {
     if (pedidoId) carregar();
   }, [pedidoId]);
 
-  // Escuta os outros pedidos ativos (excluindo este que está sendo editado),
-  // pra calcular estoque disponível corretamente sem descontar duas vezes
   useEffect(() => {
     const unsubscribe = subscribeToPedidosAtivos((lista) => {
       setPedidosAtivosGeral(lista.filter((p) => p.id !== pedidoId));
@@ -129,6 +131,26 @@ export default function EditarPedido() {
         totalPrice,
         observacoes.trim(),
       );
+
+      const resumoItens = itens
+        .map((item) => `${item.qty}x ${item.title}`)
+        .join(", ");
+
+      await criarNotificacaoPorPerfil({
+        paraPerfis: ["atendente", "adm"],
+        tipo: "pedido_editado",
+        titulo: "Pedido editado pelo cliente",
+        mensagem: `${usuario?.nome}: ${resumoItens}`,
+        pedidoId,
+        imagens: itens
+          .slice(0, 3)
+          .map((i) => i.image)
+          .filter(Boolean),
+        total: totalPrice,
+        clienteNome: usuario?.nome,
+        rota: "/pedido",
+      });
+
       Alert.alert("Pedido atualizado!", "Suas alterações foram salvas.");
       router.back();
     } catch (erro) {
