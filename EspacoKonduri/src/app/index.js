@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
+import { auth } from '../firebase/fireBaseCondig';
 import { useAuth } from '../hooks/useAuth';
+import { getRotaPosLogin } from '../utils/rotaPosLogin';
 
 export default function Index() {
   const router = useRouter();
@@ -15,13 +17,7 @@ export default function Index() {
       return;
     }
 
-    if (usuario.perfil === 'adm') {
-      router.replace('/painel');
-    } else if (usuario.perfil === 'atendente') {
-      router.replace('/pdv');
-    } else {
-      router.replace('/cliente-home');
-    }
+    router.replace(getRotaPosLogin(usuario, auth.currentUser));
   }, [usuario, carregando]);
 
   return (

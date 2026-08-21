@@ -97,21 +97,6 @@ export const EnterButtonText = styled.Text`
   letter-spacing: 0.5px;
 `;
 
-export const CreateAccountButton = styled.TouchableOpacity`
-  background-color: #3D2C22;
-  border-radius: 12px;
-  height: 52px;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const CreateAccountButtonText = styled.Text`
-  font-size: 16px;
-  font-weight: bold;
-  color: #FFFFFF;
-  letter-spacing: 0.5px;
-`;
-
 export const ErrorText = styled.Text`
   font-size: 12px;
   color: #C0392B;

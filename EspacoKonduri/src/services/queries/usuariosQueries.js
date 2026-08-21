@@ -1,5 +1,6 @@
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase/fireBaseCondig';
+import { sendEmailVerification } from 'firebase/auth';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { signOut } from 'firebase/auth';
 import {
@@ -15,9 +16,11 @@ export async function cadastrarUsuario({ nome, email, senha, perfil = 'cliente' 
   await setDoc(doc(db, 'usuarios', credenciais.user.uid), {
     nome,
     email,
-    perfil, 
+    perfil,
     criadoEm: new Date().toISOString(),
   });
+
+  await sendEmailVerification(credenciais.user);
 
   return credenciais.user;
 }
@@ -61,4 +64,21 @@ export async function garantirUsuarioNoFirestore({ uid, nome, email }) {
   }
 
   return buscarPerfilUsuario(uid);
+
 }
+
+export async function atualizarPerfilUsuario(uid, { nome, foto }) {
+  const dados = {};
+  if (nome !== undefined) dados.nome = nome;
+  if (foto !== undefined) dados.foto = foto;
+
+  await updateDoc(doc(db, COLECAO_USUARIOS, uid), dados);
+}
+
+export async function reenviarEmailVerificacao() {
+  if (!auth.currentUser) {
+    throw new Error('Nenhum usuário logado.');
+  }
+  await sendEmailVerification(auth.currentUser);
+}
+
