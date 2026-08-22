@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "82774750723",
+    "project_id": "konduri-23eb1",
+    "storage_bucket": "konduri-23eb1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:82774750723:android:ddc297b36354da04b5c036",
+        "android_client_info": {
+          "package_name": "com.espacokonduri.konduri"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "82774750723-h7vtvhhnr5obd16q1j7qk8pob6eo4kjc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA_MztPX-FdPuqP-bIf2X9MdGQgInm0ac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "82774750723-h7vtvhhnr5obd16q1j7qk8pob6eo4kjc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

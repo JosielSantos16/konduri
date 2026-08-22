@@ -24,7 +24,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.espacokonduri.konduri"
+      "package": "com.espacokonduri.konduri",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "output": "static",
@@ -46,7 +47,8 @@
       ],
       "@react-native-community/datetimepicker",
       "expo-web-browser",
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true,

@@ -27,32 +27,49 @@ export const List = styled.ScrollView`
 `;
 
 const CORES_POR_TIPO = {
-  novo_pedido: { bg: '#E6F4EA', border: '#A9D8B8', bgLida: '#F5FAF6', borderLida: '#D4EDDA' },
-  pedido_cancelado: { bg: '#FDEDEC', border: '#F1A9A0', bgLida: '#FDF5F4', borderLida: '#F5D5D1' },
-  pedido_editado: { bg: '#E8F4FD', border: '#A9CDF1', bgLida: '#F5FAFE', borderLida: '#D4E7FA' }, // ← adiciona essa linha
+  novo_pedido: { accent: '#27AE60', bgLida: '#FFFFFF' },
+  pedido_cancelado: { accent: '#C0392B', bgLida: '#FFFFFF' },
+  pedido_editado: { accent: '#1A73C0', bgLida: '#FFFFFF' },
 };
 
 export const NotifItem = styled.TouchableOpacity`
-  background-color: ${(props) => {
-    const cor = CORES_POR_TIPO[props.tipo];
-    if (!cor) return props.lida ? '#FFFFFF' : '#FDF3E7';
-    return props.lida ? cor.bgLida : cor.bg;
-  }};
+  flex-direction: row;
+  align-items: stretch;
+  background-color: #FFFFFF;
   border-radius: 12px;
-  padding: 14px 16px;
   margin-bottom: 10px;
   border-width: 1px;
-  border-color: ${(props) => {
+  border-color: #E6DFD5;
+  overflow: hidden;
+  opacity: ${(props) => (props.lida ? 0.55 : 1)};
+`;
+
+export const NotifAccentBar = styled.View`
+  width: 4px;
+  background-color: ${(props) => {
     const cor = CORES_POR_TIPO[props.tipo];
-    if (!cor) return props.lida ? '#E6DFD5' : '#F0D9A0';
-    return props.lida ? cor.borderLida : cor.border;
+    return cor ? cor.accent : '#D6CFC4';
   }};
+  opacity: ${(props) => (props.lida ? 0.35 : 1)};
+`;
+
+export const NotifContent = styled.View`
+  flex: 1;
+  padding: 14px 16px;
+`;
+
+export const UnreadDot = styled.View`
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #E67E22;
+  margin-left: 8px;
 `;
 
 export const NotifTitulo = styled.Text`
   font-size: 14px;
-  font-weight: bold;
-  color: #3D2C22;
+  font-weight: ${(props) => (props.lida ? '600' : 'bold')};
+  color: ${(props) => (props.lida ? '#7A6555' : '#3D2C22')};
   margin-bottom: 3px;
 `;
 
@@ -142,4 +159,26 @@ export const StackedImage = styled.Image`
   border-width: 2px;
   border-color: #FFFFFF;
   position: absolute;
+`;
+
+export const HeaderRow = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px 10px 20px;
+`;
+
+export const HeaderLeftGroup = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const ClearAllButton = styled.TouchableOpacity`
+  padding: 6px 10px;
+`;
+
+export const ClearAllButtonText = styled.Text`
+  font-size: 13px;
+  font-weight: bold;
+  color: #C0392B;
 `;

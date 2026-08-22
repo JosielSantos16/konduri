@@ -1,6 +1,7 @@
-import React from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { formatPrice } from '../../../utils/formatPrice';
+import React from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { formatPrice } from "../../../utils/formatPrice";
+
 import {
   ProductCard,
   ProductImage,
@@ -17,17 +18,25 @@ import {
   EsgotadoText,
   DestaqueBadge,
   DestaqueText,
-} from './cardStyle';
+} from "./cardStyle";
 
 const HIT_SLOP = { top: 8, bottom: 8, left: 8, right: 8 };
 
-export default function CardProd({ item, qty, onIncrease, onDecrease, destaque }) {
+export default function CardProd({
+  item,
+  qty,
+  onIncrease,
+  onDecrease,
+  destaque,
+}) {
   const estoqueDisponivel = item.estoque ?? 0;
   const limiteBaixo = item.limiteEstoqueBaixo ?? 5;
   const semEstoque = estoqueDisponivel <= 0;
   const estoqueBaixo = !semEstoque && estoqueDisponivel <= limiteBaixo;
   const atingiuLimite = qty >= estoqueDisponivel;
   const selecionado = qty > 0;
+
+  const restante = Math.max(0, estoqueDisponivel - qty);
 
   const handlePressCard = () => {
     if (semEstoque || atingiuLimite) return;
@@ -55,7 +64,7 @@ export default function CardProd({ item, qty, onIncrease, onDecrease, destaque }
         <ProductTitle numberOfLines={1}>{item.title}</ProductTitle>
 
         <StockText semEstoque={semEstoque} estoqueBaixo={estoqueBaixo}>
-          {semEstoque ? 'Sem estoque' : `Restam: ${estoqueDisponivel} un`}
+          {semEstoque ? "Sem estoque" : `Restam: ${restante} un`}
         </StockText>
 
         <ProductFooter>
@@ -71,12 +80,20 @@ export default function CardProd({ item, qty, onIncrease, onDecrease, destaque }
                 <Ionicons name="remove" size={14} color="#D35400" />
               </QtyButton>
               <QtyText>{qty}</QtyText>
-              <QtyButton onPress={onIncrease} disabled={atingiuLimite} hitSlop={HIT_SLOP}>
-                <Ionicons name="add" size={14} color={atingiuLimite ? '#C9BBA8' : '#D35400'} />
+              <QtyButton
+                onPress={onIncrease}
+                disabled={atingiuLimite}
+                hitSlop={HIT_SLOP}
+              >
+                <Ionicons
+                  name="add"
+                  size={14}
+                  color={atingiuLimite ? "#C9BBA8" : "#D35400"}
+                />
               </QtyButton>
             </QtyControls>
           ) : (
-            <AddButton hitSlop={HIT_SLOP} pointerEvents="none">
+            <AddButton onPress={handlePressCard} hitSlop={HIT_SLOP}>
               <Ionicons name="add" size={16} color="#D35400" />
             </AddButton>
           )}

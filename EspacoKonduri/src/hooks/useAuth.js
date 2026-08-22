@@ -16,9 +16,7 @@ export function useAuth() {
         return;
       }
 
-      if (usuario?.uid) {
-        registrarPushToken(usuario.uid);
-      }
+      registrarPushToken(firebaseUser.uid);
 
       try {
         const perfil = await buscarPerfilUsuario(firebaseUser.uid);

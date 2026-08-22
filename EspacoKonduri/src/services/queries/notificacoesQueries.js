@@ -13,17 +13,26 @@ import { db } from '../../firebase/fireBaseCondig';
 
 const COLECAO_NOTIFICACOES = 'notificacoes';
 
-export async function criarNotificacaoPorPerfil({
-  paraPerfis,
-  tipo,
-  titulo,
-  mensagem,
-  pedidoId,
-  imagens,
-  total,
-  clienteNome,
-  rota,
-}) {
+export async function criarNotificacaoPessoal({ destinatarioUid, tipo, titulo, mensagem, pedidoId, imagens, total, rota }) {
+  const ref = doc(collection(db, COLECAO_NOTIFICACOES));
+  await setDoc(ref, {
+    destinatarioUid,
+    paraPerfis: [],
+    tipo,
+    titulo,
+    mensagem,
+    pedidoId: pedidoId || null,
+    imagens: imagens || [],
+    total: total ?? null,
+    clienteNome: null,
+    rota: rota || null,
+    lidaPor: [],
+    ocultoPara: [], // ← adiciona essa linha
+    criadoEm: new Date().toISOString(),
+  });
+}
+
+export async function criarNotificacaoPorPerfil({ paraPerfis, tipo, titulo, mensagem, pedidoId, imagens, total, clienteNome, rota }) {
   const ref = doc(collection(db, COLECAO_NOTIFICACOES));
   await setDoc(ref, {
     destinatarioUid: null,
@@ -37,33 +46,7 @@ export async function criarNotificacaoPorPerfil({
     clienteNome: clienteNome || null,
     rota: rota || null,
     lidaPor: [],
-    criadoEm: new Date().toISOString(),
-  });
-}
-
-export async function criarNotificacaoPessoal({
-  destinatarioUid,
-  tipo,
-  titulo,
-  mensagem,
-  pedidoId,
-  imagem,
-  total,
-  rota,
-}) {
-  const ref = doc(collection(db, COLECAO_NOTIFICACOES));
-  await setDoc(ref, {
-    destinatarioUid,
-    paraPerfis: [],
-    tipo,
-    titulo,
-    mensagem,
-    pedidoId: pedidoId || null,
-    imagem: imagem || null,
-    total: total ?? null,
-    clienteNome: null,
-    rota: rota || null,
-    lidaPor: [],
+    ocultoPara: [], // ← adiciona essa linha
     criadoEm: new Date().toISOString(),
   });
 }
@@ -75,9 +58,9 @@ export function subscribeToNotificacoes(usuario, callback) {
   let porPerfil = [];
 
   const emitir = () => {
-    const combinadas = [...pessoais, ...porPerfil].sort(
-      (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)
-    );
+    const combinadas = [...pessoais, ...porPerfil]
+      .filter((n) => !(n.ocultoPara || []).includes(usuario.uid)) // ← filtra ocultadas
+      .sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm));
     callback(combinadas);
   };
 
@@ -113,4 +96,18 @@ export async function marcarNotificacaoComoLida(notifId, uid) {
   await updateDoc(doc(db, COLECAO_NOTIFICACOES, notifId), {
     lidaPor: arrayUnion(uid),
   });
+}
+
+export async function ocultarNotificacao(notifId, uid) {
+  await updateDoc(doc(db, COLECAO_NOTIFICACOES, notifId), {
+    ocultoPara: arrayUnion(uid),
+  });
+}
+
+export async function ocultarTodasNotificacoes(notificacoesIds, uid) {
+  await Promise.all(
+    notificacoesIds.map((id) =>
+      updateDoc(doc(db, COLECAO_NOTIFICACOES, id), { ocultoPara: arrayUnion(uid) })
+    )
+  );
 }
