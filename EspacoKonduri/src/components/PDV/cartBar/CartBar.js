@@ -56,7 +56,7 @@ export default function CartBar({
         <ObservacaoRow onPress={onPressObservacao}>
           <Ionicons name="chatbubble-ellipses-outline" size={16} color="#8C7355" />
           <ObservacaoText temTexto={!!observacoes} numberOfLines={1}>
-            {observacoes ? observacoes : 'Adicionar observação (opcional)'}
+            {observacoes ? observacoes : 'Escrever mensagem (opcional)'}
           </ObservacaoText>
           <Ionicons name="chevron-forward" size={14} color="#A99B8F" />
         </ObservacaoRow>

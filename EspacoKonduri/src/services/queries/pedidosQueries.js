@@ -1,4 +1,6 @@
 import { db } from "../../firebase/fireBaseCondig";
+import { deleteDoc } from 'firebase/firestore';
+import { arrayUnion } from 'firebase/firestore';
 import {
   collection,
   doc,
@@ -18,39 +20,41 @@ import {
 
 const COLECAO_PEDIDOS = "pedidos";
 
-export async function criarPedido({
-  clienteUid,
-  clienteNome,
-  itens,
-  total,
-  observacoes,
-}) {
+export async function ocultarPedido(pedidoId, uid) {
+  await updateDoc(doc(db, COLECAO_PEDIDOS, pedidoId), {
+    ocultoPara: arrayUnion(uid),
+  });
+}
+
+export async function criarPedido({ clienteUid, clienteNome, clienteFoto, itens, total, observacoes }) {
   const pedidoRef = doc(collection(db, COLECAO_PEDIDOS));
 
   await setDoc(pedidoRef, {
     clienteUid,
     clienteNome,
+    clienteFoto: clienteFoto || null, // ← adiciona essa linha
     itens,
     total,
-    observacoes: observacoes || "",
-    status: "pendente",
+    observacoes: observacoes || '',
+    status: 'pendente',
     pago: false,
     criadoEm: new Date().toISOString(),
   });
 
+  const mensagemComObs = observacoes
+    ? `${clienteNome}: ${formatarResumoItens(itens)} — "${observacoes}"`
+    : `${clienteNome}: ${formatarResumoItens(itens)}`;
+
   await criarNotificacaoPorPerfil({
-    paraPerfis: ["atendente", "adm"],
-    tipo: "novo_pedido",
-    titulo: "Novo pedido recebido",
-    mensagem: `${clienteNome}: ${formatarResumoItens(itens)}`,
+    paraPerfis: ['atendente', 'adm'],
+    tipo: 'novo_pedido',
+    titulo: 'Novo pedido recebido',
+    mensagem: mensagemComObs,
     pedidoId: pedidoRef.id,
-    imagens: itens
-      .slice(0, 3)
-      .map((i) => i.image)
-      .filter(Boolean), 
+    imagens: itens.slice(0, 3).map((i) => i.image).filter(Boolean),
     total: total,
     clienteNome: clienteNome,
-    rota: "/pedido",
+    rota: '/pedido',
   });
 
   return { id: pedidoRef.id };
@@ -78,21 +82,6 @@ export function subscribeToPedidosAtivos(callback) {
   });
 }
 
-export function subscribeToPedidosDoCliente(clienteUid, callback) {
-  const q = query(
-    collection(db, COLECAO_PEDIDOS),
-    where("clienteUid", "==", clienteUid),
-    orderBy("criadoEm", "desc"),
-  );
-
-  return onSnapshot(q, (snapshot) => {
-    const pedidos = snapshot.docs.map((docSnap) => ({
-      id: docSnap.id,
-      ...docSnap.data(),
-    }));
-    callback(pedidos);
-  });
-}
 
 export async function atualizarStatusPedido(pedidoId, novoStatus, clienteUid) {
   await updateDoc(doc(db, COLECAO_PEDIDOS, pedidoId), {
@@ -155,24 +144,32 @@ function formatarResumoItens(itens) {
   return `${linhas.slice(0, 2).join(", ")} e mais ${linhas.length - 2}`;
 }
 
-export function subscribeToPedidosDoAtendente(callback) {
+export function subscribeToPedidosDoCliente(clienteUid, callback) {
   const q = query(
     collection(db, COLECAO_PEDIDOS),
-    where("status", "in", [
-      "pendente",
-      "aceito",
-      "preparando",
-      "pronto",
-      "cancelado",
-    ]),
-    orderBy("criadoEm", "asc"),
+    where('clienteUid', '==', clienteUid),
+    orderBy('criadoEm', 'desc')
   );
 
   return onSnapshot(q, (snapshot) => {
-    const pedidos = snapshot.docs.map((docSnap) => ({
-      id: docSnap.id,
-      ...docSnap.data(),
-    }));
+    const pedidos = snapshot.docs
+      .map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }))
+      .filter((p) => !(p.ocultoPara || []).includes(clienteUid)); // ← filtra ocultos
+    callback(pedidos);
+  });
+}
+
+export function subscribeToPedidosDoAtendente(callback, uidAtendente) {
+  const q = query(
+    collection(db, COLECAO_PEDIDOS),
+    where('status', 'in', ['pendente', 'aceito', 'preparando', 'pronto', 'cancelado']),
+    orderBy('criadoEm', 'asc')
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    const pedidos = snapshot.docs
+      .map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }))
+      .filter((p) => !uidAtendente || !(p.ocultoPara || []).includes(uidAtendente));
     callback(pedidos);
   });
 }

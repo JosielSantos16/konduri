@@ -1,13 +1,14 @@
-import React from "react";
-import { Alert } from "react-native";
+import React, { useState } from "react";
+import { RefreshControl } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { formatPrice } from "../../utils/formatPrice";
 import { getSaudacaoData } from "../../utils/formatDateTime";
 import { useVendas } from "../../contexts/VendasContext";
+import { useProdutos } from "../../contexts/ProdutosContext";
 import { useAuth } from "../../hooks/useAuth";
-import { deslogarUsuario } from "../../services/queries/usuariosQueries";
+import NotificacoesBell from "../../components/notificacoes/NotificacoesBell";
 import {
   Container,
   ScrollContainer,
@@ -16,9 +17,8 @@ import {
   GreetingTitle,
   GreetingSubtitle,
   HeaderActions,
-  NotificationButton,
-  NotificationBadgeDot,
   UserAvatar,
+  UserAvatarImage,
   MainRevenueCard,
   RevenueCardHeader,
   RevenueTitle,
@@ -27,6 +27,11 @@ import {
   StatCard,
   StatLabel,
   StatValue,
+  LowStockBanner,
+  LowStockIconCircle,
+  LowStockTextGroup,
+  LowStockTitle,
+  LowStockSubtitle,
   SectionHeader,
   SectionTitle,
   SectionLink,
@@ -37,6 +42,8 @@ import {
   RankInfo,
   RankItemTitle,
   RankItemSubtitle,
+  RankImage,
+  RankImagePlaceholder,
 } from "./painelStyles";
 import NavBar from "../../components/painel/navBar/NavBar";
 
@@ -47,32 +54,38 @@ export default function Painel() {
   const insets = useSafeAreaInsets();
   const { usuario } = useAuth();
   const { faturamentoDia, totalPix, totalDinheiro, maisVendidos } = useVendas();
+  const { produtos } = useProdutos();
+  const [atualizando, setAtualizando] = useState(false);
 
   const top3 = maisVendidos.slice(0, 3);
+  const primeiroNome = usuario?.nome ? usuario.nome.split(" ")[0] : "Admin";
 
-  const primeiroNome = usuario?.nome ? usuario.nome.split(' ')[0] : 'Admin';
+  const produtosComEstoqueBaixo = produtos.filter((produto) => {
+    if (produto.category !== "produtos") return false;
+    const estoque = produto.estoque ?? 0;
+    const limite = produto.limiteEstoqueBaixo ?? 5;
+    return estoque <= limite;
+  });
 
-  const handleSair = () => {
-    Alert.alert(
-      'Sair da conta',
-      'Deseja realmente sair?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Sair',
-          style: 'destructive',
-          onPress: async () => {
-            await deslogarUsuario();
-            router.replace('/login');
-          },
-        },
-      ]
-    );
+  const handleRefresh = async () => {
+    setAtualizando(true);
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    setAtualizando(false);
   };
 
   return (
     <Container style={{ paddingTop: insets.top }}>
-      <ScrollContainer showsVerticalScrollIndicator={false}>
+      <ScrollContainer
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={atualizando}
+            onRefresh={handleRefresh}
+            colors={["#F39C12"]}
+            tintColor="#F39C12"
+          />
+        }
+      >
         <Header>
           <GreetingContainer>
             <GreetingTitle>Olá, {primeiroNome}!</GreetingTitle>
@@ -80,12 +93,16 @@ export default function Painel() {
           </GreetingContainer>
 
           <HeaderActions>
-            <NotificationButton onPress={() => alert("Sem novas notificações")}>
-              <Ionicons name="notifications-outline" size={20} color="#3D2C22" />
-              <NotificationBadgeDot />
-            </NotificationButton>
-            <UserAvatar onPress={handleSair}>
-              <Ionicons name="log-out-outline" size={20} color="#C0392B" />
+            <NotificacoesBell />
+            <UserAvatar onPress={() => router.push("/perfil-admin")}>
+              {usuario?.foto ? (
+                <UserAvatarImage
+                  source={{ uri: usuario.foto }}
+                  resizeMode="cover"
+                />
+              ) : (
+                <Ionicons name="person-outline" size={20} color="#3D2C22" />
+              )}
             </UserAvatar>
           </HeaderActions>
         </Header>
@@ -106,31 +123,69 @@ export default function Painel() {
 
           <StatCard bg="#E9F7EF">
             <StatLabel color="#27AE60">TOTAL EM DINHEIRO</StatLabel>
-            <StatValue valueColor="#27AE60">{formatPrice(totalDinheiro)}</StatValue>
+            <StatValue valueColor="#27AE60">
+              {formatPrice(totalDinheiro)}
+            </StatValue>
           </StatCard>
         </StatsRow>
 
+        {produtosComEstoqueBaixo.length > 0 && (
+          <LowStockBanner onPress={() => router.push("/controle")}>
+            <LowStockIconCircle>
+              <Ionicons name="alert-circle-outline" size={20} color="#B85D00" />
+            </LowStockIconCircle>
+            <LowStockTextGroup>
+              <LowStockTitle>
+                {produtosComEstoqueBaixo.length}{" "}
+                {produtosComEstoqueBaixo.length === 1
+                  ? "produto com estoque baixo"
+                  : "produtos com estoque baixo"}
+              </LowStockTitle>
+              <LowStockSubtitle>
+                Toque para ver o controle de estoque
+              </LowStockSubtitle>
+            </LowStockTextGroup>
+            <Ionicons name="chevron-forward" size={18} color="#B85D00" />
+          </LowStockBanner>
+        )}
+
         <SectionHeader>
           <SectionTitle>Mais Vendidos Hoje</SectionTitle>
-          <SectionLink onPress={() => alert("Abrindo lista completa de vendas...")}>
+          <SectionLink onPress={() => router.push("/vendas")}>
             Ver Lista Completa
           </SectionLink>
         </SectionHeader>
 
         {top3.length === 0 ? (
           <RankingCard style={{ marginBottom: 30 }}>
-            <RankItemSubtitle>Nenhuma venda registrada hoje ainda.</RankItemSubtitle>
+            <RankItemSubtitle>
+              Nenhuma venda registrada hoje ainda.
+            </RankItemSubtitle>
           </RankingCard>
         ) : (
           top3.map((produto, index) => (
             <RankingCard
               key={produto.title}
-              style={index === top3.length - 1 ? { marginBottom: 30 } : undefined}
+              style={
+                index === top3.length - 1 ? { marginBottom: 30 } : undefined
+              }
             >
               <RankingLeft>
                 <RankBadge style={{ backgroundColor: RANK_COLORS[index] }}>
                   <RankBadgeText>{index + 1}</RankBadgeText>
                 </RankBadge>
+
+                {produto.image ? (
+                  <RankImage
+                    source={{ uri: produto.image }}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <RankImagePlaceholder>
+                    <Ionicons name="cube-outline" size={18} color="#C9BBA8" />
+                  </RankImagePlaceholder>
+                )}
+
                 <RankInfo>
                   <RankItemTitle>{produto.title}</RankItemTitle>
                   <RankItemSubtitle>{produto.qty} unidades</RankItemSubtitle>
@@ -141,7 +196,7 @@ export default function Painel() {
           ))
         )}
       </ScrollContainer>
-      <NavBar/>
+      <NavBar />
     </Container>
   );
 }

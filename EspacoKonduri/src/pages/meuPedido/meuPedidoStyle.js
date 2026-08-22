@@ -110,6 +110,8 @@ export const TotalValue = styled.Text`
 `;
 
 export const EmptyState = styled.View`
+  flex: 1;
+  justify-content: center;
   align-items: center;
   padding: 60px 20px;
 `;
@@ -190,4 +192,37 @@ export const RefazerButtonText = styled.Text`
   font-weight: bold;
   color: #FFFFFF;
   margin-left: 6px;
+`;
+
+export const SwipeDeleteContainer = styled.View`
+  background-color: #C0392B;
+  border-radius: 16px;
+  justify-content: center;
+  align-items: flex-end;
+  padding-right: 24px;
+  margin-bottom: 14px;
+`;
+
+export const SwipeDeleteText = styled.Text`
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 13px;
+  margin-top: 4px;
+`;
+
+export const HeaderRow = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px 10px 20px;
+`;
+
+export const ClearAllButton = styled.TouchableOpacity`
+  padding: 6px 10px;
+`;
+
+export const ClearAllButtonText = styled.Text`
+  font-size: 13px;
+  font-weight: bold;
+  color: #C0392B;
 `;

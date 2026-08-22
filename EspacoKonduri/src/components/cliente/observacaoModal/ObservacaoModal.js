@@ -17,7 +17,7 @@ export default function ObservacaoModal({ visible, onClose, value, onChangeText 
       <Overlay>
         <Content>
           <Header>
-            <Title>Alguma observação?</Title>
+            <Title>Alguma mensagem?</Title>
             <Ionicons name="close" size={22} color="#3D2C22" onPress={onClose} />
           </Header>
 

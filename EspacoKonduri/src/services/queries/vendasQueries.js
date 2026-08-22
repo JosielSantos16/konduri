@@ -1,5 +1,6 @@
 import { paraDataISOLocal } from '../../utils/dataLocal';
-
+import { criarNotificacaoPorPerfil } from '../../services/queries/notificacoesQueries'; // ajusta o caminho se necessário
+import { formatPrice } from '../../utils/formatPrice';
 import {
   collection,
   doc,
@@ -41,6 +42,20 @@ export async function registrarVendaFirestore({
 
   await setDoc(vendaRef, venda);
 
+  const resumoItens = (itens || [])
+    .map((item) => `${item.qty}x ${item.title}`)
+    .join(', ');
+
+  await criarNotificacaoPorPerfil({
+    paraPerfis: ['adm'],
+    tipo: 'venda_realizada',
+    titulo: 'Venda realizada',
+    mensagem: `${responsavelNome}: ${resumoItens} — ${formatPrice(total)}`,
+    imagens: (itens || []).slice(0, 3).map((i) => i.image).filter(Boolean),
+    total,
+    rota: '/vendas',
+  });
+
   return { id: vendaRef.id, ...venda };
 }
 
@@ -70,14 +85,9 @@ export function subscribeToVendasPorData(dataISO, callback) {
   });
 }
 
-/**
- * Busca quais dias, dentro de um mês específico, tiveram pelo menos
- * uma venda registrada — usado para marcar bolinhas no calendário.
- * anoMes no formato "2026-08".
- */
 export async function buscarDiasComVendasNoMes(anoMes) {
   const inicio = `${anoMes}-01`;
-  const fim = `${anoMes}-31`; // comparação de string funciona bem com YYYY-MM-DD
+  const fim = `${anoMes}-31`; 
 
   const q = query(
     collection(db, COLECAO_VENDAS),

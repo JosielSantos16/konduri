@@ -36,29 +36,6 @@ export const HeaderActions = styled.View`
   align-items: center;
 `;
 
-export const NotificationButton = styled.TouchableOpacity`
-  width: 42px;
-  height: 42px;
-  border-radius: 21px;
-  background-color: #FFFFFF;
-  justify-content: center;
-  align-items: center;
-  margin-right: 12px;
-  border-width: 1px;
-  border-color: #E6DFD5;
-  elevation: 1;
-`;
-
-export const NotificationBadgeDot = styled.View`
-  position: absolute;
-  top: 10px;
-  right: 11px;
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  background-color: #E74C3C;
-`;
-
 export const UserAvatar = styled.TouchableOpacity`
   width: 42px;
   height: 42px;
@@ -222,4 +199,64 @@ export const NavText = styled.Text`
   font-weight: bold;
   color: ${props => (props.active ? '#E67E22' : '#8C7355')};
   margin-top: 4px;
+`;
+
+export const LowStockBanner = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  background-color: #FDF3E7;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  border-width: 1px;
+  border-color: #F0D9A0;
+`;
+
+export const LowStockIconCircle = styled.View`
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: #FBD9A0;
+  justify-content: center;
+  align-items: center;
+  margin-right: 12px;
+`;
+
+export const LowStockTextGroup = styled.View`
+  flex: 1;
+`;
+
+export const LowStockTitle = styled.Text`
+  font-size: 13px;
+  font-weight: bold;
+  color: #B85D00;
+`;
+
+export const LowStockSubtitle = styled.Text`
+  font-size: 12px;
+  color: #8C5A2E;
+  margin-top: 2px;
+`;
+
+export const UserAvatarImage = styled.Image`
+  width: 42px;
+  height: 42px;
+  border-radius: 21px;
+`;
+
+export const RankImage = styled.Image`
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  margin-right: 12px;
+`;
+
+export const RankImagePlaceholder = styled.View`
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background-color: #F0EAE1;
+  justify-content: center;
+  align-items: center;
+  margin-right: 12px;
 `;

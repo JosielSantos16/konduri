@@ -10,6 +10,8 @@ import {
   arrayUnion,
 } from 'firebase/firestore';
 import { db } from '../../firebase/fireBaseCondig';
+import { enviarPushExpo } from '../notificacoes/enviarPushExpo';
+import { buscarPushTokenPorUid, buscarPushTokensPorPerfis } from './usuariosQueries';
 
 const COLECAO_NOTIFICACOES = 'notificacoes';
 
@@ -27,9 +29,19 @@ export async function criarNotificacaoPessoal({ destinatarioUid, tipo, titulo, m
     clienteNome: null,
     rota: rota || null,
     lidaPor: [],
-    ocultoPara: [], // ← adiciona essa linha
+    ocultoPara: [],
     criadoEm: new Date().toISOString(),
   });
+
+  const token = await buscarPushTokenPorUid(destinatarioUid);
+  if (token) {
+    await enviarPushExpo({
+      pushToken: token,
+      titulo,
+      mensagem,
+      dados: { rota },
+    });
+  }
 }
 
 export async function criarNotificacaoPorPerfil({ paraPerfis, tipo, titulo, mensagem, pedidoId, imagens, total, clienteNome, rota }) {
@@ -46,9 +58,21 @@ export async function criarNotificacaoPorPerfil({ paraPerfis, tipo, titulo, mens
     clienteNome: clienteNome || null,
     rota: rota || null,
     lidaPor: [],
-    ocultoPara: [], // ← adiciona essa linha
+    ocultoPara: [],
     criadoEm: new Date().toISOString(),
   });
+
+  const tokens = await buscarPushTokensPorPerfis(paraPerfis);
+  await Promise.all(
+    tokens.map((token) =>
+      enviarPushExpo({
+        pushToken: token,
+        titulo,
+        mensagem,
+        dados: { rota },
+      })
+    )
+  );
 }
 
 export function subscribeToNotificacoes(usuario, callback) {

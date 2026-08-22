@@ -217,3 +217,51 @@ export const EmptySubtitle = styled.Text`
   margin-top: 8px;
   text-align: center;
 `;
+
+export const SwipeDeleteContainer = styled.View`
+  background-color: #C0392B;
+  border-radius: 16px;
+  justify-content: center;
+  align-items: flex-end;
+  padding-right: 24px;
+  margin-bottom: 14px;
+`;
+
+export const SwipeDeleteText = styled.Text`
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 13px;
+  margin-top: 4px;
+`;
+
+export const ClearAllButton = styled.TouchableOpacity`
+  padding: 6px 10px;
+`;
+
+export const ClearAllButtonText = styled.Text`
+  font-size: 13px;
+  font-weight: bold;
+  color: #C0392B;
+`;
+
+export const ClienteAvatar = styled.Image`
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  margin-right: 8px;
+`;
+
+export const ClienteAvatarPlaceholder = styled.View`
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  background-color: #F0EAE1;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+`;
+
+export const ClienteInfoRow = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;

@@ -12,7 +12,7 @@ import {
   excluirConta,
 } from "../../services/queries/usuariosQueries";
 import { uploadUserPhoto } from "../../services/queries/storageQueries";
-import NavBarAtendente from "../../components/PDV/navBar/navBarAtendente";
+import NavBar from "../../components/painel/navBar/NavBar";
 import FotoAmpliadaModal from "../../components/shared/FotoAmpliadaModal";
 import {
   Container,
@@ -28,10 +28,16 @@ import {
   InfoTextGroup,
   InfoLabel,
   InfoValue,
+  ToggleRow,
+  ToggleTextGroup,
+  ToggleTitle,
+  ToggleSubtitle,
   EditButton,
   EditButtonText,
   LogoutButton,
   LogoutButtonText,
+  DangerButton,
+  DangerButtonText,
   ModalOverlay,
   ModalContent,
   ModalHeader,
@@ -41,15 +47,9 @@ import {
   ModalInput,
   ModalSaveButton,
   ModalSaveButtonText,
-  ToggleRow,
-  ToggleTextGroup,
-  ToggleTitle,
-  ToggleSubtitle,
-  DangerButton,
-  DangerButtonText,
-} from "./perfilStyle";
+} from "./perfilAdminStyle";
 
-export default function Perfil() {
+export default function PerfilAdmin() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { usuario, refetchUsuario } = useAuth();
@@ -69,8 +69,13 @@ export default function Perfil() {
   const [salvando, setSalvando] = useState(false);
   const [excluindo, setExcluindo] = useState(false);
 
-  const cargoExibido = usuario?.perfil === "adm" ? "Administrador" : "PDV Operacional";
   const notificacoesAtivadas = usuario?.notificacoesAtivadas !== false;
+
+  const handleRefresh = async () => {
+    setAtualizando(true);
+    await refetchUsuario();
+    setAtualizando(false);
+  };
 
   const handleSair = () => {
     Alert.alert("Sair da conta", "Deseja realmente sair?", [
@@ -84,12 +89,6 @@ export default function Perfil() {
         },
       },
     ]);
-  };
-
-  const handleRefresh = async () => {
-    setAtualizando(true);
-    await refetchUsuario();
-    setAtualizando(false);
   };
 
   const handleTrocarFoto = async () => {
@@ -231,12 +230,7 @@ export default function Perfil() {
       <ScrollContainer
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl
-            refreshing={atualizando}
-            onRefresh={handleRefresh}
-            colors={["#2E5A1E"]}
-            tintColor="#2E5A1E"
-          />
+          <RefreshControl refreshing={atualizando} onRefresh={handleRefresh} colors={["#F39C12"]} tintColor="#F39C12" />
         }
       >
         <Header>
@@ -246,11 +240,11 @@ export default function Perfil() {
             </TouchableOpacity>
           ) : (
             <AvatarPlaceholder onTouchEnd={handleTrocarFoto}>
-              <Ionicons name="camera-outline" size={28} color="#2E5A1E" />
+              <Ionicons name="camera-outline" size={28} color="#F39C12" />
             </AvatarPlaceholder>
           )}
-          <Nome>{usuario?.nome || "Usuário"}</Nome>
-          <Cargo>{cargoExibido}</Cargo>
+          <Nome>{usuario?.nome || "Administrador"}</Nome>
+          <Cargo>Administrador</Cargo>
         </Header>
 
         <InfoCard>
@@ -285,29 +279,29 @@ export default function Perfil() {
           <ToggleRow>
             <ToggleTextGroup>
               <ToggleTitle>Notificações</ToggleTitle>
-              <ToggleSubtitle>Receber avisos de novos pedidos</ToggleSubtitle>
+              <ToggleSubtitle>Vendas, estoque baixo e pedidos</ToggleSubtitle>
             </ToggleTextGroup>
             <Switch
               value={notificacoesAtivadas}
               onValueChange={handleToggleNotificacoes}
-              trackColor={{ false: '#E6DFD5', true: '#A9D8B8' }}
-              thumbColor={notificacoesAtivadas ? '#2E5A1E' : '#FFFFFF'}
+              trackColor={{ false: '#E6DFD5', true: '#FBD9A0' }}
+              thumbColor={notificacoesAtivadas ? '#F39C12' : '#FFFFFF'}
             />
           </ToggleRow>
         </InfoCard>
 
         <EditButton onPress={() => setModalNomeVisivel(true)}>
-          <Ionicons name="pencil-outline" size={16} color="#2E5A1E" />
+          <Ionicons name="pencil-outline" size={16} color="#F39C12" />
           <EditButtonText>Editar Nome</EditButtonText>
         </EditButton>
 
         <EditButton onPress={() => setModalTelefoneVisivel(true)}>
-          <Ionicons name="call-outline" size={16} color="#2E5A1E" />
+          <Ionicons name="call-outline" size={16} color="#F39C12" />
           <EditButtonText>Editar Telefone</EditButtonText>
         </EditButton>
 
         <EditButton onPress={() => setModalSenhaVisivel(true)}>
-          <Ionicons name="lock-closed-outline" size={16} color="#2E5A1E" />
+          <Ionicons name="lock-closed-outline" size={16} color="#F39C12" />
           <EditButtonText>Alterar Senha</EditButtonText>
         </EditButton>
 
@@ -322,7 +316,7 @@ export default function Perfil() {
         </DangerButton>
       </ScrollContainer>
 
-      <NavBarAtendente />
+      <NavBar />
 
       <Modal visible={modalNomeVisivel} transparent animationType="fade" onRequestClose={() => setModalNomeVisivel(false)}>
         <ModalOverlay>

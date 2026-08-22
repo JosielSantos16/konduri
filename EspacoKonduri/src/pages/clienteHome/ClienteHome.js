@@ -191,12 +191,13 @@ export default function ClienteHome() {
 
     try {
       await criarPedido({
-        clienteUid: usuario.uid,
-        clienteNome: usuario.nome,
-        itens,
-        total: totalPrice,
-        observacoes: observacoes.trim(),
-      });
+  clienteUid: usuario.uid,
+  clienteNome: usuario.nome,
+  clienteFoto: usuario.foto || null, // ← adiciona essa linha
+  itens,
+  total: totalPrice,
+  observacoes: observacoes.trim(),
+});
 
       clearCart();
       setObservacoes("");

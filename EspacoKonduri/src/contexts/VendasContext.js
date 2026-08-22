@@ -54,17 +54,17 @@ export function VendasProvider({ children }) {
     .reduce((sum, v) => sum + v.total, 0);
 
   const maisVendidos = (() => {
-    const contagem = {};
-    vendasHoje.forEach((venda) => {
-      (venda.itens || []).forEach((item) => {
-        if (!contagem[item.title]) {
-          contagem[item.title] = { title: item.title, qty: 0 };
-        }
-        contagem[item.title].qty += item.qty;
-      });
+  const contagem = {};
+  vendasHoje.forEach((venda) => {
+    (venda.itens || []).forEach((item) => {
+      if (!contagem[item.title]) {
+        contagem[item.title] = { title: item.title, qty: 0, image: item.image || null };
+      }
+      contagem[item.title].qty += item.qty;
     });
-    return Object.values(contagem).sort((a, b) => b.qty - a.qty);
-  })();
+  });
+  return Object.values(contagem).sort((a, b) => b.qty - a.qty);
+})();
 
   return (
     <VendasContext.Provider

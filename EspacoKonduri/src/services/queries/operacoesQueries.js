@@ -1,5 +1,6 @@
 import { db } from "../../firebase/fireBaseCondig";
 import { atualizarProduto } from "./productsQueries";
+import { criarNotificacaoPorPerfil } from "../../services/queries/notificacoesQueries";
 import { deleteDoc } from "firebase/firestore";
 import {
   collection,
@@ -149,13 +150,7 @@ export async function atualizarProdutoDaOperacao(
 export async function registrarVendaNaOperacao(operacaoId, itensVendidos) {
   await Promise.all(
     itensVendidos.map(async (item) => {
-      const produtoRef = doc(
-        db,
-        COLECAO_OPERACOES,
-        operacaoId,
-        "produtos",
-        item.id,
-      );
+      const produtoRef = doc(db, COLECAO_OPERACOES, operacaoId, "produtos", item.id);
       const snapshot = await getDoc(produtoRef);
 
       if (!snapshot.exists()) return;
@@ -172,7 +167,30 @@ export async function registrarVendaNaOperacao(operacaoId, itensVendidos) {
       });
 
       await atualizarProduto(item.id, { estoque: novoSaldo });
-    }),
+
+      // Confere se o produto ficou baixo ou esgotado, e avisa o Admin
+      const limiteBaixo = dados.limiteEstoqueBaixo ?? 5;
+
+      if (novoSaldo <= 0) {
+        await criarNotificacaoPorPerfil({
+          paraPerfis: ["adm"],
+          tipo: "estoque_esgotado",
+          titulo: "Estoque esgotado",
+          mensagem: `${dados.nome || item.title} está sem estoque.`,
+          imagens: dados.image ? [dados.image] : [],
+          rota: "/controle",
+        });
+      } else if (novoSaldo <= limiteBaixo) {
+        await criarNotificacaoPorPerfil({
+          paraPerfis: ["adm"],
+          tipo: "estoque_baixo",
+          titulo: "Estoque baixo",
+          mensagem: `${dados.nome || item.title} está com apenas ${novoSaldo} unidades.`,
+          imagens: dados.image ? [dados.image] : [],
+          rota: "/controle",
+        });
+      }
+    })
   );
 }
 

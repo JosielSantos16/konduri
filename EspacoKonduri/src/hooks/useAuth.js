@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/fireBaseCondig";
 import { buscarPerfilUsuario } from "../services/queries/usuariosQueries";
@@ -32,5 +32,16 @@ export function useAuth() {
     return unsubscribe;
   }, []);
 
-  return { usuario, carregando };
+  // Recarrega os dados do perfil sob demanda — usado no pull-to-refresh
+  const refetchUsuario = useCallback(async () => {
+    if (!auth.currentUser) return;
+    try {
+      const perfil = await buscarPerfilUsuario(auth.currentUser.uid);
+      setUsuario(perfil);
+    } catch (erro) {
+      console.error("Erro ao recarregar perfil:", erro);
+    }
+  }, []);
+
+  return { usuario, carregando, refetchUsuario };
 }
