@@ -1,5 +1,5 @@
 const HORA_ABERTURA = 8; 
-const HORA_FECHAMENTO = 18; 
+const HORA_FECHAMENTO = 23; 
 
 export function getStatusCaixa(horaAbertura = HORA_ABERTURA, horaFechamento = HORA_FECHAMENTO) {
   const agora = new Date();
