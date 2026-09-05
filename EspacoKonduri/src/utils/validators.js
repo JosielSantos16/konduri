@@ -144,7 +144,7 @@ export function validateName(nome) {
   const nomeLimpo = nome.trim();
 
   if (nomeLimpo.length < 3) return "O nome precisa ter no mínimo 3 caracteres.";
-  if (nomeLimpo.length > 60) return "O nome pode ter no máximo 60 caracteres."; // ← adiciona essa linha
+  if (nomeLimpo.length > 30) return 'O nome pode ter no máximo 30 caracteres.';
 
   if (!/^[A-Za-zÀ-ÿ0-9\s'.\-_@$!]+$/.test(nomeLimpo)) {
     return "O nome contém caracteres não permitidos.";

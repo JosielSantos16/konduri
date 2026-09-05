@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getFunctions } from 'firebase/functions';
 import {
   initializeAuth,
   getReactNativePersistence,
@@ -20,6 +21,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
+export const functions = getFunctions(app);
 
 // Na web, usa a persistência padrão do navegador (localStorage).
 // No mobile (iOS/Android), usa AsyncStorage — getReactNativePersistence
@@ -30,3 +32,4 @@ export const auth = initializeAuth(app, {
       ? browserLocalPersistence
       : getReactNativePersistence(AsyncStorage),
 });
+

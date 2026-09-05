@@ -87,8 +87,8 @@ export default function Painel() {
         }
       >
         <Header>
-          <GreetingContainer>
-            <GreetingTitle>Olá, {primeiroNome}!</GreetingTitle>
+          <GreetingContainer style={{ flex: 1, marginRight: 16 }}>
+            <GreetingTitle numberOfLines={1} ellipsizeMode="tail">Olá, {primeiroNome}!</GreetingTitle>
             <GreetingSubtitle>{getSaudacaoData()}</GreetingSubtitle>
           </GreetingContainer>
 

@@ -60,55 +60,102 @@ export const ItemQtyPrice = styled.Text`
   color: #8C7355;
 `;
 
-export const PixKeyCard = styled.View`
-  background-color: #FFF8E7;
+export const QrCodeCard = styled.View`
+  background-color: #FFFFFF;
   border-width: 1px;
-  border-color: #F0D9A0;
+  border-color: #E6DFD5;
   border-radius: 14px;
-  padding: 14px 16px;
+  padding: 18px;
   margin-bottom: 20px;
+  align-items: center;
 `;
 
-export const PixKeyLabel = styled.Text`
-  font-size: 11px;
-  font-weight: bold;
-  color: #B85D00;
-  letter-spacing: 0.3px;
-  margin-bottom: 6px;
+export const QrCodeLoadingText = styled.Text`
+  font-size: 13px;
+  color: #8C7355;
+  margin-top: 10px;
 `;
 
-export const PixKeyRow = styled.View`
+export const QrCodeImage = styled.Image`
+  width: 200px;
+  height: 200px;
+  margin-bottom: 14px;
+`;
+
+export const QrCodeCopyRow = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-`;
-
-export const PixKeyValue = styled.Text`
-  font-size: 14px;
-  font-weight: bold;
-  color: #3D2C22;
-  flex: 1;
-`;
-
-export const CopyButton = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
+  justify-content: center;
   background-color: #8C5A2E;
-  border-radius: 8px;
-  padding-horizontal: 10px;
-  padding-vertical: 6px;
-  margin-left: 10px;
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-top: 4px;
 `;
 
-export const CopyButtonText = styled.Text`
-  font-size: 11px;
+export const QrCodeCopyText = styled.Text`
+  font-size: 12px;
   font-weight: bold;
   color: #FFFFFF;
-  margin-left: 4px;
+  margin-left: 6px;
 `;
 
-export const PixNoticeText = styled.Text`
-  font-size: 10px;
-  color: #A9895C;
-  margin-top: 8px;
+export const QrCodeStatusRow = styled.View`
+  flex-direction: row;
+  align-items: center;
+  background-color: #FDF3E7;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-top: 14px;
+  width: 100%;
+  justify-content: center;
+`;
+
+export const QrCodeStatusText = styled.Text`
+  font-size: 13px;
+  font-weight: bold;
+  color: #B85D00;
+  margin-left: 8px;
+`;
+
+export const QrCodePaidBox = styled.View`
+  flex-direction: row;
+  align-items: center;
+  background-color: #E6F4EA;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-top: 14px;
+  width: 100%;
+  justify-content: center;
+`;
+
+export const QrCodePaidText = styled.Text`
+  font-size: 13px;
+  font-weight: bold;
+  color: #2E5A1E;
+  margin-left: 8px;
+`;
+
+export const QrCodeErrorBox = styled.View`
+  background-color: #FDEDEC;
+  border-radius: 10px;
+  padding: 12px 14px;
+  width: 100%;
+  align-items: center;
+`;
+
+export const QrCodeErrorText = styled.Text`
+  font-size: 12px;
+  color: #C0392B;
+  text-align: center;
+  margin-bottom: 8px;
+`;
+
+export const RetryButton = styled.TouchableOpacity`
+  padding: 6px 12px;
+`;
+
+export const RetryButtonText = styled.Text`
+  font-size: 13px;
+  font-weight: bold;
+  color: #E67E22;
 `;

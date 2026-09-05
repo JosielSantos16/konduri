@@ -21,7 +21,7 @@ export const GreetingContainer = styled.View`
 `;
 
 export const GreetingTitle = styled.Text`
-  font-size: 24px;
+  font-size: 23px;
   font-weight: bold;
   color: #3D2C22;
 `;
@@ -37,8 +37,8 @@ export const HeaderActions = styled.View`
 `;
 
 export const UserAvatar = styled.TouchableOpacity`
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: 21px;
   background-color: #FFFFFF;
   justify-content: center;
@@ -239,8 +239,8 @@ export const LowStockSubtitle = styled.Text`
 `;
 
 export const UserAvatarImage = styled.Image`
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: 21px;
 `;
 

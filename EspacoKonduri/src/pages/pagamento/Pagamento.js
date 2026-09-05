@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Alert, BackHandler } from "react-native";
+import { Alert, BackHandler, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import { useCaixa } from "../../contexts/CaixaContext";
@@ -8,6 +8,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import SafeContainer from "../../styles/SafeContainer";
 import { formatPrice } from "../../utils/formatPrice";
 import { criarPedidoImpressao } from "../../services/queries/impressaoQueries";
+import { usePixPayment } from "../../hooks/usePixPayment";
 import {
   Container,
   FinalizeButton,
@@ -17,13 +18,19 @@ import {
   ItemRow,
   ItemName,
   ItemQtyPrice,
-  PixKeyCard,
-  PixKeyLabel,
-  PixKeyRow,
-  PixKeyValue,
-  CopyButton,
-  CopyButtonText,
-  PixNoticeText,
+  QrCodeCard,
+  QrCodeLoadingText,
+  QrCodeImage,
+  QrCodeCopyRow,
+  QrCodeCopyText,
+  QrCodeStatusRow,
+  QrCodeStatusText,
+  QrCodePaidBox,
+  QrCodePaidText,
+  QrCodeErrorBox,
+  QrCodeErrorText,
+  RetryButton,
+  RetryButtonText,
 } from "./pagamentoStyles";
 import { useTroco } from "../../hooks/useTroco";
 import { useVendas } from "../../contexts/VendasContext";
@@ -32,8 +39,6 @@ import PagamentoHeader from "../../components/pagamento/header/Header";
 import VendaTotalCard from "../../components/pagamento/totalCard/TotalCard";
 import PaymentMethodSelector from "../../components/pagamento/formaPagamento/FormaPagamento";
 import TrocoCalculator from "../../components/pagamento/trocoCalculo/TrocoCalculo";
-
-const CHAVE_PIX = process.env.EXPO_PUBLIC_PIX_KEY || "chave-pix-nao-configurada";
 
 const MULTIPLICADOR_VALOR_SUSPEITO = 20;
 
@@ -50,19 +55,46 @@ export default function Pagamento() {
   const { valorRecebido, setValorRecebido, troco, insuficiente } = useTroco(totalVenda);
   const [finalizando, setFinalizando] = useState(false);
 
-  const podeFinalizar = (selectedMethod === "pix" || !insuficiente) && !finalizando;
+  const { qrCode, gerando, pago, erro, gerarQrCode, reiniciar } = usePixPayment();
 
-  // Impede sair da tela com o botão físico de voltar enquanto a venda
-  // está sendo processada, evitando comportamento inesperado
+  const podeFinalizarDinheiro = selectedMethod === "dinheiro" && !insuficiente && !finalizando;
+
+  // Impede sair da tela com o botão físico de voltar enquanto processa
   useEffect(() => {
     const handler = () => finalizando;
     const subscription = BackHandler.addEventListener("hardwareBackPress", handler);
     return () => subscription.remove();
   }, [finalizando]);
 
-  const handleCopiarChavePix = async () => {
-    await Clipboard.setStringAsync(CHAVE_PIX);
-    Alert.alert("Copiado", "Chave Pix copiada para a área de transferência.");
+  // Gera o QR Code assim que o método Pix é selecionado (só uma vez)
+  useEffect(() => {
+    if (selectedMethod === "pix" && !qrCode && !gerando) {
+      gerarQrCode({
+        vendaId: `pix_${Date.now()}`,
+        total: totalVenda,
+        itens: itensVenda,
+      });
+    }
+  }, [selectedMethod]);
+
+  // Assim que o Pix é confirmado como pago, finaliza a venda automaticamente
+  useEffect(() => {
+    if (pago && !finalizando) {
+      executarFinalizacao();
+    }
+  }, [pago]);
+
+  const handleSelecionarMetodo = (metodo) => {
+    if (metodo !== selectedMethod) {
+      reiniciar();
+      setSelectedMethod(metodo);
+    }
+  };
+
+  const handleCopiarCodigoPix = async () => {
+    if (!qrCode?.qrCodeTexto) return;
+    await Clipboard.setStringAsync(qrCode.qrCodeTexto);
+    Alert.alert("Copiado", "Código Pix Copia e Cola copiado para a área de transferência.");
   };
 
   const confirmarValorSuspeito = () => {
@@ -84,17 +116,15 @@ export default function Pagamento() {
     });
   };
 
-  const handleFinalizar = async () => {
-    if (!podeFinalizar) return;
+  const handleFinalizarDinheiro = async () => {
+    if (!podeFinalizarDinheiro) return;
 
     const valorConfirmado = await confirmarValorSuspeito();
     if (!valorConfirmado) return;
 
     Alert.alert(
       "Confirmar venda",
-      `Confirma a venda de ${formatPrice(totalVenda)} via ${
-        selectedMethod === "pix" ? "Pix" : "Dinheiro"
-      }?`,
+      `Confirma a venda de ${formatPrice(totalVenda)} via Dinheiro?`,
       [
         { text: "Cancelar", style: "cancel" },
         { text: "Confirmar", onPress: executarFinalizacao },
@@ -103,69 +133,69 @@ export default function Pagamento() {
   };
 
   const executarFinalizacao = async () => {
-  if (finalizando) return;
-  setFinalizando(true);
+    if (finalizando) return;
+    setFinalizando(true);
 
-  let venda;
-  try {
-    venda = await registrarVenda({
-      total: totalVenda,
-      metodo: selectedMethod,
-      itens: itensVenda,
-    });
-  } catch (erro) {
-    console.error("Erro ao registrar venda:", erro);
-    setFinalizando(false);
-    Alert.alert(
-      "Não foi possível finalizar a venda",
-      "Verifique sua conexão com a internet e tente novamente."
-    );
-    return;
-  }
-
-  let pedidoImpressaoId = null;
-
-  try {
-    await Promise.all(
-      itensVenda.map((item) => decreaseByTitle(item.title, item.qty, item.id))
-    );
-
-    if (operacaoId) {
-      await registrarVendaNaOperacao(operacaoId, itensVenda);
+    let venda;
+    try {
+      venda = await registrarVenda({
+        total: totalVenda,
+        metodo: selectedMethod,
+        itens: itensVenda,
+      });
+    } catch (erro) {
+      console.error("Erro ao registrar venda:", erro);
+      setFinalizando(false);
+      Alert.alert(
+        "Não foi possível finalizar a venda",
+        "Verifique sua conexão com a internet e tente novamente."
+      );
+      return;
     }
 
-    const pedidoImpressao = await criarPedidoImpressao({
-      itens: itensVenda,
-      total: totalVenda,
-      metodo: selectedMethod,
-      data: venda.criadoEm,
-      responsavel: responsavel || "Operador",
+    let pedidoImpressaoId = null;
+
+    try {
+      await Promise.all(
+        itensVenda.map((item) => decreaseByTitle(item.title, item.qty, item.id))
+      );
+
+      if (operacaoId) {
+        await registrarVendaNaOperacao(operacaoId, itensVenda);
+      }
+
+      const pedidoImpressao = await criarPedidoImpressao({
+        itens: itensVenda,
+        total: totalVenda,
+        metodo: selectedMethod,
+        data: venda.criadoEm,
+        responsavel: responsavel || "Operador",
+      });
+      pedidoImpressaoId = pedidoImpressao.id;
+    } catch (erro) {
+      console.error("Erro ao atualizar estoque/operação/impressão (venda já registrada):", erro);
+    }
+
+    const valorRecebidoNumero = Number(valorRecebido) || 0;
+
+    router.push({
+      pathname: "/status",
+      params: {
+        total: totalVenda.toFixed(2),
+        metodo: selectedMethod,
+        comprovante: venda.id,
+        data: venda.criadoEm,
+        itens: JSON.stringify(itensVenda),
+        pedidoImpressaoId: pedidoImpressaoId || "",
+        ...(selectedMethod === "dinheiro" && {
+          valorRecebido: valorRecebidoNumero.toFixed(2),
+          troco: troco.toFixed(2),
+        }),
+      },
     });
-    pedidoImpressaoId = pedidoImpressao.id;
-  } catch (erro) {
-    console.error("Erro ao atualizar estoque/operação/impressão (venda já registrada):", erro);
-  }
 
-  const valorRecebidoNumero = Number(valorRecebido) || 0;
-
-  router.push({
-    pathname: "/status",
-    params: {
-      total: totalVenda.toFixed(2),
-      metodo: selectedMethod,
-      comprovante: venda.id,
-      data: venda.criadoEm,
-      itens: JSON.stringify(itensVenda),
-      pedidoImpressaoId: pedidoImpressaoId || "",
-      ...(selectedMethod === "dinheiro" && {
-        valorRecebido: valorRecebidoNumero.toFixed(2),
-        troco: troco.toFixed(2),
-      }),
-    },
-  });
-
-  setFinalizando(false);
-};
+    setFinalizando(false);
+  };
 
   return (
     <SafeContainer>
@@ -194,24 +224,59 @@ export default function Pagamento() {
 
         <PaymentMethodSelector
           selected={selectedMethod}
-          onSelect={setSelectedMethod}
+          onSelect={handleSelecionarMetodo}
           disabled={finalizando}
         />
 
         {selectedMethod === "pix" && (
-          <PixKeyCard>
-            <PixKeyLabel>CHAVE PIX DO ESTABELECIMENTO</PixKeyLabel>
-            <PixKeyRow>
-              <PixKeyValue numberOfLines={1}>{CHAVE_PIX}</PixKeyValue>
-              <CopyButton onPress={handleCopiarChavePix}>
-                <Ionicons name="copy-outline" size={14} color="#FFFFFF" />
-                <CopyButtonText>Copiar</CopyButtonText>
-              </CopyButton>
-            </PixKeyRow>
-            <PixNoticeText>
-              Pagamento confirmado manualmente pela atendente, fora do app.
-            </PixNoticeText>
-          </PixKeyCard>
+          <QrCodeCard>
+            {gerando && (
+              <>
+                <ActivityIndicator size="large" color="#E67E22" />
+                <QrCodeLoadingText>Gerando QR Code Pix...</QrCodeLoadingText>
+              </>
+            )}
+
+            {erro && !gerando && (
+              <QrCodeErrorBox>
+                <QrCodeErrorText>{erro}</QrCodeErrorText>
+                <RetryButton
+                  onPress={() =>
+                    gerarQrCode({
+                      vendaId: `pix_${Date.now()}`,
+                      total: totalVenda,
+                      itens: itensVenda,
+                    })
+                  }
+                >
+                  <RetryButtonText>Tentar novamente</RetryButtonText>
+                </RetryButton>
+              </QrCodeErrorBox>
+            )}
+
+            {qrCode && !gerando && !erro && (
+              <>
+                <QrCodeImage source={{ uri: qrCode.qrCodeImagemUrl }} resizeMode="contain" />
+
+                <QrCodeCopyRow onPress={handleCopiarCodigoPix}>
+                  <Ionicons name="copy-outline" size={14} color="#FFFFFF" />
+                  <QrCodeCopyText>Copiar código Pix</QrCodeCopyText>
+                </QrCodeCopyRow>
+
+                {!pago ? (
+                  <QrCodeStatusRow>
+                    <ActivityIndicator size="small" color="#B85D00" />
+                    <QrCodeStatusText>Aguardando pagamento...</QrCodeStatusText>
+                  </QrCodeStatusRow>
+                ) : (
+                  <QrCodePaidBox>
+                    <Ionicons name="checkmark-circle" size={18} color="#2E5A1E" />
+                    <QrCodePaidText>Pagamento confirmado!</QrCodePaidText>
+                  </QrCodePaidBox>
+                )}
+              </>
+            )}
+          </QrCodeCard>
         )}
 
         {selectedMethod === "dinheiro" && (
@@ -223,16 +288,18 @@ export default function Pagamento() {
           />
         )}
 
-        <FinalizeButton
-          disabled={!podeFinalizar}
-          style={{ opacity: podeFinalizar ? 1 : 0.5 }}
-          onPress={handleFinalizar}
-        >
-          <Ionicons name="checkmark-circle-outline" size={22} color="#FFFFFF" />
-          <FinalizeButtonText>
-            {finalizando ? "Registrando..." : "Finalizar e Emitir Comprovante"}
-          </FinalizeButtonText>
-        </FinalizeButton>
+        {selectedMethod === "dinheiro" && (
+          <FinalizeButton
+            disabled={!podeFinalizarDinheiro}
+            style={{ opacity: podeFinalizarDinheiro ? 1 : 0.5 }}
+            onPress={handleFinalizarDinheiro}
+          >
+            <Ionicons name="checkmark-circle-outline" size={22} color="#FFFFFF" />
+            <FinalizeButtonText>
+              {finalizando ? "Registrando..." : "Finalizar e Emitir Comprovante"}
+            </FinalizeButtonText>
+          </FinalizeButton>
+        )}
       </Container>
     </SafeContainer>
   );
