@@ -18,6 +18,7 @@ import {
   adicionarProdutoAOperacao,
   removerProdutoDaOperacao,
 } from "../../services/queries/operacoesQueries";
+import { calcularSaldoOperacao } from "../../utils/saldoOperacao";
 import {
   Container,
   ScrollContainer,
@@ -47,7 +48,7 @@ import {
   LoadingContainer,
   TextArea,
   TextAreaContainer,
-  QtyAdjustButton,
+  HelperText,
 } from "./editarProdutoStyle";
 
 function aplicarMascaraMoeda(textoDigitado) {
@@ -80,6 +81,9 @@ export default function EditarProduto() {
   const [saidaQtd, setSaidaQtd] = useState("");
   const [valorSaidas, setValorSaidas] = useState("");
   const [observacoes, setObservacoes] = useState("");
+  const [ajusteSaidaQtd, setAjusteSaidaQtd] = useState(0);
+  // Valores de estoque como vieram do banco, para só regravar o que o usuário mudou
+  const [estoqueOriginal, setEstoqueOriginal] = useState(null);
   const [custoUnitario, setCustoUnitario] = useState('');
   const [limiteEstoqueBaixo, setLimiteEstoqueBaixo] = useState("5");
 
@@ -123,6 +127,12 @@ export default function EditarProduto() {
         setValorEntradas((dadosNumericos.valorEntradas || 0).toFixed(2).replace(".", ","));
         setSaidaQtd(String(dadosNumericos.saidaQtd ?? 0));
         setValorSaidas((dadosNumericos.valorSaidas || 0).toFixed(2).replace(".", ","));
+        setAjusteSaidaQtd(dadosNumericos.ajusteSaidaQtd || 0);
+        setEstoqueOriginal({
+          estoqueInicial: dadosNumericos.estoqueInicial ?? 0,
+          saidaQtd: dadosNumericos.saidaQtd ?? 0,
+          valorSaidas: dadosNumericos.valorSaidas || 0,
+        });
       } catch (erro) {
         console.error("Erro ao carregar produto:", erro);
         setErroGeral("Não foi possível carregar o produto.");
@@ -158,11 +168,6 @@ export default function EditarProduto() {
     if (erros.preco) setErros((prev) => ({ ...prev, preco: null }));
   };
 
-  const handleChangeValorEntradas = (texto) => {
-    setValorEntradas(aplicarMascaraMoeda(texto));
-    if (erros.valorEntradas) setErros((prev) => ({ ...prev, valorEntradas: null }));
-  };
-
   const handleChangeValorSaidas = (texto) => {
     setValorSaidas(aplicarMascaraMoeda(texto));
     if (erros.valorSaidas) setErros((prev) => ({ ...prev, valorSaidas: null }));
@@ -178,7 +183,24 @@ export default function EditarProduto() {
   const estoqueInicialNumero = parseNumero(estoqueInicial);
   const entradaQtdNumero = parseNumero(entradaQtd);
   const saidaQtdNumero = parseNumero(saidaQtd);
-  const saldoPrevisto = estoqueInicialNumero + entradaQtdNumero - saidaQtdNumero;
+  const saldoPrevisto = calcularSaldoOperacao({
+    estoqueInicial: estoqueInicialNumero,
+    entradaQtd: entradaQtdNumero,
+    saidaQtd: saidaQtdNumero,
+    ajusteSaidaQtd,
+  });
+
+  // Só os campos de estoque que o usuário alterou. Os demais ficam como estão no
+  // banco, para não desfazer vendas, entradas ou perdas registradas enquanto a
+  // tela estava aberta.
+  const camposEstoqueAlterados = () => {
+    const alterados = {};
+    if (!estoqueOriginal) return alterados;
+    if (estoqueInicialNumero !== estoqueOriginal.estoqueInicial) alterados.estoqueInicial = estoqueInicialNumero;
+    if (saidaQtdNumero !== estoqueOriginal.saidaQtd) alterados.saidaQtd = saidaQtdNumero;
+    if (parseNumero(valorSaidas) !== estoqueOriginal.valorSaidas) alterados.valorSaidas = parseNumero(valorSaidas);
+    return alterados;
+  };
 
   const validarNumero = (valor) => {
     const numero = parseNumero(valor);
@@ -200,7 +222,6 @@ export default function EditarProduto() {
     }
 
     if (validarNumero(estoqueInicial)) novosErros.estoqueInicial = "Informe uma quantidade válida.";
-    if (validarNumero(entradaQtd)) novosErros.entradaQtd = "Informe uma quantidade válida.";
     if (validarNumero(saidaQtd)) novosErros.saidaQtd = "Informe uma quantidade válida.";
     if (validarNumero(limiteEstoqueBaixo)) novosErros.limiteEstoqueBaixo = "Informe um número válido.";
 
@@ -233,23 +254,29 @@ export default function EditarProduto() {
         custoMedio: parseNumero(custoUnitario),
       });
 
-      if (caixaAberto && operacaoId) {
-        const camposOperacao = {
-          estoqueInicial: estoqueInicialNumero,
-          entradaQtd: entradaQtdNumero,
-          valorEntradas: parseNumero(valorEntradas),
-          saidaQtd: saidaQtdNumero,
-          valorSaidas: parseNumero(valorSaidas),
-          nome: nome.trim(),
-          image: urlFoto,
-        };
+      const alterados = camposEstoqueAlterados();
 
+      if (caixaAberto && operacaoId) {
         if (existeNaOperacaoAtual) {
-          await atualizarProdutoDaOperacao(operacaoId, produtoId, camposOperacao);
+          // Entradas não são editadas aqui: vão pelo botão ENTRADA, com custo
+          await atualizarProdutoDaOperacao(operacaoId, produtoId, {
+            ...alterados,
+            nome: nome.trim(),
+            image: urlFoto,
+          });
         } else {
-          await adicionarProdutoAOperacao(operacaoId, { ...camposOperacao, id: produtoId });
+          await adicionarProdutoAOperacao(operacaoId, {
+            estoqueInicial: estoqueInicialNumero,
+            entradaQtd: entradaQtdNumero,
+            valorEntradas: parseNumero(valorEntradas),
+            saidaQtd: saidaQtdNumero,
+            valorSaidas: parseNumero(valorSaidas),
+            title: nome.trim(),
+            image: urlFoto,
+            id: produtoId,
+          });
         }
-      } else {
+      } else if (Object.keys(alterados).length > 0) {
         await atualizarProduto(produtoId, { estoque: saldoPrevisto });
       }
 
@@ -395,41 +422,22 @@ export default function EditarProduto() {
         <Row>
           <InputGroup style={{ flex: 1, marginRight: 10 }}>
             <Label>Entrada (Qtd.)</Label>
-            <InputContainer hasError={!!erros.entradaQtd} style={{ paddingHorizontal: 0 }}>
-              <QtyAdjustButton
-                onPress={() => setEntradaQtd(String(Math.max(0, parseNumero(entradaQtd) - 1)))}
-              >
-                <Ionicons name="remove" size={18} color="#5C4033" />
-              </QtyAdjustButton>
-              <Input
-                style={{ textAlign: "center" }}
-                value={entradaQtd}
-                onChangeText={setEntradaQtd}
-                placeholder="0"
-                keyboardType="decimal-pad"
-                placeholderTextColor="#A99B8F"
-              />
-              <QtyAdjustButton onPress={() => setEntradaQtd(String(parseNumero(entradaQtd) + 1))}>
-                <Ionicons name="add" size={18} color="#5C4033" />
-              </QtyAdjustButton>
+            <InputContainer style={{ backgroundColor: "#F0EAE1" }}>
+              <Input value={entradaQtd} editable={false} style={{ color: "#8C7355" }} />
             </InputContainer>
-            {erros.entradaQtd && <ErrorText>{erros.entradaQtd}</ErrorText>}
           </InputGroup>
 
           <InputGroup style={{ flex: 1 }}>
             <Label>Valor Entradas (R$)</Label>
-            <InputContainer hasError={!!erros.valorEntradas}>
-              <Input
-                value={valorEntradas}
-                onChangeText={handleChangeValorEntradas}
-                placeholder="0,00"
-                keyboardType="numeric"
-                placeholderTextColor="#A99B8F"
-              />
+            <InputContainer style={{ backgroundColor: "#F0EAE1" }}>
+              <Input value={valorEntradas} editable={false} style={{ color: "#8C7355" }} />
             </InputContainer>
-            {erros.valorEntradas && <ErrorText>{erros.valorEntradas}</ErrorText>}
           </InputGroup>
         </Row>
+        <HelperText>
+          Entradas de mercadoria agora são registradas só pelo botão ENTRADA (no Controle do
+          Dia ou no + do Estoque), que pede o custo da compra e atualiza o custo médio.
+        </HelperText>
 
         <Row>
           <InputGroup style={{ flex: 1, marginRight: 10 }}>

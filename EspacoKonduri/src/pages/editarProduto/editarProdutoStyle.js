@@ -202,3 +202,10 @@ export const QtyAdjustButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `;
+
+export const HelperText = styled.Text`
+  font-size: 12px;
+  color: #8C7355;
+  margin-top: -6px;
+  margin-bottom: 16px;
+`;

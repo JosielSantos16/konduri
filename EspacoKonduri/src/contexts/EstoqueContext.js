@@ -20,24 +20,6 @@ function getStatus(qty, item) {
 export function EstoqueProvider({ children }) {
   const { produtos } = useProdutos();
 
-  const increase = useCallback(
-    async (id) => {
-      const produto = produtos.find((p) => p.id === id);
-      if (!produto) return;
-      await atualizarProduto(id, { estoque: (produto.estoque || 0) + 1 });
-    },
-    [produtos]
-  );
-
-  const decrease = useCallback(
-    async (id) => {
-      const produto = produtos.find((p) => p.id === id);
-      if (!produto) return;
-      await atualizarProduto(id, { estoque: Math.max(0, (produto.estoque || 0) - 1) });
-    },
-    [produtos]
-  );
-
   /**
    * Abate o estoque real do produto no Firestore após uma venda.
    * Prioriza casar pelo id (mais confiável); se não vier, tenta pelo nome.
@@ -66,7 +48,7 @@ export function EstoqueProvider({ children }) {
   }));
 
   return (
-    <EstoqueContext.Provider value={{ stock, increase, decrease, decreaseByTitle }}>
+    <EstoqueContext.Provider value={{ stock, decreaseByTitle }}>
       {children}
     </EstoqueContext.Provider>
   );

@@ -7,6 +7,7 @@ import { useCaixa } from "../../contexts/CaixaContext";
 import { Alert } from "react-native";
 import { listarProdutosDaOperacao } from "../../services/queries/operacoesQueries";
 import ProdutoControleCard from "../../components/controleDoDia/ProdutoControleCard";
+import RegistrarEntradaModal from "../../components/estoque/registrarEntrada/RegistrarEntradaModal";
 import {
   Container,
   Header,
@@ -55,6 +56,7 @@ export default function ControleDoDia() {
   const [produtos, setProdutos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [atualizando, setAtualizando] = useState(false);
+  const [produtoEntradaId, setProdutoEntradaId] = useState(null);
 
   const carregarProdutos = useCallback(async () => {
     if (!operacaoId) {
@@ -186,6 +188,7 @@ export default function ControleDoDia() {
               key={produto.id}
               produto={produto}
               onEdit={() => handleEditarProduto(produto)}
+              onEntrada={() => setProdutoEntradaId(produto.id)}
             />
           ))}
         </ProductsList>
@@ -200,6 +203,12 @@ export default function ControleDoDia() {
           <Ionicons name="lock-closed-outline" size={18} color="#FFFFFF" />
           <FecharCaixaButtonText>Fechar Caixa do Dia</FecharCaixaButtonText>
         </FecharCaixaButton>
+
+        <RegistrarEntradaModal
+          produtoId={produtoEntradaId}
+          onClose={() => setProdutoEntradaId(null)}
+          onSalvo={carregarProdutos}
+        />
       </Container>
     </SafeContainer>
   );

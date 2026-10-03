@@ -1,5 +1,6 @@
 import { db } from "../../firebase/fireBaseCondig";
 import { atualizarProduto } from "./productsQueries";
+import { calcularSaldoOperacao } from "../../utils/saldoOperacao";
 import { criarNotificacaoPorPerfil } from "../../services/queries/notificacoesQueries";
 import { deleteDoc } from "firebase/firestore";
 import {
@@ -50,6 +51,7 @@ export async function abrirOperacao({
           estoqueInicial: produto.estoque || 0,
           entradaQtd: 0,
           saidaQtd: 0,
+          ajusteSaidaQtd: 0,
           valorEntradas: 0,
           valorSaidas: 0,
           saldoEstoque: produto.estoque || 0,
@@ -137,10 +139,7 @@ export async function atualizarProdutoDaOperacao(
   const dadosAtuais = atual.data();
   const dadosAtualizados = { ...dadosAtuais, ...campos };
 
-  const saldoEstoque =
-    dadosAtualizados.estoqueInicial +
-    dadosAtualizados.entradaQtd -
-    dadosAtualizados.saidaQtd;
+  const saldoEstoque = calcularSaldoOperacao(dadosAtualizados);
 
   await updateDoc(produtoRef, { ...campos, saldoEstoque });
 
@@ -158,7 +157,7 @@ export async function registrarVendaNaOperacao(operacaoId, itensVendidos) {
       const dados = snapshot.data();
       const novaSaidaQtd = (dados.saidaQtd || 0) + item.qty;
       const novoValorSaidas = (dados.valorSaidas || 0) + item.qty * item.price;
-      const novoSaldo = dados.estoqueInicial + dados.entradaQtd - novaSaidaQtd;
+      const novoSaldo = calcularSaldoOperacao({ ...dados, saidaQtd: novaSaidaQtd });
 
       await updateDoc(produtoRef, {
         saidaQtd: novaSaidaQtd,
@@ -209,6 +208,7 @@ export async function adicionarProdutoAOperacao(operacaoId, produto) {
     saidaQtd,
     valorEntradas: produto.valorEntradas || 0,
     valorSaidas: produto.valorSaidas || 0,
+    ajusteSaidaQtd: 0,
     saldoEstoque: estoqueInicial + entradaQtd - saidaQtd,
   });
 }

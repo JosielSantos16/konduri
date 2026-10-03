@@ -28,12 +28,16 @@ import {
   NavText,
 } from './estoqueStyle';
 import NavBar from '../../components/painel/navBar/NavBar';
+import RegistrarEntradaModal from '../../components/estoque/registrarEntrada/RegistrarEntradaModal';
+import RegistrarAjusteModal from '../../components/estoque/registrarAjuste/RegistrarAjusteModal';
 
 export default function Estoque() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [search, setSearch] = useState('');
-  const { stock, increase, decrease } = useEstoque();
+  const { stock } = useEstoque();
+  const [produtoEntradaId, setProdutoEntradaId] = useState(null);
+  const [produtoAjusteId, setProdutoAjusteId] = useState(null);
 
   const filteredStock = stock.filter(item =>
     item.title.toLowerCase().includes(search.toLowerCase())
@@ -55,11 +59,11 @@ export default function Estoque() {
         <ActionButtonMinus
           disabled={item.qty === 0}
           style={{ opacity: item.qty === 0 ? 0.4 : 1 }}
-          onPress={() => decrease(item.id)}
+          onPress={() => setProdutoAjusteId(item.id)}
         >
           <Ionicons name="remove" size={18} color="#3D2C22" />
         </ActionButtonMinus>
-        <ActionButtonPlus onPress={() => increase(item.id)}>
+        <ActionButtonPlus onPress={() => setProdutoEntradaId(item.id)}>
           <Ionicons name="add" size={18} color="#FFFFFF" />
         </ActionButtonPlus>
       </StockActions>
@@ -100,6 +104,16 @@ export default function Estoque() {
       )}
 
       <NavBar/>
+
+      <RegistrarEntradaModal
+        produtoId={produtoEntradaId}
+        onClose={() => setProdutoEntradaId(null)}
+      />
+
+      <RegistrarAjusteModal
+        produtoId={produtoAjusteId}
+        onClose={() => setProdutoAjusteId(null)}
+      />
     </Container>
   );
 }

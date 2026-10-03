@@ -20,7 +20,7 @@ import {
   AlertaEstoqueText,
 } from './produtoControleCardStyle';
 
-export default function ProdutoControleCard({ produto, onEdit }) {
+export default function ProdutoControleCard({ produto, onEdit, onEntrada }) {
   const saldo = produto.saldoEstoque ?? 0;
   const limiteBaixo = produto.limiteEstoqueBaixo ?? 5;
   const semEstoque = saldo <= 0;
@@ -85,11 +85,24 @@ export default function ProdutoControleCard({ produto, onEdit }) {
         </StatBlock>
       </StatsRow>
 
+      {produto.ajusteSaidaQtd > 0 && (
+        <StatsRow>
+          <StatBlock>
+            <StatLabel>PERDAS / AJUSTES</StatLabel>
+            <StatValue>{produto.ajusteSaidaQtd} un</StatValue>
+          </StatBlock>
+        </StatsRow>
+      )}
+
       <StatsRow style={{ marginBottom: 0 }}>
         <StatBlock>
           <StatLabel>VALOR SAÍDAS</StatLabel>
           <StatValue>R$ {produto.valorSaidas.toFixed(2)}</StatValue>
         </StatBlock>
+        <EditButton onPress={onEntrada} activeOpacity={0.8} style={{ marginRight: 8 }}>
+          <Ionicons name="add" size={14} color="#FFFFFF" />
+          <EditButtonText>ENTRADA</EditButtonText>
+        </EditButton>
         <EditButton onPress={onEdit} activeOpacity={0.8}>
           <Ionicons name="pencil" size={13} color="#FFFFFF" />
           <EditButtonText>EDITAR</EditButtonText>

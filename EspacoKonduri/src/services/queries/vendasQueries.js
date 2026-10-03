@@ -4,7 +4,7 @@ import { formatPrice } from '../../utils/formatPrice';
 import {
   collection,
   doc,
-  setDoc,
+  writeBatch,
   onSnapshot,
   query,
   where,
@@ -12,6 +12,7 @@ import {
   getDocs,
 } from 'firebase/firestore';
 import { db } from '../../firebase/fireBaseCondig';
+import { TIPOS_MOVIMENTO, novoMovimentoRef, montarMovimento } from './estoqueMovimentosQueries';
 
 const COLECAO_VENDAS = 'vendas';
 
@@ -72,7 +73,28 @@ export async function registrarVendaFirestore({
     criadoEm: new Date().toISOString(),
   };
 
-  await setDoc(vendaRef, venda);
+  // Venda e movimentos de estoque são gravados juntos: ou tudo entra, ou nada
+  const batch = writeBatch(db);
+  batch.set(vendaRef, venda);
+
+  itensComCusto.forEach((item) => {
+    batch.set(
+      novoMovimentoRef(),
+      montarMovimento({
+        produtoId: item.id,
+        produtoNome: item.title,
+        tipo: TIPOS_MOVIMENTO.VENDA,
+        quantidade: item.qty,
+        custoUnitario: item.custoUnitario,
+        usuarioUid: responsavelUid,
+        usuarioNome: responsavelNome,
+        vendaId: vendaRef.id,
+        operacaoId,
+      })
+    );
+  });
+
+  await batch.commit();
 
   const resumoItens = (itens || [])
     .map((item) => `${item.qty}x ${item.title}`)

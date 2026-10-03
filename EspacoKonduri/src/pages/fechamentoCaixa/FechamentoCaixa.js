@@ -85,7 +85,7 @@ export default function FechamentoCaixa() {
   const totalEntradas = produtos.reduce((soma, p) => soma + (p.valorEntradas || 0), 0);
   const totalSaidas = produtos.reduce((soma, p) => soma + (p.valorSaidas || 0), 0);
   const balancoVolume = produtos.reduce(
-    (soma, p) => soma + (p.entradaQtd || 0) - (p.saidaQtd || 0),
+    (soma, p) => soma + (p.entradaQtd || 0) - (p.saidaQtd || 0) - (p.ajusteSaidaQtd || 0),
     0
   );
 
