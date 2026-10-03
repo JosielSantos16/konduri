@@ -139,6 +139,20 @@ export function subscribeToVendasPorData(dataISO, callback) {
   });
 }
 
+// Vendas entre duas datas 'AAAA-MM-DD' (inclusive), para a Gestão Financeira
+export function subscribeToVendasPorPeriodo(inicioISO, fimISO, callback) {
+  const q = query(
+    collection(db, COLECAO_VENDAS),
+    where('data', '>=', inicioISO),
+    where('data', '<=', fimISO)
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    const vendas = snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
+    callback(vendas);
+  });
+}
+
 export async function buscarDiasComVendasNoMes(anoMes) {
   const inicio = `${anoMes}-01`;
   const fim = `${anoMes}-31`; 
