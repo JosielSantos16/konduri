@@ -19,6 +19,7 @@ import {
   removerProdutoDaOperacao,
 } from "../../services/queries/operacoesQueries";
 import { calcularSaldoOperacao } from "../../utils/saldoOperacao";
+import { ehAdmin as usuarioEhAdmin } from "../../utils/permissoes";
 import {
   Container,
   ScrollContainer,
@@ -92,7 +93,7 @@ export default function EditarProduto() {
   const [erros, setErros] = useState({});
   const [erroGeral, setErroGeral] = useState(null);
 
-  const ehAdmin = usuario?.perfil === "adm";
+  const ehAdmin = usuarioEhAdmin(usuario);
 
   useEffect(() => {
     async function carregar() {
