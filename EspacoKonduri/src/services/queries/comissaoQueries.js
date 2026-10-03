@@ -71,3 +71,17 @@ export async function buscarDiasComComissaoNoMes(anoMes) {
 
   return Array.from(diasComComissao);
 }
+
+// Comissões de todos os atendentes no mês (anoMes = 'AAAA-MM'), usadas como
+// custo variável automático em Custos e Despesas
+export function subscribeToComissoesDoMes(anoMes, callback) {
+  const q = query(
+    collection(db, COLECAO_COMISSOES),
+    where('data', '>=', `${anoMes}-01`),
+    where('data', '<=', `${anoMes}-31`)
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    callback(snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() })));
+  });
+}

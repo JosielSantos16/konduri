@@ -8,6 +8,7 @@ import { Alert } from "react-native";
 import { listarProdutosDaOperacao } from "../../services/queries/operacoesQueries";
 import ProdutoControleCard from "../../components/controleDoDia/ProdutoControleCard";
 import RegistrarEntradaModal from "../../components/estoque/registrarEntrada/RegistrarEntradaModal";
+import AtalhoDespesas from "../../components/despesas/atalhoDespesas/AtalhoDespesas";
 import {
   Container,
   Header,
@@ -156,6 +157,8 @@ export default function ControleDoDia() {
             <UserBadgeText>{primeiroNome}</UserBadgeText>
           </UserBadge>
         </Header>
+
+        <AtalhoDespesas style={{ marginHorizontal: 20, marginBottom: 4 }} />
 
         <SectionHeader>
           <SectionTitle>PRODUTOS ATIVOS ({produtos.length})</SectionTitle>

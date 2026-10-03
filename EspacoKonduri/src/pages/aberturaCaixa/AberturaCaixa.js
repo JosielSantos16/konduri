@@ -1,6 +1,7 @@
 import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import AtalhoDespesas from "../../components/despesas/atalhoDespesas/AtalhoDespesas";
 import NavBar from "../../components/painel/navBar/NavBar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -143,6 +144,8 @@ export default function AberturaCaixa() {
             <AlertText style={{ color: '#C0392B' }}>{erroAbertura}</AlertText>
           </AlertBox>
         )}
+
+        <AtalhoDespesas />
 
         <StartButton
           disabled={!podeIniciar}
