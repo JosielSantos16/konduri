@@ -26,6 +26,14 @@ export const ProductImage = styled.Image`
   background-color: #F0EAE1;
 `;
 
+export const ProductImagePlaceholder = styled.View`
+  width: 100%;
+  height: 110px;
+  background-color: #F0EAE1;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const CardContent = styled.View`
   padding: 10px;
 `;
@@ -122,3 +130,4 @@ export const DestaqueText = styled.Text`
   color: #FFFFFF;
   margin-left: 3px;
 `;
+

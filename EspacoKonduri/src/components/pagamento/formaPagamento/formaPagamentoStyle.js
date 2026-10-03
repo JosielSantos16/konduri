@@ -17,9 +17,9 @@ export const MethodCard = styled.TouchableOpacity`
   flex: 1;
   background-color: #FFFFFF;
   border-radius: 16px;
-  padding: 20px 10px;
+  padding: 16px 6px;
   align-items: center;
-  margin-horizontal: 5px;
+  margin-horizontal: 4px;
   border-width: 2px;
   border-color: ${props => (props.selected ? '#E67E22' : '#E6DFD5')};
   elevation: ${props => (props.selected ? 3 : 1)};

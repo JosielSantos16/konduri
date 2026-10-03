@@ -80,6 +80,7 @@ export default function EditarProduto() {
   const [saidaQtd, setSaidaQtd] = useState("");
   const [valorSaidas, setValorSaidas] = useState("");
   const [observacoes, setObservacoes] = useState("");
+  const [custoUnitario, setCustoUnitario] = useState('');
   const [limiteEstoqueBaixo, setLimiteEstoqueBaixo] = useState("5");
 
   const [salvando, setSalvando] = useState(false);
@@ -100,6 +101,7 @@ export default function EditarProduto() {
         }
 
         setNome(produtoMaster.title || "");
+        setCustoUnitario((produtoMaster.custoMedio ?? produtoMaster.custoUnitario ?? 0).toFixed(2).replace(".", ","));
         setCategoria(produtoMaster.category || "produtos");
         setPreco((produtoMaster.price || 0).toFixed(2).replace(".", ","));
         setObservacoes(produtoMaster.observacoes || "");
@@ -166,6 +168,11 @@ export default function EditarProduto() {
     if (erros.valorSaidas) setErros((prev) => ({ ...prev, valorSaidas: null }));
   };
 
+  const handleChangeCustoUnitario = (texto) => {
+  setCustoUnitario(aplicarMascaraMoeda(texto));
+  if (erros.custoUnitario) setErros((prev) => ({ ...prev, custoUnitario: null }));
+};
+
   const parseNumero = (valor) => Number((valor || "0").replace(",", ".")) || 0;
 
   const estoqueInicialNumero = parseNumero(estoqueInicial);
@@ -185,6 +192,12 @@ export default function EditarProduto() {
 
     const precoNumero = parseNumero(preco);
     if (!preco || precoNumero <= 0) novosErros.preco = "Informe um preço válido.";
+
+    if (validarNumero(custoUnitario)) {
+      novosErros.custoUnitario = "Informe um custo válido.";
+    } else if (parseNumero(custoUnitario) > precoNumero) {
+      novosErros.custoUnitario = "O custo não pode ser maior que o preço de venda.";
+    }
 
     if (validarNumero(estoqueInicial)) novosErros.estoqueInicial = "Informe uma quantidade válida.";
     if (validarNumero(entradaQtd)) novosErros.entradaQtd = "Informe uma quantidade válida.";
@@ -215,6 +228,9 @@ export default function EditarProduto() {
         image: urlFoto,
         observacoes: observacoes.trim(),
         limiteEstoqueBaixo: Number(limiteEstoqueBaixo) || 5,
+        // Edição manual do custo corrige o custo médio usado nas próximas vendas
+        custoUnitario: parseNumero(custoUnitario),
+        custoMedio: parseNumero(custoUnitario),
       });
 
       if (caixaAberto && operacaoId) {
@@ -442,6 +458,22 @@ export default function EditarProduto() {
               />
             </InputContainer>
             {erros.valorSaidas && <ErrorText>{erros.valorSaidas}</ErrorText>}
+          </InputGroup>
+        </Row>
+
+        <Row>
+          <InputGroup style={{ flex: 1 }}>
+            <Label>Custo Unitário (R$)</Label>
+            <InputContainer hasError={!!erros.custoUnitario}>
+              <Input
+                value={custoUnitario}
+                onChangeText={handleChangeCustoUnitario}
+                placeholder="0,00"
+                keyboardType="numeric"
+                placeholderTextColor="#A99B8F"
+              />
+            </InputContainer>
+            {erros.custoUnitario && <ErrorText>{erros.custoUnitario}</ErrorText>}
           </InputGroup>
         </Row>
 

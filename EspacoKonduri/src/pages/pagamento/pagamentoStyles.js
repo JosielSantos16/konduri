@@ -159,3 +159,21 @@ export const RetryButtonText = styled.Text`
   font-weight: bold;
   color: #E67E22;
 `;
+
+export const MaquininhaCard = styled.View`
+  flex-direction: row;
+  align-items: center;
+  background-color: #FFF8E7;
+  border-width: 1px;
+  border-color: #F0D9A0;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+`;
+
+export const MaquininhaText = styled.Text`
+  flex: 1;
+  font-size: 13px;
+  color: #8C5A2E;
+  margin-left: 10px;
+`;

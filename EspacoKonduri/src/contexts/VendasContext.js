@@ -2,12 +2,14 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { registrarVendaFirestore, subscribeToVendasHoje } from '../services/queries/vendasQueries';
 import { useAuth } from '../hooks/useAuth';
 import { useCaixa } from './CaixaContext';
+import { useProdutos } from './ProdutosContext';
 
 const VendasContext = createContext(null);
 
 export function VendasProvider({ children }) {
   const { usuario } = useAuth();
   const { operacaoId } = useCaixa();
+  const { produtos } = useProdutos();
 
   const [vendasHoje, setVendasHoje] = useState([]);
   const [carregandoVendas, setCarregandoVendas] = useState(true);
@@ -30,17 +32,24 @@ export function VendasProvider({ children }) {
 
   const registrarVenda = useCallback(
     async ({ total, metodo, itens }) => {
+      // Custo médio atual de cada produto, lido aqui (e não no carrinho) para
+      // não trafegar pelo PDV, pagamento, impressão e Pix
+      const itensComCustoAtual = (itens || []).map((item) => {
+        const produto = produtos.find((p) => p.id === item.id);
+        return { ...item, custoUnitario: produto?.custoMedio ?? produto?.custoUnitario ?? null };
+      });
+
       const venda = await registrarVendaFirestore({
         operacaoId,
         responsavelUid: usuario?.uid,
         responsavelNome: usuario?.nome,
         total,
         metodo,
-        itens,
+        itens: itensComCustoAtual,
       });
       return venda;
     },
-    [operacaoId, usuario]
+    [operacaoId, usuario, produtos]
   );
 
   const faturamentoDia = vendasHoje.reduce((sum, v) => sum + v.total, 0);

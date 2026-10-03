@@ -19,6 +19,33 @@ function dataDeHoje() {
   return paraDataISOLocal();
 }
 
+function arredondarCentavos(valor) {
+  return Math.round(valor * 100) / 100;
+}
+
+// Congela o custo de cada item no momento da venda, para que mudanças futuras
+// no custo do produto não alterem o CMV histórico. Item sem custo cadastrado
+// fica com custo null ("sem custo registrado"), e o CMV da venda também.
+function congelarCustos(itens) {
+  const itensComCusto = (itens || []).map((item) => {
+    const custo = Number(item.custoUnitario);
+    const custoUnitario = custo > 0 ? custo : null;
+
+    return {
+      ...item,
+      custoUnitario,
+      custoTotal: custoUnitario !== null ? arredondarCentavos(custoUnitario * item.qty) : null,
+    };
+  });
+
+  const algumItemSemCusto = itensComCusto.some((item) => item.custoTotal === null);
+  const cmvTotal = algumItemSemCusto
+    ? null
+    : arredondarCentavos(itensComCusto.reduce((soma, item) => soma + item.custoTotal, 0));
+
+  return { itensComCusto, cmvTotal };
+}
+
 export async function registrarVendaFirestore({
   operacaoId,
   responsavelUid,
@@ -29,13 +56,18 @@ export async function registrarVendaFirestore({
 }) {
   const vendaRef = doc(collection(db, COLECAO_VENDAS));
 
+  const { itensComCusto, cmvTotal } = congelarCustos(itens);
+
   const venda = {
     operacaoId: operacaoId || null,
     responsavelUid: responsavelUid || null,
     responsavelNome: responsavelNome || '',
     total,
     metodo,
-    itens,
+    itens: itensComCusto,
+    cmvTotal,
+    margemBruta: cmvTotal !== null ? arredondarCentavos(total - cmvTotal) : null,
+    status: 'concluida',
     data: dataDeHoje(),
     criadoEm: new Date().toISOString(),
   };

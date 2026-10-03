@@ -17,6 +17,8 @@ exports.criarPedidoPix = onCall({ secrets: [PAGBANK_TOKEN] }, async (request) =>
 
   const valorEmCentavos = Math.round(total * 100);
 
+  const expiracao = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+
   const resposta = await fetch(`${PAGBANK_URL}/orders`, {
     method: "POST",
     headers: {
@@ -24,7 +26,6 @@ exports.criarPedidoPix = onCall({ secrets: [PAGBANK_TOKEN] }, async (request) =>
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      reference_id: vendaId,
       customer: {
         name: clienteNome || "Cliente Espaço Konduri",
         email: clienteEmail || "cliente@espacokonduri.com",
@@ -36,7 +37,33 @@ exports.criarPedidoPix = onCall({ secrets: [PAGBANK_TOKEN] }, async (request) =>
         quantity: item.qty,
         unit_amount: Math.round(item.price * 100),
       })),
-      qr_codes: [{ amount: { value: valorEmCentavos } }],
+      shipping: {
+        address: {
+          street: "Endereço do evento",
+          number: "S/N",
+          locality: "Oriximina",
+          city: "Oriximina",
+          region_code: "PA",
+          country: "BRA",
+          postal_code: "69270000",
+        },
+      },
+      charges: [
+        {
+          reference_id: vendaId,
+          description: "Venda Espaço Konduri",
+          amount: {
+            value: valorEmCentavos,
+            currency: "BRL",
+          },
+          payment_method: {
+            type: "PIX",
+            pix: {
+              expiration_date: expiracao,
+            },
+          },
+        },
+      ],
       notification_urls: [
         `https://us-central1-konduri-23eb1.cloudfunctions.net/webhookPagBank`,
       ],
@@ -46,26 +73,35 @@ exports.criarPedidoPix = onCall({ secrets: [PAGBANK_TOKEN] }, async (request) =>
   const pedido = await resposta.json();
 
   if (!resposta.ok) {
-    console.error("Erro do PagBank:", pedido);
+    console.error("Erro do PagBank:", JSON.stringify(pedido));
     throw new Error("Não foi possível criar o pedido Pix.");
   }
 
-  const qrCode = pedido.qr_codes[0];
+  const cobranca = pedido.charges?.[0];
+
+  if (!cobranca) {
+    console.error("Pedido criado sem charges:", JSON.stringify(pedido));
+    throw new Error("Resposta inesperada do PagBank.");
+  }
+
+  const qrCodeTexto = cobranca.qr_code?.text;
+  const qrCodeImagemUrl = cobranca.links?.find((l) => l.rel === "QRCODE.PNG")?.href;
 
   await db.collection("pagamentosPix").doc(pedido.id).set({
     vendaId,
     orderId: pedido.id,
-    status: "aguardando",
+    chargeId: cobranca.id,
+    status: cobranca.status === "PAID" ? "pago" : "aguardando",
     total,
-    qrCodeTexto: qrCode.text,
-    qrCodeImagemUrl: qrCode.links.find((l) => l.rel === "QRCODE.PNG")?.href,
+    qrCodeTexto,
+    qrCodeImagemUrl,
     criadoEm: new Date().toISOString(),
   });
 
   return {
     orderId: pedido.id,
-    qrCodeTexto: qrCode.text,
-    qrCodeImagemUrl: qrCode.links.find((l) => l.rel === "QRCODE.PNG")?.href,
+    qrCodeTexto,
+    qrCodeImagemUrl,
   };
 });
 
@@ -106,7 +142,6 @@ exports.verificarStatusPix = onCall({ secrets: [PAGBANK_TOKEN] }, async (request
 
   const pedido = await resposta.json();
 
-  // Log detalhado pra investigar o que o PagBank realmente devolveu
   console.log("Resposta completa do PagBank:", JSON.stringify(pedido));
   console.log("Campo charges recebido:", JSON.stringify(pedido.charges));
 

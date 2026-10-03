@@ -44,10 +44,14 @@ export async function criarProduto({
   valorSaidas,
   observacoes,
   limiteEstoqueBaixo,
+  custoUnitario,
 }) {
   const produtoRef = doc(collection(db, COLECAO_PRODUTOS));
 
   const saldoEstoque = estoqueInicial + entradaQtd - saidaQtd;
+
+  // No cadastro inicial, o custo médio começa igual ao custo informado
+  const custoMedioInicial = custoUnitario || 0;
 
   await setDoc(produtoRef, {
     title,
@@ -63,6 +67,8 @@ export async function criarProduto({
     valorSaidas,
     observacoes: observacoes || '',
     limiteEstoqueBaixo: limiteEstoqueBaixo || 5,
+    custoUnitario: custoMedioInicial,
+    custoMedio: custoMedioInicial,
     criadoEm: new Date().toISOString(),
   });
 
@@ -75,4 +81,28 @@ export async function atualizarProduto(produtoId, campos) {
 
 export async function excluirProduto(produtoId) {
   await deleteDoc(doc(db, COLECAO_PRODUTOS, produtoId));
+}
+
+export async function registrarEntradaComCusto(produtoId, { quantidade, custoUnitario }) {
+  const produto = await buscarProdutoPorId(produtoId);
+  if (!produto) throw new Error('Produto não encontrado.');
+
+  const estoqueAtual = produto.estoque ?? 0;
+  const custoMedioAtual = produto.custoMedio ?? produto.custoUnitario ?? 0;
+
+  const valorEstoqueAtual = estoqueAtual * custoMedioAtual;
+  const valorEntrada = quantidade * custoUnitario;
+  const novoEstoque = estoqueAtual + quantidade;
+
+  const novoCustoMedio = novoEstoque > 0
+    ? (valorEstoqueAtual + valorEntrada) / novoEstoque
+    : custoUnitario;
+
+  await updateDoc(doc(db, COLECAO_PRODUTOS, produtoId), {
+    estoque: novoEstoque,
+    custoMedio: novoCustoMedio,
+    custoUnitario: novoCustoMedio,
+  });
+
+  return { novoEstoque, novoCustoMedio };
 }
