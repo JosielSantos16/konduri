@@ -184,3 +184,30 @@ export const GeneralErrorText = styled.Text`
   font-size: 13px;
   text-align: center;
 `;
+
+export const HelperText = styled.Text`
+  font-size: 12px;
+  color: #8C7355;
+  margin-top: 4px;
+`;
+
+export const ChipsWrap = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+
+export const Chip = styled.TouchableOpacity`
+  padding: 8px 14px;
+  border-radius: 16px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  border-width: 1px;
+  border-color: ${props => (props.selected ? '#E67E22' : '#E6DFD5')};
+  background-color: ${props => (props.selected ? '#FEF5E7' : '#FFFFFF')};
+`;
+
+export const ChipText = styled.Text`
+  font-size: 13px;
+  font-weight: ${props => (props.selected ? 'bold' : 'normal')};
+  color: ${props => (props.selected ? '#B85D00' : '#5C4033')};
+`;

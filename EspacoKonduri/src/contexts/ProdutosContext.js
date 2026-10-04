@@ -35,7 +35,7 @@ export function ProdutosProvider({ children }) {
 
     const { id } = await criarProdutoQuery({ ...dadosProduto, image: urlImagem });
 
-    return { id };
+    return { id, image: urlImagem };
   }, []);
 
   const excluirProduto = useCallback(async (produtoId) => {

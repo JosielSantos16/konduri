@@ -45,7 +45,7 @@ export const MetodoBadge = styled.View`
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  background-color: ${(props) => (props.type === 'pix' ? '#E8F8F5' : '#E9F7EF')};
+  background-color: ${(props) => props.bg};
   justify-content: center;
   align-items: center;
   margin-right: 6px;

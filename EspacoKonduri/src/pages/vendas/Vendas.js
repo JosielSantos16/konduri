@@ -43,6 +43,7 @@ import {
 const FILTROS_METODO = [
   { key: "todos", label: "Todos" },
   { key: "pix", label: "Pix" },
+  { key: "cartao", label: "Cartão" },
   { key: "dinheiro", label: "Dinheiro" },
 ];
 
@@ -77,6 +78,7 @@ export default function Vendas() {
     operacaoDoDia,
     totalPeriodo,
     totalPix,
+    totalCartao,
     totalDinheiro,
     listaAtendentes,
     listaResumoGeral,
@@ -219,6 +221,7 @@ export default function Vendas() {
           totalPeriodo={totalPeriodo}
           qtdVendas={vendasFiltradas.length}
           totalPix={totalPix}
+          totalCartao={totalCartao}
           totalDinheiro={totalDinheiro}
           listaResumoGeral={listaResumoGeral}
         />

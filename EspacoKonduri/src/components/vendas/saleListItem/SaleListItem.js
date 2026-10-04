@@ -1,6 +1,7 @@
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { formatPrice } from "../../../utils/formatPrice";
+import { infoMetodo } from "../../../utils/metodosPagamento";
 import { formatHora } from "../../../utils/formatDateTime";
 import {
   SaleCard,
@@ -47,11 +48,11 @@ export default function SaleListItem({ venda, numero, onPress }) {
       </SaleLeft>
 
       <SaleRight>
-        <MetodoBadge type={venda.metodo}>
+        <MetodoBadge bg={infoMetodo(venda.metodo).fundo}>
           <Ionicons
-            name={venda.metodo === "pix" ? "qr-code-outline" : "cash-outline"}
+            name={infoMetodo(venda.metodo).icone}
             size={11}
-            color={venda.metodo === "pix" ? "#16A085" : "#27AE60"}
+            color={infoMetodo(venda.metodo).cor}
           />
         </MetodoBadge>
         <SalePrice>{formatPrice(venda.total)}</SalePrice>

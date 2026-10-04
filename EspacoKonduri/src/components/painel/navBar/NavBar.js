@@ -14,6 +14,8 @@ const TABS = [
   { key: "vendas", label: "Vendas", icon: "receipt-outline", route: "/vendas" },
   { key: "estoque", label: "Estoque", icon: "cube-outline", route: "/estoque" },
   { key: "controle", label: "Controle", icon: "clipboard-outline" }, // rota calculada dinamicamente
+  // Esta barra só aparece em telas de admin (RotaAdmin); o atendente usa a navBarAtendente
+  { key: "gestao", label: "Gestão", icon: "trending-up-outline", route: "/gestao" },
 ];
 
 export default function NavBar() {

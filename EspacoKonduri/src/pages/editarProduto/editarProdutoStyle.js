@@ -209,3 +209,76 @@ export const HelperText = styled.Text`
   margin-top: -6px;
   margin-bottom: 16px;
 `;
+
+export const ChipsWrap = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+
+export const Chip = styled.TouchableOpacity`
+  padding: 8px 14px;
+  border-radius: 16px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  border-width: 1px;
+  border-color: ${props => (props.selected ? '#E67E22' : '#E6DFD5')};
+  background-color: ${props => (props.selected ? '#FEF5E7' : '#FFFFFF')};
+`;
+
+export const ChipText = styled.Text`
+  font-size: 13px;
+  font-weight: ${props => (props.selected ? 'bold' : 'normal')};
+  color: ${props => (props.selected ? '#B85D00' : '#5C4033')};
+`;
+
+export const ReadOnlyContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  background-color: #F0EAE1;
+  border-radius: 12px;
+  border-width: 1px;
+  border-color: #E6DFD5;
+  padding-horizontal: 14px;
+  height: 52px;
+`;
+
+export const ReadOnlyText = styled.Text`
+  flex: 1;
+  font-size: 15px;
+  font-weight: bold;
+  color: #5C4033;
+`;
+
+export const MovimentoBox = styled.View`
+  background-color: #FFFFFF;
+  border-radius: 14px;
+  border-width: 1px;
+  border-color: #E6DFD5;
+  padding: 14px;
+  margin-bottom: 16px;
+`;
+
+export const MovimentoTitulo = styled.Text`
+  font-size: 12px;
+  font-weight: bold;
+  color: #8C7355;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+`;
+
+export const MovimentoLinha = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  padding-vertical: 4px;
+`;
+
+export const MovimentoLabel = styled.Text`
+  font-size: 13px;
+  color: #8C7355;
+`;
+
+export const MovimentoValor = styled.Text`
+  font-size: 13px;
+  font-weight: bold;
+  color: #3D2C22;
+`;

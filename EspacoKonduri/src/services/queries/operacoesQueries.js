@@ -18,6 +18,25 @@ import {
 
 const COLECAO_OPERACOES = "operacoes";
 
+// Item do produto na operação, partindo do estoque atual do produto. Usado na
+// abertura do caixa e ao incluir um produto com o caixa já aberto.
+function montarProdutoDaOperacao(produto) {
+  const estoqueAtual = produto.estoque || 0;
+  return {
+    produtoId: produto.id,
+    nome: produto.title,
+    unidade: produto.unidade || "unidades",
+    image: produto.image || null,
+    estoqueInicial: estoqueAtual,
+    entradaQtd: 0,
+    saidaQtd: 0,
+    ajusteSaidaQtd: 0,
+    valorEntradas: 0,
+    valorSaidas: 0,
+    saldoEstoque: estoqueAtual,
+  };
+}
+
 export async function abrirOperacao({
   responsavelUid,
   responsavelNome,
@@ -43,19 +62,7 @@ export async function abrirOperacao({
     produtos.map((produto) =>
       setDoc(
         doc(db, COLECAO_OPERACOES, operacaoRef.id, "produtos", produto.id),
-        {
-          produtoId: produto.id,
-          nome: produto.title,
-          unidade: produto.unidade || "unidades",
-          image: produto.image || null,
-          estoqueInicial: produto.estoque || 0,
-          entradaQtd: 0,
-          saidaQtd: 0,
-          ajusteSaidaQtd: 0,
-          valorEntradas: 0,
-          valorSaidas: 0,
-          saldoEstoque: produto.estoque || 0,
-        },
+        montarProdutoDaOperacao(produto),
       ),
     ),
   );
@@ -193,24 +200,13 @@ export async function registrarVendaNaOperacao(operacaoId, itensVendidos) {
   );
 }
 
+// Inclui um produto no caixa já aberto (produto novo, ou que ficou de fora na
+// abertura). produto = { id, title, unidade, image, estoque }
 export async function adicionarProdutoAOperacao(operacaoId, produto) {
-  const estoqueInicial = produto.estoqueInicial || 0;
-  const entradaQtd = produto.entradaQtd || 0;
-  const saidaQtd = produto.saidaQtd || 0;
-
-  await setDoc(doc(db, COLECAO_OPERACOES, operacaoId, "produtos", produto.id), {
-    produtoId: produto.id,
-    nome: produto.title,
-    unidade: produto.unidade || "un",
-    image: produto.image || null, 
-    estoqueInicial,
-    entradaQtd,
-    saidaQtd,
-    valorEntradas: produto.valorEntradas || 0,
-    valorSaidas: produto.valorSaidas || 0,
-    ajusteSaidaQtd: 0,
-    saldoEstoque: estoqueInicial + entradaQtd - saidaQtd,
-  });
+  await setDoc(
+    doc(db, COLECAO_OPERACOES, operacaoId, "produtos", produto.id),
+    montarProdutoDaOperacao(produto),
+  );
 }
 
 export async function removerProdutoDaOperacao(operacaoId, produtoId) {

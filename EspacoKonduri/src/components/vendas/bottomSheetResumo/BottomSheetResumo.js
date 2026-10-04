@@ -22,6 +22,7 @@ export default function BottomSheetResumo({
   totalPeriodo,
   qtdVendas,
   totalPix,
+  totalCartao,
   totalDinheiro,
   listaResumoGeral,
 }) {
@@ -92,6 +93,10 @@ export default function BottomSheetResumo({
             <SheetRow>
               <SheetRowLabel>Pix</SheetRowLabel>
               <SheetRowValue>{formatPrice(totalPix)}</SheetRowValue>
+            </SheetRow>
+            <SheetRow>
+              <SheetRowLabel>Cartão</SheetRowLabel>
+              <SheetRowValue>{formatPrice(totalCartao)}</SheetRowValue>
             </SheetRow>
             <SheetRow>
               <SheetRowLabel>Dinheiro</SheetRowLabel>

@@ -8,6 +8,7 @@ import { subscribeToVendasPorData } from '../../services/queries/vendasQueries';
 import { deslogarUsuario } from '../../services/queries/usuariosQueries';
 import { subscribeToComissao } from '../../services/queries/comissaoQueries';
 import { formatPrice } from '../../utils/formatPrice';
+import { totalPorMetodo } from '../../utils/metodosPagamento';
 import { formatDataFiltro, isMesmoDia } from '../../utils/formatDateTime';
 import Calendario from '../../components/painel/calendario/Calendario';
 import NavBarAtendente from '../../components/PDV/navBar/navBarAtendente';
@@ -85,8 +86,9 @@ const minhasVendas = vendasDoDia.filter((v) => v.responsavelUid === usuario?.uid
 
 
   const totalDia = minhasVendas.reduce((soma, v) => soma + v.total, 0);
-  const totalPix = minhasVendas.filter((v) => v.metodo === 'pix').reduce((s, v) => s + v.total, 0);
-  const totalDinheiro = minhasVendas.filter((v) => v.metodo === 'dinheiro').reduce((s, v) => s + v.total, 0);
+  const totalPix = totalPorMetodo(minhasVendas, 'pix');
+  const totalCartao = totalPorMetodo(minhasVendas, 'cartao');
+  const totalDinheiro = totalPorMetodo(minhasVendas, 'dinheiro');
   const qtdVendas = minhasVendas.length;
 
   const primeiroNome = usuario?.nome ? usuario.nome.split(' ')[0] : 'Atendente';
@@ -143,6 +145,13 @@ const minhasVendas = vendasDoDia.filter((v) => v.responsavelUid === usuario?.uid
             <StatLabel color="#16A085">PIX</StatLabel>
             <StatValue valueColor="#16A085">{formatPrice(totalPix)}</StatValue>
           </StatCard>
+          <StatCard bg="#E8F0FB">
+            <StatLabel color="#1A73C0">CARTÃO</StatLabel>
+            <StatValue valueColor="#1A73C0">{formatPrice(totalCartao)}</StatValue>
+          </StatCard>
+        </StatsRow>
+
+        <StatsRow>
           <StatCard bg="#E9F7EF">
             <StatLabel color="#27AE60">DINHEIRO</StatLabel>
             <StatValue valueColor="#27AE60">{formatPrice(totalDinheiro)}</StatValue>

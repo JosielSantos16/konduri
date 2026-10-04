@@ -3,6 +3,7 @@ import { registrarVendaFirestore, subscribeToVendasHoje } from '../services/quer
 import { useAuth } from '../hooks/useAuth';
 import { useCaixa } from './CaixaContext';
 import { useProdutos } from './ProdutosContext';
+import { totalPorMetodo } from '../utils/metodosPagamento';
 
 const VendasContext = createContext(null);
 
@@ -54,13 +55,9 @@ export function VendasProvider({ children }) {
 
   const faturamentoDia = vendasHoje.reduce((sum, v) => sum + v.total, 0);
 
-  const totalPix = vendasHoje
-    .filter((v) => v.metodo === 'pix')
-    .reduce((sum, v) => sum + v.total, 0);
-
-  const totalDinheiro = vendasHoje
-    .filter((v) => v.metodo === 'dinheiro')
-    .reduce((sum, v) => sum + v.total, 0);
+  const totalPix = totalPorMetodo(vendasHoje, 'pix');
+  const totalCartao = totalPorMetodo(vendasHoje, 'cartao');
+  const totalDinheiro = totalPorMetodo(vendasHoje, 'dinheiro');
 
   const maisVendidos = (() => {
   const contagem = {};
@@ -83,6 +80,7 @@ export function VendasProvider({ children }) {
         registrarVenda,
         faturamentoDia,
         totalPix,
+        totalCartao,
         totalDinheiro,
         maisVendidos,
       }}

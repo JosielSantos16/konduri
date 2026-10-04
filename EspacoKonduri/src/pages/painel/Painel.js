@@ -53,7 +53,7 @@ export default function Painel() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { usuario } = useAuth();
-  const { faturamentoDia, totalPix, totalDinheiro, maisVendidos } = useVendas();
+  const { faturamentoDia, totalPix, totalCartao, totalDinheiro, maisVendidos } = useVendas();
   const { produtos } = useProdutos();
   const [atualizando, setAtualizando] = useState(false);
 
@@ -117,13 +117,22 @@ export default function Painel() {
 
         <StatsRow>
           <StatCard bg="#E8F8F5">
-            <StatLabel color="#16A085">TOTAL EM PIX</StatLabel>
-            <StatValue valueColor="#16A085">{formatPrice(totalPix)}</StatValue>
+            <StatLabel color="#16A085">PIX</StatLabel>
+            <StatValue valueColor="#16A085" numberOfLines={1} adjustsFontSizeToFit>
+              {formatPrice(totalPix)}
+            </StatValue>
+          </StatCard>
+
+          <StatCard bg="#E8F0FB">
+            <StatLabel color="#1A73C0">CARTÃO</StatLabel>
+            <StatValue valueColor="#1A73C0" numberOfLines={1} adjustsFontSizeToFit>
+              {formatPrice(totalCartao)}
+            </StatValue>
           </StatCard>
 
           <StatCard bg="#E9F7EF">
-            <StatLabel color="#27AE60">TOTAL EM DINHEIRO</StatLabel>
-            <StatValue valueColor="#27AE60">
+            <StatLabel color="#27AE60">DINHEIRO</StatLabel>
+            <StatValue valueColor="#27AE60" numberOfLines={1} adjustsFontSizeToFit>
               {formatPrice(totalDinheiro)}
             </StatValue>
           </StatCard>

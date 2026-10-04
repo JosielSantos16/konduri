@@ -2,6 +2,7 @@ import React from "react";
 import { Modal } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { formatPrice } from "../../../utils/formatPrice";
+import { infoMetodo } from "../../../utils/metodosPagamento";
 import { formatHora } from "../../../utils/formatDateTime";
 import {
   DetalheOverlay,
@@ -52,7 +53,7 @@ export default function DetalheVendaModal({ venda, onClose }) {
           </DetalheInfoRow>
           <DetalheInfoRow>
             <DetalheInfoLabel>Forma de pagamento</DetalheInfoLabel>
-            <DetalheInfoValue>{venda.metodo === "pix" ? "Pix" : "Dinheiro"}</DetalheInfoValue>
+            <DetalheInfoValue>{infoMetodo(venda.metodo).label}</DetalheInfoValue>
           </DetalheInfoRow>
           <DetalheInfoRow>
             <DetalheInfoLabel>Total de unidades</DetalheInfoLabel>

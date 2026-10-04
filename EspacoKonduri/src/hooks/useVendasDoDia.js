@@ -7,6 +7,7 @@ import {
 import { buscarDiasComComissaoNoMes } from "../services/queries/comissaoQueries";
 import { buscarOperacaoPorData } from "../services/queries/operacoesQueries";
 import { useAuth } from "./useAuth";
+import { totalPorMetodo } from "../utils/metodosPagamento";
 
 const FILTROS_METODO_TODOS = "todos";
 
@@ -90,10 +91,9 @@ export function useVendasDoDia() {
 
   // Totais gerais do dia
   const totalPeriodo = vendasFiltradas.reduce((sum, v) => sum + v.total, 0);
-  const totalPix = vendasFiltradas.filter((v) => v.metodo === "pix").reduce((s, v) => s + v.total, 0);
-  const totalDinheiro = vendasFiltradas
-    .filter((v) => v.metodo === "dinheiro")
-    .reduce((s, v) => s + v.total, 0);
+  const totalPix = totalPorMetodo(vendasFiltradas, "pix");
+  const totalCartao = totalPorMetodo(vendasFiltradas, "cartao");
+  const totalDinheiro = totalPorMetodo(vendasFiltradas, "dinheiro");
 
   // Base de comissão (só produtos) e resumo geral, agrupados por atendente
   const atendentesDoDia = {};
@@ -176,6 +176,7 @@ export function useVendasDoDia() {
     operacaoDoDia,
     totalPeriodo,
     totalPix,
+    totalCartao,
     totalDinheiro,
     listaAtendentes,
     listaResumoGeral,

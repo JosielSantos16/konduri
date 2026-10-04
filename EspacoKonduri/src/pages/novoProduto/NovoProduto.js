@@ -5,6 +5,9 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useProdutos } from '../../contexts/ProdutosContext';
+import { useCaixa } from '../../contexts/CaixaContext';
+import { adicionarProdutoAOperacao } from '../../services/queries/operacoesQueries';
+import { CATEGORIAS_PRODUTO } from '../../utils/categoriasProduto';
 import {
   Container,
   ScrollContainer,
@@ -18,20 +21,20 @@ import {
   Label,
   InputContainer,
   Input,
-  Row,
   ErrorText,
+  HelperText,
   CategoryOptions,
   CategoryButton,
   CategoryButtonText,
+  ChipsWrap,
+  Chip,
+  ChipText,
   SaveButton,
   SaveButtonText,
   ErrorBox,
   GeneralErrorText,
   TextArea,
   TextAreaContainer,
-  PreviewBox,
-  PreviewLabel,
-  PreviewValue,
 } from './novoProdutoStyle';
 
 function aplicarMascaraMoeda(textoDigitado) {
@@ -46,19 +49,18 @@ export default function NovoProduto() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { criarProduto } = useProdutos();
+  const { caixaAberto, operacaoId } = useCaixa();
 
   const [foto, setFoto] = useState(null);
   const [nome, setNome] = useState('');
+  // "Vender como": 'produtos' | 'ingressos' (separa as abas do PDV)
   const [categoria, setCategoria] = useState('produtos');
-  const [custoUnitario, setCustoUnitario] = useState('');
   const [preco, setPreco] = useState('');
-  const [estoqueInicial, setEstoqueInicial] = useState('');
-  const [entradaQtd, setEntradaQtd] = useState('');
-  const [valorEntradas, setValorEntradas] = useState('');
-  const [saidaQtd, setSaidaQtd] = useState('');
-  const [valorSaidas, setValorSaidas] = useState('');
-  const [observacoes, setObservacoes] = useState('');
+  const [custoUnitario, setCustoUnitario] = useState('');
+  const [estoqueAtual, setEstoqueAtual] = useState('');
   const [limiteEstoqueBaixo, setLimiteEstoqueBaixo] = useState('5');
+  const [categoriaProduto, setCategoriaProduto] = useState(null);
+  const [observacoes, setObservacoes] = useState('');
 
   const [salvando, setSalvando] = useState(false);
   const [erros, setErros] = useState({});
@@ -88,27 +90,12 @@ export default function NovoProduto() {
     if (erros.preco) setErros((prev) => ({ ...prev, preco: null }));
   };
 
-  const handleChangeValorEntradas = (texto) => {
-    setValorEntradas(aplicarMascaraMoeda(texto));
-    if (erros.valorEntradas) setErros((prev) => ({ ...prev, valorEntradas: null }));
-  };
-
-  const handleChangeValorSaidas = (texto) => {
-    setValorSaidas(aplicarMascaraMoeda(texto));
-    if (erros.valorSaidas) setErros((prev) => ({ ...prev, valorSaidas: null }));
-  };
-
   const handleChangeCustoUnitario = (texto) => {
-  setCustoUnitario(aplicarMascaraMoeda(texto));
-  if (erros.custoUnitario) setErros((prev) => ({ ...prev, custoUnitario: null }));
-};
+    setCustoUnitario(aplicarMascaraMoeda(texto));
+    if (erros.custoUnitario) setErros((prev) => ({ ...prev, custoUnitario: null }));
+  };
 
   const parseNumero = (valor) => Number((valor || '0').replace(',', '.')) || 0;
-
-  const estoqueInicialNumero = parseNumero(estoqueInicial);
-  const entradaQtdNumero = parseNumero(entradaQtd);
-  const saidaQtdNumero = parseNumero(saidaQtd);
-  const saldoPrevisto = estoqueInicialNumero + entradaQtdNumero - saidaQtdNumero;
 
   const validarNumero = (valor) => {
     const numero = parseNumero(valor);
@@ -123,14 +110,11 @@ export default function NovoProduto() {
     const precoNumero = parseNumero(preco);
     if (!preco || precoNumero <= 0) novosErros.preco = 'Informe um preço válido.';
 
-    const custoNumero = parseNumero(custoUnitario);
-if (custoUnitario && custoNumero > parseNumero(preco)) {
-  novosErros.custoUnitario = 'O custo não pode ser maior que o preço de venda.';
-}
+    if (custoUnitario && parseNumero(custoUnitario) > precoNumero) {
+      novosErros.custoUnitario = 'O custo não pode ser maior que o preço de venda.';
+    }
 
-    if (validarNumero(estoqueInicial)) novosErros.estoqueInicial = 'Informe uma quantidade válida.';
-    if (validarNumero(entradaQtd)) novosErros.entradaQtd = 'Informe uma quantidade válida.';
-    if (validarNumero(saidaQtd)) novosErros.saidaQtd = 'Informe uma quantidade válida.';
+    if (validarNumero(estoqueAtual)) novosErros.estoqueAtual = 'Informe uma quantidade válida.';
     if (validarNumero(limiteEstoqueBaixo)) novosErros.limiteEstoqueBaixo = 'Informe um número válido.';
 
     setErros(novosErros);
@@ -143,24 +127,39 @@ if (custoUnitario && custoNumero > parseNumero(preco)) {
     setSalvando(true);
     setErroGeral(null);
 
+    const estoqueNumero = parseNumero(estoqueAtual);
+
     try {
-      await criarProduto(
+      // Entradas e saídas começam zeradas: no cadastro, o estoque atual é o estoque inicial
+      const { id, image } = await criarProduto(
         {
           title: nome.trim(),
           price: parseNumero(preco),
           category: categoria,
+          categoriaProduto,
           unidade: UNIDADE_PADRAO,
-          estoqueInicial: estoqueInicialNumero,
-          entradaQtd: entradaQtdNumero,
-          saidaQtd: saidaQtdNumero,
-          valorEntradas: parseNumero(valorEntradas),
-          valorSaidas: parseNumero(valorSaidas),
+          estoqueInicial: estoqueNumero,
+          entradaQtd: 0,
+          saidaQtd: 0,
+          valorEntradas: 0,
+          valorSaidas: 0,
           custoUnitario: parseNumero(custoUnitario),
           observacoes: observacoes.trim(),
           limiteEstoqueBaixo: Number(limiteEstoqueBaixo) || 5,
         },
         foto
       );
+
+      // Com o caixa aberto, o produto já entra no Controle do Dia
+      if (caixaAberto && operacaoId) {
+        await adicionarProdutoAOperacao(operacaoId, {
+          id,
+          title: nome.trim(),
+          unidade: UNIDADE_PADRAO,
+          image,
+          estoque: estoqueNumero,
+        });
+      }
 
       router.back();
     } catch (erro) {
@@ -181,24 +180,13 @@ if (custoUnitario && custoNumero > parseNumero(preco)) {
           <HeaderTitle>Novo Produto</HeaderTitle>
         </Header>
 
-        <PhotoPicker onPress={escolherFoto}>
-          {foto ? (
-            <PhotoPreview source={{ uri: foto }} />
-          ) : (
-            <>
-              <Ionicons name="camera-outline" size={28} color="#8C7355" />
-              <PhotoPickerText>Adicionar{'\n'}foto</PhotoPickerText>
-            </>
-          )}
-        </PhotoPicker>
-
         <InputGroup>
           <Label>Nome do produto</Label>
           <InputContainer hasError={!!erros.nome}>
             <Input
               value={nome}
               onChangeText={setNome}
-              placeholder="Ex: Cerveja Gelada"
+              placeholder="Ex: Cerveja Império lata 269 ml"
               placeholderTextColor="#A99B8F"
             />
           </InputContainer>
@@ -206,130 +194,61 @@ if (custoUnitario && custoNumero > parseNumero(preco)) {
         </InputGroup>
 
         <InputGroup>
-          <Label>Categoria</Label>
+          <Label>Vender como</Label>
           <CategoryOptions>
             <CategoryButton selected={categoria === 'produtos'} onPress={() => setCategoria('produtos')}>
-              <CategoryButtonText selected={categoria === 'produtos'}>Produtos</CategoryButtonText>
+              <CategoryButtonText selected={categoria === 'produtos'}>Produto</CategoryButtonText>
             </CategoryButton>
             <CategoryButton selected={categoria === 'ingressos'} onPress={() => setCategoria('ingressos')}>
-              <CategoryButtonText selected={categoria === 'ingressos'}>Ingressos</CategoryButtonText>
+              <CategoryButtonText selected={categoria === 'ingressos'}>Ingresso</CategoryButtonText>
             </CategoryButton>
           </CategoryOptions>
         </InputGroup>
 
-        <Row>
-          <InputGroup style={{ flex: 1, marginRight: 10 }}>
-            <Label>Preço (R$)</Label>
-            <InputContainer hasError={!!erros.preco}>
-              <Input
-                value={preco}
-                onChangeText={handleChangePreco}
-                placeholder="0,00"
-                keyboardType="numeric"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.preco && <ErrorText>{erros.preco}</ErrorText>}
-          </InputGroup>
-
-          <InputGroup style={{ flex: 1 }}>
-            <Label>Estoque Inicial</Label>
-            <InputContainer hasError={!!erros.estoqueInicial}>
-              <Input
-                value={estoqueInicial}
-                onChangeText={setEstoqueInicial}
-                placeholder="0"
-                keyboardType="decimal-pad"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.estoqueInicial && <ErrorText>{erros.estoqueInicial}</ErrorText>}
-          </InputGroup>
-        </Row>
-
-        <Row>
-          <InputGroup style={{ flex: 1, marginRight: 10 }}>
-            <Label>Entrada (Qtd.)</Label>
-            <InputContainer hasError={!!erros.entradaQtd}>
-              <Input
-                value={entradaQtd}
-                onChangeText={setEntradaQtd}
-                placeholder="0"
-                keyboardType="decimal-pad"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.entradaQtd && <ErrorText>{erros.entradaQtd}</ErrorText>}
-          </InputGroup>
-
-          <InputGroup style={{ flex: 1 }}>
-            <Label>Valor Entradas (R$)</Label>
-            <InputContainer hasError={!!erros.valorEntradas}>
-              <Input
-                value={valorEntradas}
-                onChangeText={handleChangeValorEntradas}
-                placeholder="0,00"
-                keyboardType="numeric"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.valorEntradas && <ErrorText>{erros.valorEntradas}</ErrorText>}
-          </InputGroup>
-        </Row>
-
-        <Row>
-          <InputGroup style={{ flex: 1, marginRight: 10 }}>
-            <Label>Saída / Venda (Qtd.)</Label>
-            <InputContainer hasError={!!erros.saidaQtd}>
-              <Input
-                value={saidaQtd}
-                onChangeText={setSaidaQtd}
-                placeholder="0"
-                keyboardType="decimal-pad"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.saidaQtd && <ErrorText>{erros.saidaQtd}</ErrorText>}
-          </InputGroup>
-
-          <InputGroup style={{ flex: 1 }}>
-            <Label>Valor Saídas (R$)</Label>
-            <InputContainer hasError={!!erros.valorSaidas}>
-              <Input
-                value={valorSaidas}
-                onChangeText={handleChangeValorSaidas}
-                placeholder="0,00"
-                keyboardType="numeric"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.valorSaidas && <ErrorText>{erros.valorSaidas}</ErrorText>}
-          </InputGroup>
-        </Row>
-
-        <Row>
-  <InputGroup style={{ flex: 1 }}>
-    <Label>Custo Unitário (R$)</Label>
-    <InputContainer hasError={!!erros.custoUnitario}>
-      <Input
-        value={custoUnitario}
-        onChangeText={handleChangeCustoUnitario}
-        placeholder="0,00"
-        keyboardType="numeric"
-        placeholderTextColor="#A99B8F"
-      />
-    </InputContainer>
-    {erros.custoUnitario && <ErrorText>{erros.custoUnitario}</ErrorText>}
-  </InputGroup>
-</Row>
-
-        <PreviewBox>
-          <PreviewLabel>SALDO EM ESTOQUE</PreviewLabel>
-          <PreviewValue>{saldoPrevisto}</PreviewValue>
-        </PreviewBox>
+        <InputGroup>
+          <Label>Preço de venda (R$)</Label>
+          <InputContainer hasError={!!erros.preco}>
+            <Input
+              value={preco}
+              onChangeText={handleChangePreco}
+              placeholder="0,00"
+              keyboardType="numeric"
+              placeholderTextColor="#A99B8F"
+            />
+          </InputContainer>
+          {erros.preco && <ErrorText>{erros.preco}</ErrorText>}
+        </InputGroup>
 
         <InputGroup>
-          <Label>Avisar quando o estoque for menor que</Label>
+          <Label>Custo unitário (R$)</Label>
+          <InputContainer hasError={!!erros.custoUnitario}>
+            <Input
+              value={custoUnitario}
+              onChangeText={handleChangeCustoUnitario}
+              placeholder="0,00"
+              keyboardType="numeric"
+              placeholderTextColor="#A99B8F"
+            />
+          </InputContainer>
+          {erros.custoUnitario && <ErrorText>{erros.custoUnitario}</ErrorText>}
+        </InputGroup>
+
+        <InputGroup>
+          <Label>Estoque atual</Label>
+          <InputContainer hasError={!!erros.estoqueAtual}>
+            <Input
+              value={estoqueAtual}
+              onChangeText={setEstoqueAtual}
+              placeholder="0"
+              keyboardType="decimal-pad"
+              placeholderTextColor="#A99B8F"
+            />
+          </InputContainer>
+          {erros.estoqueAtual && <ErrorText>{erros.estoqueAtual}</ErrorText>}
+        </InputGroup>
+
+        <InputGroup>
+          <Label>Estoque mínimo</Label>
           <InputContainer hasError={!!erros.limiteEstoqueBaixo}>
             <Input
               value={limiteEstoqueBaixo}
@@ -339,7 +258,42 @@ if (custoUnitario && custoNumero > parseNumero(preco)) {
               placeholderTextColor="#A99B8F"
             />
           </InputContainer>
-          {erros.limiteEstoqueBaixo && <ErrorText>{erros.limiteEstoqueBaixo}</ErrorText>}
+          {erros.limiteEstoqueBaixo ? (
+            <ErrorText>{erros.limiteEstoqueBaixo}</ErrorText>
+          ) : (
+            <HelperText>Avisa quando o estoque chegar a este número.</HelperText>
+          )}
+        </InputGroup>
+
+        <InputGroup>
+          <Label>Categoria (opcional)</Label>
+          <ChipsWrap>
+            {CATEGORIAS_PRODUTO.map((nomeCategoria) => (
+              <Chip
+                key={nomeCategoria}
+                selected={categoriaProduto === nomeCategoria}
+                onPress={() =>
+                  setCategoriaProduto(categoriaProduto === nomeCategoria ? null : nomeCategoria)
+                }
+              >
+                <ChipText selected={categoriaProduto === nomeCategoria}>{nomeCategoria}</ChipText>
+              </Chip>
+            ))}
+          </ChipsWrap>
+        </InputGroup>
+
+        <InputGroup>
+          <Label>Foto</Label>
+          <PhotoPicker onPress={escolherFoto} style={{ marginBottom: 0 }}>
+            {foto ? (
+              <PhotoPreview source={{ uri: foto }} />
+            ) : (
+              <>
+                <Ionicons name="camera-outline" size={28} color="#8C7355" />
+                <PhotoPickerText>Adicionar{'\n'}foto</PhotoPickerText>
+              </>
+            )}
+          </PhotoPicker>
         </InputGroup>
 
         <InputGroup>

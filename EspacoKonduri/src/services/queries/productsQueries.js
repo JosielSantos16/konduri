@@ -50,6 +50,7 @@ export async function criarProduto({
   observacoes,
   limiteEstoqueBaixo,
   custoUnitario,
+  categoriaProduto,
 }) {
   const produtoRef = doc(collection(db, COLECAO_PRODUTOS));
 
@@ -72,6 +73,7 @@ export async function criarProduto({
     valorSaidas,
     observacoes: observacoes || '',
     limiteEstoqueBaixo: limiteEstoqueBaixo || 5,
+    categoriaProduto: categoriaProduto || null,
     custoUnitario: custoMedioInicial,
     custoMedio: custoMedioInicial,
     criadoEm: new Date().toISOString(),
