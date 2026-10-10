@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { formatPrice } from '../../utils/formatPrice';
 import { formatDataHoraComprovante } from '../../utils/formatDateTime';
+import { infoMetodo } from '../../utils/metodosPagamento';
 import {
   criarPedidoImpressao,
   subscribeToStatusImpressao,
@@ -47,7 +48,7 @@ export default function StatusVenda() {
   } = useLocalSearchParams();
 
   const valorPago = Number(total) || 0;
-  const metodoLabel = metodo === 'pix' ? 'PIX' : 'Dinheiro';
+  const metodoLabel = infoMetodo(metodo).label;
   const dataFormatada = data ? formatDataHoraComprovante(data) : '';
   const numeroComprovante = comprovante ? comprovante.slice(-4) : '0000';
   const itensVenda = itens ? JSON.parse(itens) : [];

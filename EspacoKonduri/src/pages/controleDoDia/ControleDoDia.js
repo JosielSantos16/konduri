@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useFocusEffect } from "expo-router";
 import SafeContainer from "../../styles/SafeContainer";
 import { useCaixa } from "../../contexts/CaixaContext";
+import { useProdutos } from "../../contexts/ProdutosContext";
 import { Alert } from "react-native";
 import { listarProdutosDaOperacao } from "../../services/queries/operacoesQueries";
 import ProdutoControleCard from "../../components/controleDoDia/ProdutoControleCard";
@@ -53,6 +54,8 @@ function formatarDataHoje() {
 export default function ControleDoDia() {
   const router = useRouter();
   const { operacaoId, responsavel } = useCaixa();
+  // O limite de estoque baixo fica no cadastro do produto, não no item do caixa
+  const { produtos: catalogo } = useProdutos();
 
   const [produtos, setProdutos] = useState([]);
   const [carregando, setCarregando] = useState(true);
@@ -189,7 +192,10 @@ export default function ControleDoDia() {
           {produtos.map((produto) => (
             <ProdutoControleCard
               key={produto.id}
-              produto={produto}
+              produto={{
+                ...produto,
+                limiteEstoqueBaixo: catalogo.find((p) => p.id === produto.id)?.limiteEstoqueBaixo,
+              }}
               onEdit={() => handleEditarProduto(produto)}
               onEntrada={() => setProdutoEntradaId(produto.id)}
             />

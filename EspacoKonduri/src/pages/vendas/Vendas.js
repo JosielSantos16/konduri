@@ -10,6 +10,7 @@ import ComissaoModal from "../../components/vendas/comissaoAtendente/ComissaoMod
 import DetalheVendaModal from "../../components/vendas/detalheVenda/DetalheVendaModal";
 import BottomSheetResumo from "../../components/vendas/bottomSheetResumo/BottomSheetResumo";
 import SaleListItem from "../../components/vendas/saleListItem/SaleListItem";
+import { ehAdmin } from "../../utils/permissoes";
 import {
   Container,
   Header,
@@ -77,6 +78,7 @@ export default function Vendas() {
     setFiltroMetodo,
     operacaoDoDia,
     totalPeriodo,
+    qtdVendasValidas,
     totalPix,
     totalCartao,
     totalDinheiro,
@@ -219,7 +221,7 @@ export default function Vendas() {
       {vendasFiltradas.length > 0 && (
         <BottomSheetResumo
           totalPeriodo={totalPeriodo}
-          qtdVendas={vendasFiltradas.length}
+          qtdVendas={qtdVendasValidas}
           totalPix={totalPix}
           totalCartao={totalCartao}
           totalDinheiro={totalDinheiro}
@@ -227,7 +229,13 @@ export default function Vendas() {
         />
       )}
 
-      <DetalheVendaModal venda={vendaSelecionada} onClose={() => setVendaSelecionada(null)} />
+      <DetalheVendaModal
+        // Versão atual da venda (o snapshot atualiza depois do cancelamento)
+        venda={vendasFiltradas.find((v) => v.id === vendaSelecionada?.id) || vendaSelecionada}
+        onClose={() => setVendaSelecionada(null)}
+        podeCancelar={ehAdmin(usuario)}
+        usuario={usuario}
+      />
 
       <ComissaoModal
         visible={comissaoModalVisivel}

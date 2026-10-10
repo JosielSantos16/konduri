@@ -10,6 +10,7 @@ export const TIPOS_MOVIMENTO = {
   VENDA: 'VENDA',
   AJUSTE_ENTRADA: 'AJUSTE_ENTRADA',
   AJUSTE_SAIDA: 'AJUSTE_SAIDA',
+  ESTORNO_VENDA: 'ESTORNO_VENDA', // devolução ao estoque por cancelamento de venda
   PERDA: 'PERDA',
   CORTESIA: 'CORTESIA',
 };

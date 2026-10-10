@@ -67,6 +67,23 @@ export default function ClienteHome() {
   const [meusPedidosAtivos, setMeusPedidosAtivos] = useState([]);
   const [ordenacao, setOrdenacao] = useState("padrao");
 
+  // Estoque disponível = estoque menos o que já está reservado em pedidos ativos.
+  // O carrinho usa esse número como limite (antes usava o estoque total e o
+  // cliente conseguia pedir mais do que havia)
+  const quantidadeReservadaPorProduto = pedidosAtivosGeral.reduce(
+    (acc, pedido) => {
+      (pedido.itens || []).forEach((item) => {
+        acc[item.id] = (acc[item.id] || 0) + item.qty;
+      });
+      return acc;
+    },
+    {},
+  );
+  const produtosComEstoqueDisponivel = produtos.map((item) => ({
+    ...item,
+    estoque: Math.max(0, (item.estoque ?? 0) - (quantidadeReservadaPorProduto[item.id] || 0)),
+  }));
+
   const {
     cart,
     handleIncrease,
@@ -75,7 +92,7 @@ export default function ClienteHome() {
     clearCart,
     totalItems,
     totalPrice,
-  } = useCart(produtos);
+  } = useCart(produtosComEstoqueDisponivel);
 
   useEffect(() => {
     const unsubscribe = subscribeToPedidosAtivos((lista) => {
@@ -127,16 +144,6 @@ export default function ClienteHome() {
     }, [totalItems]),
   );
 
-  const quantidadeReservadaPorProduto = pedidosAtivosGeral.reduce(
-    (acc, pedido) => {
-      (pedido.itens || []).forEach((item) => {
-        acc[item.id] = (acc[item.id] || 0) + item.qty;
-      });
-      return acc;
-    },
-    {},
-  );
-
   const handleRefresh = async () => {
     setAtualizando(true);
     await new Promise((resolve) => setTimeout(resolve, 600));
@@ -147,13 +154,8 @@ export default function ClienteHome() {
     (maisVendidos || []).slice(0, 3).map((v) => v.title),
   );
 
-  let produtosDisponiveis = produtos
+  let produtosDisponiveis = produtosComEstoqueDisponivel
     .filter((item) => item.category === "produtos")
-    .map((item) => {
-      const reservado = quantidadeReservadaPorProduto[item.id] || 0;
-      const estoqueAjustado = Math.max(0, (item.estoque ?? 0) - reservado);
-      return { ...item, estoque: estoqueAjustado };
-    })
     .filter((item) => item.estoque > 0);
 
   if (ordenacao === "preco-asc") {
@@ -178,16 +180,25 @@ export default function ClienteHome() {
   };
 
   const handleEnviarPedido = async () => {
-    const itens = Object.entries(cart).map(([id, qty]) => {
-      const produto = produtos.find((p) => p.id === id);
-      return {
-        id: produto.id,
-        title: produto.title,
-        qty,
-        price: produto.price,
-        image: produto.image,
-      };
-    });
+    // Produto pode ter sido excluído do catálogo com ele ainda no carrinho
+    const itens = Object.entries(cart)
+      .map(([id, qty]) => {
+        const produto = produtos.find((p) => p.id === id);
+        if (!produto) return null;
+        return {
+          id: produto.id,
+          title: produto.title,
+          qty,
+          price: produto.price,
+          image: produto.image,
+        };
+      })
+      .filter(Boolean);
+    if (itens.length === 0) {
+      Alert.alert("Carrinho vazio", "Os produtos do carrinho não estão mais disponíveis.");
+      clearCart();
+      return;
+    }
 
     try {
       await criarPedido({
@@ -216,12 +227,14 @@ export default function ClienteHome() {
     }
   };
 
-  const itensCarrinhoDetalhados = Object.entries(cart).map(([id, qty]) => {
-    const produto =
-      produtosDisponiveis.find((p) => p.id === id) ||
-      produtos.find((p) => p.id === id);
-    return { ...produto, qty };
-  });
+  const itensCarrinhoDetalhados = Object.entries(cart)
+    .map(([id, qty]) => {
+      const produto =
+        produtosDisponiveis.find((p) => p.id === id) ||
+        produtos.find((p) => p.id === id);
+      return produto ? { ...produto, qty } : null;
+    })
+    .filter(Boolean);
 
   return (
     <Container style={{ paddingTop: insets.top }}>

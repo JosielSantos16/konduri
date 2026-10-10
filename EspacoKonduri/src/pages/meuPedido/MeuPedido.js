@@ -9,11 +9,12 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../hooks/useAuth";
+import { useProdutos } from "../../contexts/ProdutosContext";
 import {
   subscribeToPedidosDoCliente,
-  atualizarStatusPedido,
+  cancelarPedidoDoCliente,
+  ERRO_PEDIDO_STATUS_MUDOU,
   criarPedido,
-  apagarPedido,
 } from "../../services/queries/pedidosQueries";
 import { criarNotificacaoPorPerfil } from "../../services/queries/notificacoesQueries";
 import { formatPrice } from "../../utils/formatPrice";
@@ -68,6 +69,7 @@ export default function MeuPedido() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { usuario } = useAuth();
+  const { produtos } = useProdutos();
   const [pedidos, setPedidos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [atualizando, setAtualizando] = useState(false);
@@ -103,13 +105,15 @@ export default function MeuPedido() {
           onPress: async () => {
             setCancelandoId(pedido.id);
             try {
-              await atualizarStatusPedido(pedido.id, "cancelado");
+              await cancelarPedidoDoCliente(pedido.id);
 
               const resumoItens = (pedido.itens || [])
                 .map((item) => `${item.qty}x ${item.title}`)
                 .join(", ");
 
-              await criarNotificacaoPorPerfil({
+              // A ação já foi gravada: se a notificação falhar, não pode virar erro na tela
+              // (a pessoa tentaria de novo e duplicaria)
+              criarNotificacaoPorPerfil({
                 paraPerfis: ["atendente", "adm"],
                 tipo: "pedido_cancelado",
                 titulo: "Pedido cancelado pelo cliente",
@@ -122,8 +126,17 @@ export default function MeuPedido() {
                 total: pedido.total,
                 clienteNome: usuario.nome,
                 rota: "/pedido",
-              });
+              }).catch((erro) =>
+                console.error("A ação foi salva, mas a notificação falhou:", erro),
+              );
             } catch (erro) {
+              if (erro.message === ERRO_PEDIDO_STATUS_MUDOU) {
+                Alert.alert(
+                  "Não é mais possível cancelar",
+                  "Seu pedido já entrou em preparo. Fale com o atendente.",
+                );
+                return;
+              }
               console.error("Erro ao cancelar pedido:", erro);
               Alert.alert(
                 "Erro",
@@ -149,17 +162,48 @@ export default function MeuPedido() {
           onPress: async () => {
             setRefazendoId(pedido.id);
             try {
+              // Monta de novo com o preço e o estoque de agora: o pedido antigo
+              // pode ter preço desatualizado ou produto que acabou
+              const foraDoPedido = [];
+              const itens = (pedido.itens || [])
+                .map((item) => {
+                  const produto = produtos.find((p) => p.id === item.id);
+                  const disponivel = produto?.estoque ?? 0;
+                  if (!produto || disponivel <= 0) {
+                    foraDoPedido.push(item.title);
+                    return null;
+                  }
+                  return {
+                    id: produto.id,
+                    title: produto.title,
+                    qty: Math.min(item.qty, disponivel),
+                    price: produto.price,
+                    image: produto.image,
+                  };
+                })
+                .filter(Boolean);
+
+              if (itens.length === 0) {
+                Alert.alert(
+                  "Não foi possível refazer",
+                  "Os produtos desse pedido não estão disponíveis agora.",
+                );
+                return;
+              }
+
               await criarPedido({
-  clienteUid: usuario.uid,
-  clienteNome: usuario.nome,
-  clienteFoto: usuario.foto || null, // ← adiciona essa linha
-  itens: pedido.itens,
-  total: pedido.total,
-  observacoes: pedido.observacoes || '',
-});
+                clienteUid: usuario.uid,
+                clienteNome: usuario.nome,
+                clienteFoto: usuario.foto || null,
+                itens,
+                total: itens.reduce((soma, item) => soma + item.qty * item.price, 0),
+                observacoes: pedido.observacoes || "",
+              });
               Alert.alert(
                 "Pedido reenviado!",
-                "Seu pedido foi enviado novamente.",
+                foraDoPedido.length > 0
+                  ? `Seu pedido foi enviado com os preços de agora. Ficaram de fora por falta de estoque: ${foraDoPedido.join(", ")}.`
+                  : "Seu pedido foi enviado novamente, com os preços de agora.",
               );
             } catch (erro) {
               console.error("Erro ao refazer pedido:", erro);

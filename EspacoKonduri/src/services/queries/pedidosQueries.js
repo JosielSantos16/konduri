@@ -11,6 +11,7 @@ import {
   where,
   orderBy,
   getDoc,
+  runTransaction,
 } from "firebase/firestore";
 
 import {
@@ -19,6 +20,23 @@ import {
 } from "./notificacoesQueries";
 
 const COLECAO_PEDIDOS = "pedidos";
+
+// O cliente só pode cancelar ou editar enquanto o pedido não entrou em preparo
+export const STATUS_ALTERAVEIS_PELO_CLIENTE = ["pendente", "aceito"];
+export const ERRO_PEDIDO_STATUS_MUDOU = "PEDIDO_STATUS_MUDOU";
+
+// Muda o status só se ele ainda estiver como a tela mostrava (statusPermitidos).
+// Evita que um aparelho com a lista desatualizada faça o pedido voltar de etapa
+// ou que o cliente cancele um pedido que já está em preparo.
+async function mudarStatusComConferencia(pedidoId, novoStatus, statusPermitidos) {
+  const pedidoRef = doc(db, COLECAO_PEDIDOS, pedidoId);
+  await runTransaction(db, async (transaction) => {
+    const snapshot = await transaction.get(pedidoRef);
+    if (!snapshot.exists()) throw new Error("Pedido não encontrado.");
+    if (!statusPermitidos.includes(snapshot.data().status)) throw new Error(ERRO_PEDIDO_STATUS_MUDOU);
+    transaction.update(pedidoRef, { status: novoStatus, atualizadoEm: new Date().toISOString() });
+  });
+}
 
 export async function ocultarPedido(pedidoId, uid) {
   await updateDoc(doc(db, COLECAO_PEDIDOS, pedidoId), {
@@ -45,7 +63,9 @@ export async function criarPedido({ clienteUid, clienteNome, clienteFoto, itens,
     ? `${clienteNome}: ${formatarResumoItens(itens)} — "${observacoes}"`
     : `${clienteNome}: ${formatarResumoItens(itens)}`;
 
-  await criarNotificacaoPorPerfil({
+  // A ação já foi gravada: se a notificação falhar, não pode virar erro na tela
+  // (a pessoa tentaria de novo e duplicaria)
+  criarNotificacaoPorPerfil({
     paraPerfis: ['atendente', 'adm'],
     tipo: 'novo_pedido',
     titulo: 'Novo pedido recebido',
@@ -55,7 +75,9 @@ export async function criarPedido({ clienteUid, clienteNome, clienteFoto, itens,
     total: total,
     clienteNome: clienteNome,
     rota: '/pedido',
-  });
+  }).catch((erro) =>
+    console.error("A ação foi salva, mas a notificação falhou:", erro),
+  );
 
   return { id: pedidoRef.id };
 }
@@ -83,11 +105,16 @@ export function subscribeToPedidosAtivos(callback) {
 }
 
 
-export async function atualizarStatusPedido(pedidoId, novoStatus, clienteUid) {
-  await updateDoc(doc(db, COLECAO_PEDIDOS, pedidoId), {
-    status: novoStatus,
-    atualizadoEm: new Date().toISOString(),
-  });
+// statusAtual: o status que a atendente estava vendo ao tocar no botão
+export async function atualizarStatusPedido(pedidoId, novoStatus, clienteUid, statusAtual) {
+  if (statusAtual) {
+    await mudarStatusComConferencia(pedidoId, novoStatus, [statusAtual]);
+  } else {
+    await updateDoc(doc(db, COLECAO_PEDIDOS, pedidoId), {
+      status: novoStatus,
+      atualizadoEm: new Date().toISOString(),
+    });
+  }
 
   const mensagens = {
     aceito: "Seu pedido foi aceito e já entrou na fila!",
@@ -98,7 +125,9 @@ export async function atualizarStatusPedido(pedidoId, novoStatus, clienteUid) {
   if (clienteUid && mensagens[novoStatus]) {
     const pedido = await buscarPedidoPorId(pedidoId);
 
-    await criarNotificacaoPessoal({
+    // A ação já foi gravada: se a notificação falhar, não pode virar erro na tela
+    // (a pessoa tentaria de novo e duplicaria)
+    criarNotificacaoPessoal({
       destinatarioUid: clienteUid,
       tipo: 'status_pedido',
       titulo: 'Atualização do seu pedido',
@@ -107,8 +136,14 @@ export async function atualizarStatusPedido(pedidoId, novoStatus, clienteUid) {
       imagens: (pedido?.itens || []).slice(0, 3).map((i) => i.image).filter(Boolean),
       total: pedido?.total ?? null,
       rota: '/meu-pedido',
-    });
+    }).catch((erro) =>
+      console.error("A ação foi salva, mas a notificação falhou:", erro),
+    );
   }
+}
+
+export async function cancelarPedidoDoCliente(pedidoId) {
+  await mudarStatusComConferencia(pedidoId, "cancelado", STATUS_ALTERAVEIS_PELO_CLIENTE);
 }
 
 export async function atualizarItensPedido(
@@ -117,11 +152,20 @@ export async function atualizarItensPedido(
   total,
   observacoes,
 ) {
-  await updateDoc(doc(db, COLECAO_PEDIDOS, pedidoId), {
-    itens,
-    total,
-    observacoes: observacoes || "",
-    atualizadoEm: new Date().toISOString(),
+  const pedidoRef = doc(db, COLECAO_PEDIDOS, pedidoId);
+  await runTransaction(db, async (transaction) => {
+    const snapshot = await transaction.get(pedidoRef);
+    if (!snapshot.exists()) throw new Error("Pedido não encontrado.");
+    // A atendente pode ter começado o preparo enquanto o cliente editava
+    if (!STATUS_ALTERAVEIS_PELO_CLIENTE.includes(snapshot.data().status)) {
+      throw new Error(ERRO_PEDIDO_STATUS_MUDOU);
+    }
+    transaction.update(pedidoRef, {
+      itens,
+      total,
+      observacoes: observacoes || "",
+      atualizadoEm: new Date().toISOString(),
+    });
   });
 }
 

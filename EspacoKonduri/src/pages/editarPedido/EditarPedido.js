@@ -26,6 +26,7 @@ import {
   buscarPedidoPorId,
   atualizarItensPedido,
   subscribeToPedidosAtivos,
+  ERRO_PEDIDO_STATUS_MUDOU,
 } from "../../services/queries/pedidosQueries";
 
 export default function EditarPedido() {
@@ -43,6 +44,22 @@ export default function EditarPedido() {
   const [observacaoModalVisivel, setObservacaoModalVisivel] = useState(false);
   const [observacoes, setObservacoes] = useState("");
 
+  // Estoque disponível = estoque menos o reservado nos outros pedidos ativos
+  // (este pedido fica de fora). O carrinho usa esse número como limite.
+  const quantidadeReservadaPorProduto = pedidosAtivosGeral.reduce(
+    (acc, pedido) => {
+      (pedido.itens || []).forEach((item) => {
+        acc[item.id] = (acc[item.id] || 0) + item.qty;
+      });
+      return acc;
+    },
+    {},
+  );
+  const produtosComEstoqueDisponivel = produtos.map((item) => ({
+    ...item,
+    estoque: Math.max(0, (item.estoque ?? 0) - (quantidadeReservadaPorProduto[item.id] || 0)),
+  }));
+
   const {
     cart,
     setCart,
@@ -51,7 +68,7 @@ export default function EditarPedido() {
     removeItem,
     totalItems,
     totalPrice,
-  } = useCart(produtos);
+  } = useCart(produtosComEstoqueDisponivel);
 
   useEffect(() => {
     async function carregar() {
@@ -84,23 +101,8 @@ export default function EditarPedido() {
     return unsubscribe;
   }, [pedidoId]);
 
-  const quantidadeReservadaPorProduto = pedidosAtivosGeral.reduce(
-    (acc, pedido) => {
-      (pedido.itens || []).forEach((item) => {
-        acc[item.id] = (acc[item.id] || 0) + item.qty;
-      });
-      return acc;
-    },
-    {},
-  );
-
-  const produtosDisponiveis = produtos
+  const produtosDisponiveis = produtosComEstoqueDisponivel
     .filter((item) => item.category === "produtos")
-    .map((item) => {
-      const reservado = quantidadeReservadaPorProduto[item.id] || 0;
-      const estoqueAjustado = Math.max(0, (item.estoque ?? 0) - reservado);
-      return { ...item, estoque: estoqueAjustado };
-    })
     .filter((item) => item.estoque > 0 || cart[item.id] > 0);
 
   const handleSalvar = async () => {
@@ -112,16 +114,24 @@ export default function EditarPedido() {
       return;
     }
 
-    const itens = Object.entries(cart).map(([id, qty]) => {
-      const produto = produtos.find((p) => p.id === id);
-      return {
-        id: produto.id,
-        title: produto.title,
-        qty,
-        price: produto.price,
-        image: produto.image,
-      };
-    });
+    // Produto pode ter sido excluído do catálogo com ele ainda no pedido
+    const itens = Object.entries(cart)
+      .map(([id, qty]) => {
+        const produto = produtos.find((p) => p.id === id);
+        if (!produto) return null;
+        return {
+          id: produto.id,
+          title: produto.title,
+          qty,
+          price: produto.price,
+          image: produto.image,
+        };
+      })
+      .filter(Boolean);
+    if (itens.length === 0) {
+      Alert.alert("Pedido vazio", "Os produtos do pedido não estão mais disponíveis.");
+      return;
+    }
 
     setSalvando(true);
     try {
@@ -136,7 +146,9 @@ export default function EditarPedido() {
         .map((item) => `${item.qty}x ${item.title}`)
         .join(", ");
 
-      await criarNotificacaoPorPerfil({
+      // A ação já foi gravada: se a notificação falhar, não pode virar erro na tela
+      // (a pessoa tentaria de novo e duplicaria)
+      criarNotificacaoPorPerfil({
         paraPerfis: ["atendente", "adm"],
         tipo: "pedido_editado",
         titulo: "Pedido editado pelo cliente",
@@ -149,11 +161,21 @@ export default function EditarPedido() {
         total: totalPrice,
         clienteNome: usuario?.nome,
         rota: "/pedido",
-      });
+      }).catch((erro) =>
+        console.error("A ação foi salva, mas a notificação falhou:", erro),
+      );
 
       Alert.alert("Pedido atualizado!", "Suas alterações foram salvas.");
       router.back();
     } catch (erro) {
+      if (erro.message === ERRO_PEDIDO_STATUS_MUDOU) {
+        Alert.alert(
+          "Não é mais possível editar",
+          "Seu pedido já entrou em preparo. Fale com o atendente para mudar algo.",
+        );
+        router.back();
+        return;
+      }
       console.error("Erro ao salvar edição do pedido:", erro);
       Alert.alert(
         "Erro",
@@ -164,10 +186,12 @@ export default function EditarPedido() {
     }
   };
 
-  const itensCarrinhoDetalhados = Object.entries(cart).map(([id, qty]) => {
-    const produto = produtos.find((p) => p.id === id);
-    return { ...produto, qty };
-  });
+  const itensCarrinhoDetalhados = Object.entries(cart)
+    .map(([id, qty]) => {
+      const produto = produtos.find((p) => p.id === id);
+      return produto ? { ...produto, qty } : null;
+    })
+    .filter(Boolean);
 
   if (carregando) {
     return (

@@ -70,8 +70,8 @@ export default function ComissaoAtendenteCard({
   const handleSalvar = () => {
     const percentualNumero = Number(percentualInput.replace(",", "."));
 
-    if (!percentualInput || isNaN(percentualNumero) || percentualNumero < 0) {
-      Alert.alert("Percentual inválido", "Informe um percentual válido.");
+    if (!percentualInput || isNaN(percentualNumero) || percentualNumero < 0 || percentualNumero > 100) {
+      Alert.alert("Percentual inválido", "Informe um percentual entre 0 e 100.");
       return;
     }
 
@@ -123,6 +123,15 @@ export default function ComissaoAtendenteCard({
           <ComissaoSavedText>Comissão definida ({comissaoSalva.percentual}%)</ComissaoSavedText>
           <ComissaoSavedValue>{formatPrice(comissaoSalva.valorComissao)}</ComissaoSavedValue>
         </ComissaoSavedBox>
+      )}
+
+      {/* O valor salvo é base × % no momento em que foi salvo (é ele que entra na
+          Gestão). Se vendas entraram ou foram canceladas depois, avisa. */}
+      {comissaoSalva && Math.abs((comissaoSalva.baseCalculo || 0) - baseCalculo) >= 0.01 && (
+        <ComissaoSavedText style={{ color: "#B85D00", marginTop: 6 }}>
+          As vendas do dia mudaram desde que esta comissão foi salva (base salva:{" "}
+          {formatPrice(comissaoSalva.baseCalculo || 0)}). Toque em SALVAR para atualizar o valor.
+        </ComissaoSavedText>
       )}
     </ComissaoCard>
   );

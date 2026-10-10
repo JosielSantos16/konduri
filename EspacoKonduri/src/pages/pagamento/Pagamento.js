@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Alert, BackHandler } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useCaixa } from "../../contexts/CaixaContext";
-import { useEstoque } from "../../contexts/EstoqueContext";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import SafeContainer from "../../styles/SafeContainer";
 import { formatPrice } from "../../utils/formatPrice";
@@ -21,7 +20,7 @@ import {
 } from "./pagamentoStyles";
 import { useTroco } from "../../hooks/useTroco";
 import { useVendas } from "../../contexts/VendasContext";
-import { registrarVendaNaOperacao } from "../../services/queries/operacoesQueries";
+import { baixarEstoqueDaVenda } from "../../services/queries/operacoesQueries";
 import PagamentoHeader from "../../components/pagamento/header/Header";
 import VendaTotalCard from "../../components/pagamento/totalCard/TotalCard";
 import PaymentMethodSelector from "../../components/pagamento/formaPagamento/FormaPagamento";
@@ -42,11 +41,13 @@ export default function Pagamento() {
   const itensVenda = itens ? JSON.parse(itens) : [];
 
   const { registrarVenda } = useVendas();
-  const { decreaseByTitle } = useEstoque();
   const { responsavel, operacaoId } = useCaixa();
   const [selectedMethod, setSelectedMethod] = useState("pix");
   const { valorRecebido, setValorRecebido, troco, insuficiente } = useTroco(totalVenda);
   const [finalizando, setFinalizando] = useState(false);
+  // Trava síncrona: o estado do React só muda no próximo render, então dois
+  // toques rápidos (ou duas confirmações abertas) registrariam a venda duas vezes
+  const finalizacaoEmAndamento = useRef(false);
 
   const podeFinalizar = (selectedMethod !== "dinheiro" || !insuficiente) && !finalizando;
 
@@ -76,7 +77,7 @@ export default function Pagamento() {
   };
 
   const handleFinalizar = async () => {
-    if (!podeFinalizar) return;
+    if (!podeFinalizar || finalizacaoEmAndamento.current) return;
 
     const valorConfirmado = await confirmarValorSuspeito();
     if (!valorConfirmado) return;
@@ -92,7 +93,8 @@ export default function Pagamento() {
   };
 
   const executarFinalizacao = async () => {
-    if (finalizando) return;
+    if (finalizacaoEmAndamento.current) return;
+    finalizacaoEmAndamento.current = true;
     setFinalizando(true);
 
     let venda;
@@ -104,6 +106,7 @@ export default function Pagamento() {
       });
     } catch (erro) {
       console.error("Erro ao registrar venda:", erro);
+      finalizacaoEmAndamento.current = false;
       setFinalizando(false);
       Alert.alert(
         "Não foi possível finalizar a venda",
@@ -115,13 +118,7 @@ export default function Pagamento() {
     let pedidoImpressaoId = null;
 
     try {
-      await Promise.all(
-        itensVenda.map((item) => decreaseByTitle(item.title, item.qty, item.id))
-      );
-
-      if (operacaoId) {
-        await registrarVendaNaOperacao(operacaoId, itensVenda);
-      }
+      await baixarEstoqueDaVenda(operacaoId, itensVenda);
 
       const pedidoImpressao = await criarPedidoImpressao({
         itens: itensVenda,

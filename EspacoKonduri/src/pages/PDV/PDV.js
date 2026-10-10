@@ -120,10 +120,15 @@ export default function PDV() {
 
     const itens = Object.entries(cart).map(([id, qty]) => {
       const produto = produtos.find((p) => p.id === id);
-      const estoqueAtual = produto?.estoque ?? 0;
+      // Produto excluído do catálogo com ele no carrinho
+      if (!produto) {
+        itensSemEstoqueSuficiente.push({ title: "Produto removido do catálogo", qty, estoqueAtual: 0 });
+        return null;
+      }
+      const estoqueAtual = produto.estoque ?? 0;
 
       if (qty > estoqueAtual) {
-        itensSemEstoqueSuficiente.push({ title: produto?.title, qty, estoqueAtual });
+        itensSemEstoqueSuficiente.push({ title: produto.title, qty, estoqueAtual });
       }
 
       return { id: produto.id, title: produto.title, qty, price: produto.price, image: produto.image, category: produto.category };
@@ -167,10 +172,13 @@ export default function PDV() {
     });
   };
 
-  const itensCarrinhoDetalhados = Object.entries(cart).map(([id, qty]) => {
-    const produto = produtos.find((p) => p.id === id);
-    return { ...produto, qty };
-  });
+  // Produto excluído do catálogo com ele no carrinho não aparece na revisão
+  const itensCarrinhoDetalhados = Object.entries(cart)
+    .map(([id, qty]) => {
+      const produto = produtos.find((p) => p.id === id);
+      return produto ? { ...produto, qty } : null;
+    })
+    .filter(Boolean);
 
   return (
 

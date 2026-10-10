@@ -71,6 +71,20 @@ export const SaleDetails = styled.Text`
 export const SalePrice = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  color: #3D2C22;
+  color: ${(props) => (props.cancelada ? '#A99B8F' : '#3D2C22')};
+  text-decoration-line: ${(props) => (props.cancelada ? 'line-through' : 'none')};
   margin-right: 8px;
+`;
+
+export const CanceladaSelo = styled.View`
+  background-color: #FDEDEC;
+  border-radius: 8px;
+  padding: 2px 6px;
+  margin-right: 6px;
+`;
+
+export const CanceladaSeloTexto = styled.Text`
+  font-size: 10px;
+  font-weight: bold;
+  color: #C0392B;
 `;

@@ -9,6 +9,7 @@ import { deslogarUsuario } from '../../services/queries/usuariosQueries';
 import { subscribeToComissao } from '../../services/queries/comissaoQueries';
 import { formatPrice } from '../../utils/formatPrice';
 import { totalPorMetodo } from '../../utils/metodosPagamento';
+import { vendaValida } from '../../utils/financeiro';
 import { formatDataFiltro, isMesmoDia } from '../../utils/formatDateTime';
 import Calendario from '../../components/painel/calendario/Calendario';
 import NavBarAtendente from '../../components/PDV/navBar/navBarAtendente';
@@ -82,7 +83,8 @@ useEffect(() => {
   return unsubscribe;
 }, [dataISO]);
 
-const minhasVendas = vendasDoDia.filter((v) => v.responsavelUid === usuario?.uid);
+// Vendas canceladas pelo admin não contam no resumo do atendente
+const minhasVendas = vendasDoDia.filter((v) => v.responsavelUid === usuario?.uid && vendaValida(v));
 
 
   const totalDia = minhasVendas.reduce((soma, v) => soma + v.total, 0);

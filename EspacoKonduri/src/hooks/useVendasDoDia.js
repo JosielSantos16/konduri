@@ -8,6 +8,8 @@ import { buscarDiasComComissaoNoMes } from "../services/queries/comissaoQueries"
 import { buscarOperacaoPorData } from "../services/queries/operacoesQueries";
 import { useAuth } from "./useAuth";
 import { totalPorMetodo } from "../utils/metodosPagamento";
+import { vendaValida } from "../utils/financeiro";
+import { subtotalProdutosDaVenda } from "../utils/estornoVenda";
 
 const FILTROS_METODO_TODOS = "todos";
 
@@ -89,17 +91,19 @@ export function useVendasDoDia() {
     return bateMetodo && bateBusca;
   });
 
-  // Totais gerais do dia
-  const totalPeriodo = vendasFiltradas.reduce((sum, v) => sum + v.total, 0);
-  const totalPix = totalPorMetodo(vendasFiltradas, "pix");
-  const totalCartao = totalPorMetodo(vendasFiltradas, "cartao");
-  const totalDinheiro = totalPorMetodo(vendasFiltradas, "dinheiro");
+  // Totais gerais do dia. Vendas canceladas aparecem na lista, mas não somam
+  const vendasValidas = vendasFiltradas.filter(vendaValida);
+  const qtdVendasValidas = vendasValidas.length;
+  const totalPeriodo = vendasValidas.reduce((sum, v) => sum + v.total, 0);
+  const totalPix = totalPorMetodo(vendasValidas, "pix");
+  const totalCartao = totalPorMetodo(vendasValidas, "cartao");
+  const totalDinheiro = totalPorMetodo(vendasValidas, "dinheiro");
 
   // Base de comissão (só produtos) e resumo geral, agrupados por atendente
   const atendentesDoDia = {};
   const resumoGeralPorAtendente = {};
 
-  vendasFiltradas.forEach((venda) => {
+  vendasValidas.forEach((venda) => {
     const uid = venda.responsavelUid;
     if (!uid) return;
 
@@ -118,11 +122,7 @@ export function useVendasDoDia() {
       };
     }
 
-    const subtotalProdutos = (venda.itens || [])
-      .filter((item) => item.category === "produtos")
-      .reduce((s, item) => s + item.qty * item.price, 0);
-
-    atendentesDoDia[uid].baseCalculo += subtotalProdutos;
+    atendentesDoDia[uid].baseCalculo += subtotalProdutosDaVenda(venda);
     resumoGeralPorAtendente[uid].totalGeral += venda.total;
   });
 
@@ -175,6 +175,7 @@ export function useVendasDoDia() {
     setFiltroMetodo,
     operacaoDoDia,
     totalPeriodo,
+    qtdVendasValidas,
     totalPix,
     totalCartao,
     totalDinheiro,

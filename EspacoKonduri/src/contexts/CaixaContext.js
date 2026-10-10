@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { abrirOperacao, fecharOperacao, buscarOperacaoAtiva } from '../services/queries/operacoesQueries';
+import { abrirOperacao, fecharOperacao, subscribeToOperacaoAtiva } from '../services/queries/operacoesQueries';
+import { paraDataISOLocal } from '../utils/dataLocal';
 import { useProdutos } from './ProdutosContext';
 
 const CaixaContext = createContext(null);
@@ -20,33 +21,26 @@ export function CaixaProvider({ children }) {
 
   const responsavel = usuario?.nome || '';
 
-  // Ao logar (ou recarregar o app), verifica se já existe uma operação
-  // aberta no Firestore e restaura o estado local a partir dela —
-  // evita perder a referência da operação após um reload/Fast Refresh.
+  // Acompanha em tempo real o caixa aberto no Firestore. Antes isso era lido
+  // só no login: o PDV da atendente não via o caixa que o admin acabou de
+  // abrir, e continuava vendendo num caixa que já tinha sido fechado.
+  const usuarioUid = usuario?.uid;
   useEffect(() => {
-    async function restaurar() {
-      if (!usuario) {
-        setRestaurandoOperacao(false);
-        return;
-      }
-
-      setRestaurandoOperacao(true);
-      try {
-        const operacaoAtiva = await buscarOperacaoAtiva();
-        if (operacaoAtiva) {
-          setOperacaoId(operacaoAtiva.id);
-          setCaixaAberto(true);
-          if (operacaoAtiva.local) setLocal(operacaoAtiva.local);
-        }
-      } catch (erro) {
-        console.error('Erro ao restaurar operação ativa:', erro);
-      } finally {
-        setRestaurandoOperacao(false);
-      }
+    if (!usuarioUid) {
+      setCaixaAberto(false);
+      setOperacaoId(null);
+      setRestaurandoOperacao(false);
+      return undefined;
     }
 
-    restaurar();
-  }, [usuario]);
+    setRestaurandoOperacao(true);
+    return subscribeToOperacaoAtiva((operacaoAtiva) => {
+      setOperacaoId(operacaoAtiva ? operacaoAtiva.id : null);
+      setCaixaAberto(!!operacaoAtiva);
+      if (operacaoAtiva?.local) setLocal(operacaoAtiva.local);
+      setRestaurandoOperacao(false);
+    });
+  }, [usuarioUid]);
 
   const abrirCaixa = useCallback(async () => {
     if (!usuario) {
@@ -63,6 +57,7 @@ export function CaixaProvider({ children }) {
         responsavelNome: usuario.nome,
         local,
         produtos,
+        dataISO: paraDataISOLocal(dataOperacao),
       });
 
       setOperacaoId(operacao.id);
@@ -76,7 +71,7 @@ export function CaixaProvider({ children }) {
     } finally {
       setAbrindoCaixa(false);
     }
-  }, [usuario, local, produtos]);
+  }, [usuario, local, produtos, dataOperacao]);
 
   const fecharCaixa = useCallback(async () => {
     if (!operacaoId) return;

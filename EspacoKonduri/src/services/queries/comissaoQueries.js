@@ -4,6 +4,11 @@ import { criarNotificacaoPessoal } from './notificacoesQueries';
 
 const COLECAO_COMISSOES = 'comissoes';
 
+// Referência da comissão de um atendente num dia (usada também no cancelamento de venda)
+export function comissaoRef(dataISO, responsavelUid) {
+  return doc(db, COLECAO_COMISSOES, gerarId(dataISO, responsavelUid));
+}
+
 function gerarId(dataISO, responsavelUid) {
   return `${dataISO}_${responsavelUid}`;
 }
@@ -30,12 +35,16 @@ export async function salvarComissao({
     atualizadoEm: new Date().toISOString(),
   });
 
-  await criarNotificacaoPessoal({
+  // A ação já foi gravada: se a notificação falhar, não pode virar erro na tela
+  // (a pessoa tentaria de novo e duplicaria)
+  criarNotificacaoPessoal({
   destinatarioUid: responsavelUid,
   tipo: 'comissao_definida',
   titulo: 'Comissão definida',
   mensagem: `Sua comissão de ${dataISO} foi definida em ${percentual}%.`,
-});
+}).catch((erro) =>
+    console.error("A ação foi salva, mas a notificação falhou:", erro),
+  );
 
   return { id, valorComissao };
 }

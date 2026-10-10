@@ -355,3 +355,44 @@ describe('comparação mensal com o mês em andamento', () => {
     expect(linhas.resultado).toMatchObject({ anterior: -400, atual: -280, variacao: 30 });
   });
 });
+
+describe('venda cancelada (Fase 8)', () => {
+  const vendas = [
+    vendaDeProduto('2026-09-05', 'imp', 'Império', 10, 6, 3.2), // R$ 60, CMV 32
+    { ...vendaDeProduto('2026-09-06', 'imp', 'Império', 5, 6, 3.2), status: 'cancelada', metodo: 'cartao' }, // R$ 30
+    { ...vendaDeProduto('2026-09-07', 'agua', 'Água', 4, 3, 1.1), status: 'concluida', metodo: 'dinheiro' }, // R$ 12
+  ];
+
+  test('fica fora do faturamento, do CMV e dos totais por forma de pagamento', () => {
+    const r = calcularIndicadores({ ...SETEMBRO, vendas, despesas: [], comissoes: [] });
+
+    expect(r.faturamento).toBe(72);
+    expect(r.quantidadeVendas).toBe(2);
+    expect(r.cmv).toBe(36.4); // 32 + 4 × 1,10
+    expect(r.porMetodo).toEqual({ pix: 60, dinheiro: 12 });
+  });
+
+  test('fica fora da rentabilidade por produto', () => {
+    const porId = Object.fromEntries(rentabilidadePorProduto(vendas).map((p) => [p.produtoId, p]));
+
+    expect(porId.imp).toMatchObject({ quantidade: 10, receita: 60, cmv: 32, lucroBruto: 28 });
+    expect(porId.agua).toMatchObject({ quantidade: 4, receita: 12 });
+  });
+
+  test('produto vendido só em venda cancelada não aparece na rentabilidade', () => {
+    const produtos = rentabilidadePorProduto([
+      { ...vendaDeProduto('2026-09-06', 'flesh', 'Flesh 2L', 2, 12, 6.5), status: 'cancelada' },
+    ]);
+
+    expect(produtos).toEqual([]);
+  });
+
+  test('venda antiga sem status continua valendo', () => {
+    const antiga = vendaDeProduto('2026-09-05', 'imp', 'Império', 3, 6, 3.2);
+    delete antiga.status;
+    const r = calcularIndicadores({ ...SETEMBRO, vendas: [antiga], despesas: [], comissoes: [] });
+
+    expect(r.faturamento).toBe(18);
+    expect(r.quantidadeVendas).toBe(1);
+  });
+});

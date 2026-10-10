@@ -74,11 +74,17 @@ export async function garantirUsuarioNoFirestore({ uid, nome, email }) {
   return buscarPerfilUsuario(uid);
 }
 
-export async function atualizarPerfilUsuario(uid, { nome, foto }) {
+// Só estes campos podem ser alterados pelo próprio usuário (o perfil adm,
+// atendente ou cliente nunca muda por aqui). Telefone e notificações eram
+// descartados antes, e as telas de perfil diziam "Pronto!" sem salvar nada.
+export async function atualizarPerfilUsuario(uid, { nome, foto, telefone, notificacoesAtivadas }) {
   const dados = {};
   if (nome !== undefined) dados.nome = nome;
   if (foto !== undefined) dados.foto = foto;
+  if (telefone !== undefined) dados.telefone = telefone;
+  if (notificacoesAtivadas !== undefined) dados.notificacoesAtivadas = notificacoesAtivadas;
 
+  if (Object.keys(dados).length === 0) return;
   await updateDoc(doc(db, COLECAO_USUARIOS, uid), dados);
 }
 

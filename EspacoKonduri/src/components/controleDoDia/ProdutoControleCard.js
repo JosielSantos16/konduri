@@ -1,5 +1,6 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { formatPrice } from '../../utils/formatPrice';
 import {
   Card,
   CardHeader,
@@ -66,22 +67,22 @@ export default function ProdutoControleCard({ produto, onEdit, onEntrada }) {
       <StatsRow>
         <StatBlock>
           <StatLabel>ESTOQUE INICIAL</StatLabel>
-          <StatValue>{produto.estoqueInicial} un</StatValue>
+          <StatValue>{produto.estoqueInicial ?? 0} un</StatValue>
         </StatBlock>
         <StatBlock>
           <StatLabel>ENTRADA (QTD.)</StatLabel>
-          <StatValue>{produto.entradaQtd} un</StatValue>
+          <StatValue>{produto.entradaQtd ?? 0} un</StatValue>
         </StatBlock>
       </StatsRow>
 
       <StatsRow>
         <StatBlock>
           <StatLabel>SAÍDA / VENDA</StatLabel>
-          <StatValue>{produto.saidaQtd} un</StatValue>
+          <StatValue>{produto.saidaQtd ?? 0} un</StatValue>
         </StatBlock>
         <StatBlock>
           <StatLabel>VALOR ENTRADAS</StatLabel>
-          <StatValue>R$ {produto.valorEntradas.toFixed(2)}</StatValue>
+          <StatValue>{formatPrice(produto.valorEntradas || 0)}</StatValue>
         </StatBlock>
       </StatsRow>
 
@@ -97,7 +98,7 @@ export default function ProdutoControleCard({ produto, onEdit, onEntrada }) {
       <StatsRow style={{ marginBottom: 0 }}>
         <StatBlock>
           <StatLabel>VALOR SAÍDAS</StatLabel>
-          <StatValue>R$ {produto.valorSaidas.toFixed(2)}</StatValue>
+          <StatValue>{formatPrice(produto.valorSaidas || 0)}</StatValue>
         </StatBlock>
         <EditButton onPress={onEntrada} activeOpacity={0.8} style={{ marginRight: 8 }}>
           <Ionicons name="add" size={14} color="#FFFFFF" />

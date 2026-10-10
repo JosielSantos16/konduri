@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { formatPrice } from "../../../utils/formatPrice";
 import { infoMetodo } from "../../../utils/metodosPagamento";
 import { formatHora } from "../../../utils/formatDateTime";
+import { vendaCancelada } from "../../../utils/estornoVenda";
 import {
   SaleCard,
   SaleLeft,
@@ -14,6 +15,8 @@ import {
   SaleDetails,
   SaleRight,
   SalePrice,
+  CanceladaSelo,
+  CanceladaSeloTexto,
 } from "./saleListItemStyle";
 
 export default function SaleListItem({ venda, numero, onPress }) {
@@ -21,6 +24,7 @@ export default function SaleListItem({ venda, numero, onPress }) {
   const primeiroItem = itens[0];
   const outrosItensCount = itens.length - 1;
   const totalUnidades = itens.reduce((soma, i) => soma + i.qty, 0);
+  const cancelada = vendaCancelada(venda);
 
   const nomeExibido = primeiroItem
     ? outrosItensCount > 0
@@ -41,13 +45,18 @@ export default function SaleListItem({ venda, numero, onPress }) {
         <SaleInfo>
           <SaleTitle numberOfLines={1}>{nomeExibido}</SaleTitle>
           <SaleDetails>
-            Venda #{numero} • {formatHora(venda.data)} • {totalUnidades}{" "}
+            Venda #{numero} • {formatHora(venda.criadoEm || venda.data)} • {totalUnidades}{" "}
             {totalUnidades === 1 ? "unidade" : "unidades"}
           </SaleDetails>
         </SaleInfo>
       </SaleLeft>
 
       <SaleRight>
+        {cancelada && (
+          <CanceladaSelo>
+            <CanceladaSeloTexto>Cancelada</CanceladaSeloTexto>
+          </CanceladaSelo>
+        )}
         <MetodoBadge bg={infoMetodo(venda.metodo).fundo}>
           <Ionicons
             name={infoMetodo(venda.metodo).icone}
@@ -55,7 +64,7 @@ export default function SaleListItem({ venda, numero, onPress }) {
             color={infoMetodo(venda.metodo).cor}
           />
         </MetodoBadge>
-        <SalePrice>{formatPrice(venda.total)}</SalePrice>
+        <SalePrice cancelada={cancelada}>{formatPrice(venda.total)}</SalePrice>
       </SaleRight>
     </SaleCard>
   );

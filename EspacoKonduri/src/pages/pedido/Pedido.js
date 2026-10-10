@@ -12,6 +12,7 @@ import {
   atualizarStatusPedido,
   atualizarPagamentoPedido,
   ocultarPedido,
+  ERRO_PEDIDO_STATUS_MUDOU,
 } from "../../services/queries/pedidosQueries";
 import { formatPrice } from "../../utils/formatPrice";
 import { formatHora } from "../../utils/formatDateTime";
@@ -96,8 +97,12 @@ export default function Pedido() {
 
     setProcessandoId(pedido.id);
     try {
-      await atualizarStatusPedido(pedido.id, proximo.status, pedido.clienteUid);
+      await atualizarStatusPedido(pedido.id, proximo.status, pedido.clienteUid, pedido.status);
     } catch (erro) {
+      if (erro.message === ERRO_PEDIDO_STATUS_MUDOU) {
+        Alert.alert("Pedido já atualizado", "Esse pedido mudou em outro aparelho ou foi cancelado pelo cliente. A lista já mostra o status atual.");
+        return;
+      }
       console.error("Erro ao avançar status do pedido:", erro);
       Alert.alert("Erro", "Não foi possível atualizar o pedido. Tente novamente.");
     } finally {
