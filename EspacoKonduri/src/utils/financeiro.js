@@ -14,6 +14,7 @@
 import { paraDataISOLocal } from './dataLocal';
 import {
   competenciaDe,
+  deslocarCompetencia,
   diasNoMes,
   ocorrenciasDaCompetencia,
   FORMAS_CALCULO,
@@ -269,6 +270,38 @@ export function intervaloDaCompetencia(competencia) {
   return {
     inicio: `${competencia}-01`,
     fim: `${competencia}-${String(diasNoMes(competencia)).padStart(2, '0')}`,
+  };
+}
+
+// Intervalos da comparação mensal (mês de referência x mês anterior).
+// Mês fechado: os dois meses inteiros. Mês em andamento (hoje dentro dele): do
+// dia 1 até hoje nos dois meses, para comparar o mesmo número de dias; no mês
+// anterior o recorte para no último dia dele (ex.: 31/03 x 28/02). Os custos
+// fixos entram proporcionais aos dias do recorte nos dois lados
+// (custosDoIntervalo), então o Resultado também fica comparável.
+export function intervalosDaComparacao(competencia, hojeISO = paraDataISOLocal()) {
+  const competenciaAnterior = deslocarCompetencia(competencia, -1);
+
+  if (hojeISO.slice(0, 7) !== competencia) {
+    return {
+      competenciaAnterior,
+      emAndamento: false,
+      atual: intervaloDaCompetencia(competencia),
+      anterior: intervaloDaCompetencia(competenciaAnterior),
+    };
+  }
+
+  const diaDeHoje = Number(hojeISO.slice(8, 10));
+  const ultimoDiaAnterior = Math.min(diaDeHoje, diasNoMes(competenciaAnterior));
+
+  return {
+    competenciaAnterior,
+    emAndamento: true,
+    atual: { inicio: `${competencia}-01`, fim: hojeISO },
+    anterior: {
+      inicio: `${competenciaAnterior}-01`,
+      fim: `${competenciaAnterior}-${String(ultimoDiaAnterior).padStart(2, '0')}`,
+    },
   };
 }
 

@@ -3,7 +3,6 @@ import { ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useComparacaoMensal } from '../../../hooks/useComparacaoMensal';
 import { formatarMoeda, formatarPercentual } from '../../../utils/formatFinanceiro';
-import { competenciaDe } from '../../../utils/despesas';
 import {
   Card,
   CardHeader,
@@ -40,6 +39,21 @@ function formatarVariacao(linha) {
   return linha.tipo === 'percentual' ? `${sinal}${numero} p.p.` : `${sinal}${numero}%`;
 }
 
+function diaDe(dataISO) {
+  return Number(dataISO.slice(8, 10));
+}
+
+// Texto do recorte usado com o mês em andamento: "1 a 10" quando os dois lados
+// têm os mesmos dias; senão, cada lado com o seu (ex.: 31/03 x 28/02)
+function descreverRecorte(intervaloAtual, intervaloAnterior) {
+  const diaAtual = diaDe(intervaloAtual.fim);
+  const diaAnterior = diaDe(intervaloAnterior.fim);
+  if (diaAtual === diaAnterior) {
+    return diaAtual === 1 ? 'o dia 1 dos dois meses' : `os dias 1 a ${diaAtual} dos dois meses`;
+  }
+  return `os dias 1 a ${diaAtual} de ${mesLongo(intervaloAtual.inicio.slice(0, 7)).toLowerCase()} e o mês inteiro de ${mesLongo(intervaloAnterior.inicio.slice(0, 7)).toLowerCase()} (1 a ${diaAnterior})`;
+}
+
 // CMV subir junto com as vendas é esperado, então ele não ganha cor de bom/ruim
 function corVariacao(linha) {
   if (linha.variacao === null || linha.variacao === 0 || linha.chave === 'cmv') return '#5C4033';
@@ -47,8 +61,8 @@ function corVariacao(linha) {
 }
 
 export default function ComparacaoMensalCard({ competencia }) {
-  const { competenciaAnterior, linhas, carregando } = useComparacaoMensal(competencia);
-  const mesEmAndamento = competencia === competenciaDe();
+  const { competenciaAnterior, emAndamento, intervaloAtual, intervaloAnterior, linhas, carregando } =
+    useComparacaoMensal(competencia);
 
   return (
     <Card>
@@ -79,10 +93,12 @@ export default function ComparacaoMensalCard({ competencia }) {
             </TabelaLinha>
           ))}
 
-          {mesEmAndamento && (
+          {emAndamento && (
             <TextoSuave style={{ marginTop: 8 }}>
-              {mesLongo(competencia)} ainda está em andamento: o faturamento é até hoje, mas os custos
-              fixos já contam o mês inteiro.
+              {mesLongo(competencia)} ainda está em andamento, então a comparação usa{' '}
+              {descreverRecorte(intervaloAtual, intervaloAnterior)}. Os custos fixos entram proporcionais a
+              esses dias nos dois lados (ex.: aluguel ÷ dias do mês × dias do recorte), para o resultado
+              também ser comparável.
             </TextoSuave>
           )}
         </>

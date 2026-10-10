@@ -3,6 +3,7 @@ import {
   compararIndicadores,
   intervaloDaCompetencia,
   intervaloDoPeriodo,
+  intervalosDaComparacao,
   margemDoProduto,
   mesesDoIntervalo,
   ordenarRentabilidade,
@@ -290,5 +291,67 @@ describe('rentabilidade, margem e comparação (Fase 7)', () => {
 
   test('intervalo de uma competência', () => {
     expect(intervaloDaCompetencia('2026-02')).toEqual({ inicio: '2026-02-01', fim: '2026-02-28' });
+  });
+});
+
+// Como a consulta do Firestore no hook: só as vendas dentro do intervalo
+function noIntervalo(vendas, { inicio, fim }) {
+  return vendas.filter((v) => v.data >= inicio && v.data <= fim);
+}
+
+describe('comparação mensal com o mês em andamento', () => {
+  test('mês em andamento compara os mesmos dias nos dois meses', () => {
+    expect(intervalosDaComparacao('2026-10', '2026-10-04')).toEqual({
+      competenciaAnterior: '2026-09',
+      emAndamento: true,
+      atual: { inicio: '2026-10-01', fim: '2026-10-04' },
+      anterior: { inicio: '2026-09-01', fim: '2026-09-04' },
+    });
+  });
+
+  test('mês anterior mais curto: o recorte para no último dia dele', () => {
+    expect(intervalosDaComparacao('2026-03', '2026-03-31')).toMatchObject({
+      emAndamento: true,
+      atual: { inicio: '2026-03-01', fim: '2026-03-31' },
+      anterior: { inicio: '2026-02-01', fim: '2026-02-28' },
+    });
+  });
+
+  test('mês fechado compara os dois meses inteiros', () => {
+    expect(intervalosDaComparacao('2026-09', '2026-10-04')).toEqual({
+      competenciaAnterior: '2026-08',
+      emAndamento: false,
+      atual: { inicio: '2026-09-01', fim: '2026-09-30' },
+      anterior: { inicio: '2026-08-01', fim: '2026-08-31' },
+    });
+  });
+
+  test('faturamento, CMV, margens e resultado usam o mesmo recorte nos dois lados', () => {
+    // Hoje = 10/10. Aluguel de R$ 100 por dia nos dois meses (3.100 em outubro, 3.000 em setembro)
+    const { atual, anterior } = intervalosDaComparacao('2026-10', '2026-10-10');
+    const vendas = [
+      venda('2026-09-05', 1000, 400), // dentro do recorte de setembro
+      venda('2026-09-20', 5000, 2000), // depois do dia 10: fica de fora
+      venda('2026-10-03', 1200, 480),
+    ];
+    const despesas = [
+      // Aluguel antigo encerrado em setembro e o novo valendo a partir de outubro
+      { ...custoFixo(3000, '2026-09'), competenciaFim: '2026-09' },
+      custoFixo(3100, '2026-10'),
+    ];
+
+    const indicadoresAnterior = calcularIndicadores({ ...anterior, vendas: noIntervalo(vendas, anterior), despesas, comissoes: [] });
+    const indicadoresAtual = calcularIndicadores({ ...atual, vendas: noIntervalo(vendas, atual), despesas, comissoes: [] });
+
+    // 10 dias de aluguel dos dois lados: 3.000 ÷ 30 × 10 e 3.100 ÷ 31 × 10
+    expect(indicadoresAnterior.custosFixos).toBe(1000);
+    expect(indicadoresAtual.custosFixos).toBe(1000);
+
+    const linhas = Object.fromEntries(compararIndicadores(indicadoresAnterior, indicadoresAtual).map((l) => [l.chave, l]));
+    expect(linhas.faturamento).toMatchObject({ anterior: 1000, atual: 1200, variacao: 20 });
+    expect(linhas.cmv).toMatchObject({ anterior: 400, atual: 480, variacao: 20 });
+    expect(linhas.margemBruta).toMatchObject({ anterior: 60, atual: 60, variacao: 0 });
+    // Resultado: 1.000 - 400 - 1.000 = -400 em setembro; 1.200 - 480 - 1.000 = -280 em outubro
+    expect(linhas.resultado).toMatchObject({ anterior: -400, atual: -280, variacao: 30 });
   });
 });
