@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -6,7 +6,19 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import NavBar from '../../components/painel/navBar/NavBar';
 import Calendario from '../../components/painel/calendario/Calendario';
 import PontoEquilibrioCard from '../../components/gestao/pontoEquilibrio/PontoEquilibrioCard';
+import ResultadoFinanceiroCard from '../../components/gestao/resultadoFinanceiro/ResultadoFinanceiroCard';
+import RentabilidadeProdutosCard from '../../components/gestao/rentabilidadeProdutos/RentabilidadeProdutosCard';
+import AlertaMargemCard from '../../components/gestao/alertaMargem/AlertaMargemCard';
+import MargemMinimaModal from '../../components/gestao/alertaMargem/MargemMinimaModal';
+import ComparacaoMensalCard from '../../components/gestao/comparacaoMensal/ComparacaoMensalCard';
 import { useGestaoFinanceira } from '../../hooks/useGestaoFinanceira';
+import { useProdutos } from '../../contexts/ProdutosContext';
+import {
+  subscribeToConfiguracoesGestao,
+  salvarMargemMinima,
+  MARGEM_MINIMA_PADRAO,
+} from '../../services/queries/configuracoesQueries';
+import { auth } from '../../firebase/fireBaseCondig';
 import { PERIODOS, intervaloDoPeriodo } from '../../utils/financeiro';
 import { formatarCompetencia } from '../../utils/despesas';
 import { paraDataISOLocal } from '../../utils/dataLocal';
@@ -102,7 +114,19 @@ export default function Gestao() {
         }
       : intervaloDoPeriodo(periodo);
 
-  const { indicadores, carregando } = useGestaoFinanceira(intervalo);
+  const { indicadores, vendas, carregando } = useGestaoFinanceira(intervalo);
+  const { produtos } = useProdutos();
+
+  const [margemMinima, setMargemMinima] = useState(MARGEM_MINIMA_PADRAO);
+  const [modalMargemVisivel, setModalMargemVisivel] = useState(false);
+
+  useEffect(
+    () => subscribeToConfiguracoesGestao((config) => setMargemMinima(config.margemMinima)),
+    []
+  );
+
+  // Comparação mensal: mês do fim do período selecionado x mês anterior
+  const competenciaReferencia = intervalo.fim.slice(0, 7);
 
   const renderSeletorData = (valor, onChange) => (
     <Calendario
@@ -205,6 +229,21 @@ export default function Gestao() {
           custosFixos={i.custosFixos}
         />
 
+        <ResultadoFinanceiroCard indicadores={i} />
+
+        <RentabilidadeProdutosCard vendas={vendas} margemMinima={margemMinima} />
+
+        <AlertaMargemCard
+          produtos={produtos}
+          margemMinima={margemMinima}
+          onEditarMargem={() => setModalMargemVisivel(true)}
+          onAbrirProduto={(produtoId) =>
+            router.push({ pathname: '/controle-do-dia/editar-produto', params: { produtoId } })
+          }
+        />
+
+        <ComparacaoMensalCard competencia={competenciaReferencia} />
+
         <LinkLinha activeOpacity={0.8} onPress={() => router.push('/despesas')}>
           <Ionicons name="wallet-outline" size={20} color="#D35400" />
           <LinkTexto>Custos e Despesas</LinkTexto>
@@ -252,6 +291,13 @@ export default function Gestao() {
       </ScrollContainer>
 
       <NavBar />
+
+      <MargemMinimaModal
+        visivel={modalMargemVisivel}
+        margemAtual={margemMinima}
+        onFechar={() => setModalMargemVisivel(false)}
+        onSalvar={(valor) => salvarMargemMinima(valor, { usuarioUid: auth.currentUser?.uid })}
+      />
     </Container>
   );
 }

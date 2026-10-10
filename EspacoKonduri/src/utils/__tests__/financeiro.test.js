@@ -1,7 +1,13 @@
 import {
   calcularIndicadores,
+  compararIndicadores,
+  intervaloDaCompetencia,
   intervaloDoPeriodo,
+  margemDoProduto,
   mesesDoIntervalo,
+  ordenarRentabilidade,
+  rentabilidadePorProduto,
+  ORDENACOES_RENTABILIDADE,
   PERIODOS,
   STATUS_EQUILIBRIO,
 } from '../financeiro';
@@ -207,5 +213,82 @@ describe('casos de borda', () => {
       inicio: '2026-12-01',
       fim: '2026-12-31',
     });
+  });
+});
+
+// Venda de um produto com custo unitário congelado (como gravado desde a Fase 1)
+function vendaDeProduto(data, id, title, qty, price, custoUnitario) {
+  return {
+    data,
+    total: qty * price,
+    metodo: 'pix',
+    itens: [{ id, title, qty, price, custoUnitario, custoTotal: Math.round(custoUnitario * qty * 100) / 100 }],
+  };
+}
+
+describe('rentabilidade, margem e comparação (Fase 7)', () => {
+  test('§6: 10 cervejas a R$ 6,00 com custo R$ 3,20', () => {
+    const [imperio] = rentabilidadePorProduto([vendaDeProduto('2026-09-10', 'imp', 'Império', 10, 6, 3.2)]);
+
+    expect(imperio).toMatchObject({ quantidade: 10, receita: 60, cmv: 32, lucroBruto: 28, margem: 46.67 });
+  });
+
+  test('§13: tabela de rentabilidade e as três ordenações', () => {
+    const produtos = rentabilidadePorProduto([
+      vendaDeProduto('2026-09-05', 'imp', 'Império', 180, 6, 3.2),
+      vendaDeProduto('2026-09-06', 'agua', 'Água', 100, 3, 1.1),
+      vendaDeProduto('2026-09-07', 'flesh', 'Flesh 2L', 40, 12, 6.5),
+    ]);
+    const porId = Object.fromEntries(produtos.map((p) => [p.produtoId, p]));
+
+    expect(porId.imp).toMatchObject({ quantidade: 180, receita: 1080, cmv: 576, lucroBruto: 504, margem: 46.67 });
+    expect(porId.agua).toMatchObject({ quantidade: 100, receita: 300, cmv: 110, lucroBruto: 190, margem: 63.33 });
+    expect(porId.flesh).toMatchObject({ quantidade: 40, receita: 480, cmv: 260, lucroBruto: 220, margem: 45.83 });
+
+    const ids = (ordenacao) => ordenarRentabilidade(produtos, ordenacao).map((p) => p.produtoId);
+    expect(ids(ORDENACOES_RENTABILIDADE.MAIS_RENTAVEIS)).toEqual(['imp', 'flesh', 'agua']);
+    expect(ids(ORDENACOES_RENTABILIDADE.MENOR_MARGEM)).toEqual(['flesh', 'imp', 'agua']);
+    expect(ids(ORDENACOES_RENTABILIDADE.MAIS_VENDIDOS)).toEqual(['imp', 'agua', 'flesh']);
+  });
+
+  test('produto vendido sem custo registrado só aparece em "Mais vendidos"', () => {
+    const produtos = rentabilidadePorProduto([
+      vendaDeProduto('2026-09-05', 'imp', 'Império', 10, 6, 3.2),
+      { data: '2026-09-06', total: 50, metodo: 'pix', itens: [{ id: 'velho', title: 'Antigo', qty: 50, price: 1 }] },
+    ]);
+
+    expect(produtos.find((p) => p.produtoId === 'velho')).toMatchObject({ custoCompleto: false, margem: null });
+    expect(ordenarRentabilidade(produtos, ORDENACOES_RENTABILIDADE.MAIS_RENTAVEIS).map((p) => p.produtoId)).toEqual(['imp']);
+    expect(ordenarRentabilidade(produtos, ORDENACOES_RENTABILIDADE.MAIS_VENDIDOS).map((p) => p.produtoId)).toEqual(['velho', 'imp']);
+  });
+
+  test('§14: Michelob a R$ 8,00 com custo R$ 6,20 tem margem de 22,5%', () => {
+    expect(margemDoProduto(8, 6.2)).toBe(22.5);
+    expect(margemDoProduto(8, 0)).toBeNull();
+  });
+
+  test('§17: setembro x agosto', () => {
+    const agosto = calcularIndicadores({
+      ...intervaloDaCompetencia('2026-08'),
+      vendas: [venda('2026-08-10', 20800, 9400)],
+      despesas: [custoFixo(5400, '2026-08'), custoVariavel(1900, '2026-08')],
+      comissoes: [],
+    });
+    const setembro = calcularIndicadores({
+      ...intervaloDaCompetencia('2026-09'),
+      vendas: [venda('2026-09-10', 25400, 10800)],
+      despesas: [custoFixo(6300), custoVariavel(2100)],
+      comissoes: [],
+    });
+    const linhas = Object.fromEntries(compararIndicadores(agosto, setembro).map((l) => [l.chave, l]));
+
+    expect(linhas.faturamento).toMatchObject({ anterior: 20800, atual: 25400, variacao: 22.1 });
+    expect(linhas.cmv).toMatchObject({ anterior: 9400, atual: 10800, variacao: 14.9 });
+    expect(linhas.margemBruta).toMatchObject({ anterior: 54.81, atual: 57.48, variacao: 2.7 });
+    expect(linhas.resultado).toMatchObject({ anterior: 4100, atual: 6200, variacao: 51.2 });
+  });
+
+  test('intervalo de uma competência', () => {
+    expect(intervaloDaCompetencia('2026-02')).toEqual({ inicio: '2026-02-01', fim: '2026-02-28' });
   });
 });

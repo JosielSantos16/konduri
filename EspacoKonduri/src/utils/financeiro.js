@@ -263,3 +263,104 @@ export function calcularIndicadores({ vendas, despesas, comissoes, inicio, fim, 
     },
   };
 }
+
+// Intervalo de um mês inteiro a partir da competência 'AAAA-MM'
+export function intervaloDaCompetencia(competencia) {
+  return {
+    inicio: `${competencia}-01`,
+    fim: `${competencia}-${String(diasNoMes(competencia)).padStart(2, '0')}`,
+  };
+}
+
+// Margem de um produto pelo preço e custo atuais (alerta de margem baixa).
+// null quando falta preço ou custo.
+export function margemDoProduto(preco, custo) {
+  if (!(preco > 0) || !(custo > 0)) return null;
+  return arredondar(((preco - custo) / preco) * 100);
+}
+
+export const ORDENACOES_RENTABILIDADE = {
+  MAIS_RENTAVEIS: 'MAIS_RENTAVEIS',
+  MENOR_MARGEM: 'MENOR_MARGEM',
+  MAIS_VENDIDOS: 'MAIS_VENDIDOS',
+};
+
+// Quantidade, receita, CMV, lucro bruto e margem de cada produto vendido no
+// período, a partir do custo congelado nos itens. Se algum item do produto foi
+// vendido sem custo registrado, CMV, lucro e margem ficam null (custoCompleto = false).
+export function rentabilidadePorProduto(vendas) {
+  const porProduto = {};
+
+  vendas.filter(vendaValida).forEach((venda) => {
+    (venda.itens || []).forEach((item) => {
+      const chave = item.id || item.title;
+      if (!porProduto[chave]) {
+        porProduto[chave] = { produtoId: item.id || null, nome: item.title, quantidade: 0, receita: 0, cmv: 0, temItemSemCusto: false };
+      }
+      const produto = porProduto[chave];
+      produto.quantidade += item.qty || 0;
+      produto.receita += (Number(item.price) || 0) * (item.qty || 0);
+      if (item.custoTotal != null) produto.cmv += item.custoTotal;
+      else produto.temItemSemCusto = true;
+    });
+  });
+
+  return Object.values(porProduto).map(({ temItemSemCusto, ...produto }) => {
+    const receita = arredondar(produto.receita);
+    if (temItemSemCusto) {
+      return { ...produto, receita, cmv: null, lucroBruto: null, margem: null, custoCompleto: false };
+    }
+    const cmv = arredondar(produto.cmv);
+    const lucroBruto = arredondar(receita - cmv);
+    return { ...produto, receita, cmv, lucroBruto, margem: percentualDe(lucroBruto, receita), custoCompleto: true };
+  });
+}
+
+// "Mais rentáveis" e "Menor margem" só listam produtos com custo completo;
+// "Mais vendidos" lista todos
+export function ordenarRentabilidade(produtos, ordenacao) {
+  switch (ordenacao) {
+    case ORDENACOES_RENTABILIDADE.MAIS_RENTAVEIS:
+      return produtos.filter((p) => p.lucroBruto !== null).sort((a, b) => b.lucroBruto - a.lucroBruto);
+    case ORDENACOES_RENTABILIDADE.MENOR_MARGEM:
+      return produtos.filter((p) => p.margem !== null).sort((a, b) => a.margem - b.margem);
+    case ORDENACOES_RENTABILIDADE.MAIS_VENDIDOS:
+    default:
+      return [...produtos].sort((a, b) => b.quantidade - a.quantidade || b.receita - a.receita);
+  }
+}
+
+// Variação percentual sobre o valor anterior (base em módulo, para resultados
+// negativos); null se o anterior for zero
+function variacaoPercentual(anterior, atual) {
+  if (anterior == null || atual == null || anterior === 0) return null;
+  return arredondar(((atual - anterior) / Math.abs(anterior)) * 100, 1);
+}
+
+function variacaoPontos(anterior, atual) {
+  if (anterior == null || atual == null) return null;
+  return arredondar(atual - anterior, 1);
+}
+
+// Linhas da comparação entre dois períodos (ex.: setembro x agosto). Valores
+// em R$ variam em %; margens variam em pontos percentuais (p.p.).
+export function compararIndicadores(anterior, atual) {
+  const moeda = (chave, label, campo) => ({
+    chave, label, tipo: 'moeda',
+    anterior: anterior[campo], atual: atual[campo],
+    variacao: variacaoPercentual(anterior[campo], atual[campo]),
+  });
+  const margem = (chave, label, campo) => ({
+    chave, label, tipo: 'percentual',
+    anterior: anterior[campo], atual: atual[campo],
+    variacao: variacaoPontos(anterior[campo], atual[campo]),
+  });
+
+  return [
+    moeda('faturamento', 'Faturamento', 'faturamento'),
+    moeda('cmv', 'CMV', 'cmv'),
+    margem('margemBruta', 'Margem bruta', 'margemBrutaPercentual'),
+    margem('margemContribuicao', 'Margem de contribuição', 'margemContribuicaoPercentual'),
+    moeda('resultado', 'Resultado', 'resultado'),
+  ];
+}
