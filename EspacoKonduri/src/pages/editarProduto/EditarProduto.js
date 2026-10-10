@@ -21,7 +21,6 @@ import {
 import { calcularSaldoOperacao } from "../../utils/saldoOperacao";
 import { ehAdmin as usuarioEhAdmin } from "../../utils/permissoes";
 import { CATEGORIAS_PRODUTO } from "../../utils/categoriasProduto";
-import { formatPrice } from "../../utils/formatPrice";
 import {
   Container,
   ScrollContainer,
@@ -36,6 +35,7 @@ import {
   Label,
   InputContainer,
   Input,
+  Row,
   ErrorText,
   CategoryOptions,
   CategoryButton,
@@ -43,13 +43,9 @@ import {
   ChipsWrap,
   Chip,
   ChipText,
-  ReadOnlyContainer,
-  ReadOnlyText,
-  MovimentoBox,
-  MovimentoTitulo,
-  MovimentoLinha,
-  MovimentoLabel,
-  MovimentoValor,
+  PreviewBox,
+  PreviewLabel,
+  PreviewValue,
   SaveButton,
   SaveButtonText,
   ErrorBox,
@@ -82,17 +78,20 @@ export default function EditarProduto() {
   const [existeNaOperacaoAtual, setExisteNaOperacaoAtual] = useState(false);
 
   const [nome, setNome] = useState("");
-  // "Vender como": 'produtos' | 'ingressos' (separa as abas do PDV)
   const [categoria, setCategoria] = useState("produtos");
-  const [preco, setPreco] = useState("");
-  const [custoUnitario, setCustoUnitario] = useState("");
-  const [limiteEstoqueBaixo, setLimiteEstoqueBaixo] = useState("5");
   const [categoriaProduto, setCategoriaProduto] = useState(null);
+  const [preco, setPreco] = useState("");
+  const [estoqueInicial, setEstoqueInicial] = useState("");
+  const [entradaQtd, setEntradaQtd] = useState("");
+  const [valorEntradas, setValorEntradas] = useState("");
+  const [saidaQtd, setSaidaQtd] = useState("");
+  const [valorSaidas, setValorSaidas] = useState("");
   const [observacoes, setObservacoes] = useState("");
-  // Estoque e movimento do dia são só leitura: mudanças de estoque vão pelos
-  // botões ENTRADA e "−", que registram o movimento
-  const [estoqueAtual, setEstoqueAtual] = useState(0);
-  const [movimentoDoDia, setMovimentoDoDia] = useState(null);
+  const [ajusteSaidaQtd, setAjusteSaidaQtd] = useState(0);
+  // Valores de estoque como vieram do banco, para só regravar o que o usuário mudou
+  const [estoqueOriginal, setEstoqueOriginal] = useState(null);
+  const [custoUnitario, setCustoUnitario] = useState('');
+  const [limiteEstoqueBaixo, setLimiteEstoqueBaixo] = useState("5");
 
   const [salvando, setSalvando] = useState(false);
   const [excluindo, setExcluindo] = useState(false);
@@ -114,22 +113,31 @@ export default function EditarProduto() {
         setNome(produtoMaster.title || "");
         setCustoUnitario((produtoMaster.custoMedio ?? produtoMaster.custoUnitario ?? 0).toFixed(2).replace(".", ","));
         setCategoria(produtoMaster.category || "produtos");
+        setCategoriaProduto(produtoMaster.categoriaProduto || null);
         setPreco((produtoMaster.price || 0).toFixed(2).replace(".", ","));
         setObservacoes(produtoMaster.observacoes || "");
         setFotoAtualUrl(produtoMaster.image || null);
         setLimiteEstoqueBaixo(String(produtoMaster.limiteEstoqueBaixo ?? 5));
-        setCategoriaProduto(produtoMaster.categoriaProduto || null);
-        setEstoqueAtual(produtoMaster.estoque ?? 0);
+
+        let dadosNumericos = produtoMaster;
 
         if (caixaAberto && operacaoId) {
           const produtoNaOperacao = await buscarProdutoDaOperacao(operacaoId, produtoId);
           if (produtoNaOperacao) {
-            // Com o caixa aberto, o saldo da operação é o estoque que vale
-            setEstoqueAtual(calcularSaldoOperacao(produtoNaOperacao));
-            setMovimentoDoDia(produtoNaOperacao);
+            dadosNumericos = produtoNaOperacao;
             setExisteNaOperacaoAtual(true);
           }
         }
+
+        setEstoqueInicial(String(dadosNumericos.estoqueInicial ?? 0));
+        setEntradaQtd(String(dadosNumericos.entradaQtd ?? 0));
+        setValorEntradas((dadosNumericos.valorEntradas || 0).toFixed(2).replace(".", ","));
+        setSaidaQtd(String(dadosNumericos.saidaQtd ?? 0));
+        setValorSaidas((dadosNumericos.valorSaidas || 0).toFixed(2).replace(".", ","));
+        setAjusteSaidaQtd(dadosNumericos.ajusteSaidaQtd || 0);
+        setEstoqueOriginal({
+          estoqueInicial: dadosNumericos.estoqueInicial ?? 0,
+        });
       } catch (erro) {
         console.error("Erro ao carregar produto:", erro);
         setErroGeral("Não foi possível carregar o produto.");
@@ -166,11 +174,31 @@ export default function EditarProduto() {
   };
 
   const handleChangeCustoUnitario = (texto) => {
-    setCustoUnitario(aplicarMascaraMoeda(texto));
-    if (erros.custoUnitario) setErros((prev) => ({ ...prev, custoUnitario: null }));
-  };
+  setCustoUnitario(aplicarMascaraMoeda(texto));
+  if (erros.custoUnitario) setErros((prev) => ({ ...prev, custoUnitario: null }));
+};
 
   const parseNumero = (valor) => Number((valor || "0").replace(",", ".")) || 0;
+
+  const estoqueInicialNumero = parseNumero(estoqueInicial);
+  const entradaQtdNumero = parseNumero(entradaQtd);
+  const saidaQtdNumero = parseNumero(saidaQtd);
+  const saldoPrevisto = calcularSaldoOperacao({
+    estoqueInicial: estoqueInicialNumero,
+    entradaQtd: entradaQtdNumero,
+    saidaQtd: saidaQtdNumero,
+    ajusteSaidaQtd,
+  });
+
+  // Só os campos de estoque que o usuário alterou. Os demais ficam como estão no
+  // banco, para não desfazer vendas, entradas ou perdas registradas enquanto a
+  // tela estava aberta.
+  const camposEstoqueAlterados = () => {
+    const alterados = {};
+    if (!estoqueOriginal) return alterados;
+    if (estoqueInicialNumero !== estoqueOriginal.estoqueInicial) alterados.estoqueInicial = estoqueInicialNumero;
+    return alterados;
+  };
 
   const validarNumero = (valor) => {
     const numero = parseNumero(valor);
@@ -191,6 +219,7 @@ export default function EditarProduto() {
       novosErros.custoUnitario = "O custo não pode ser maior que o preço de venda.";
     }
 
+    if (validarNumero(estoqueInicial)) novosErros.estoqueInicial = "Informe uma quantidade válida.";
     if (validarNumero(limiteEstoqueBaixo)) novosErros.limiteEstoqueBaixo = "Informe um número válido.";
 
     setErros(novosErros);
@@ -213,20 +242,23 @@ export default function EditarProduto() {
         title: nome.trim(),
         price: parseNumero(preco),
         category: categoria,
+        categoriaProduto,
         unidade: UNIDADE_PADRAO,
         image: urlFoto,
         observacoes: observacoes.trim(),
         limiteEstoqueBaixo: Number(limiteEstoqueBaixo) || 5,
-        categoriaProduto,
         // Edição manual do custo corrige o custo médio usado nas próximas vendas
         custoUnitario: parseNumero(custoUnitario),
         custoMedio: parseNumero(custoUnitario),
       });
 
-      // Esta tela não altera estoque; só mantém nome e foto em dia no Controle do Dia
+      const alterados = camposEstoqueAlterados();
+
       if (caixaAberto && operacaoId) {
         if (existeNaOperacaoAtual) {
+          // Entradas não são editadas aqui: vão pelo botão ENTRADA, com custo
           await atualizarProdutoDaOperacao(operacaoId, produtoId, {
+            ...alterados,
             nome: nome.trim(),
             image: urlFoto,
           });
@@ -239,9 +271,11 @@ export default function EditarProduto() {
             title: nome.trim(),
             unidade: UNIDADE_PADRAO,
             image: urlFoto,
-            estoque: produtoAtual?.estoque ?? estoqueAtual,
+            estoque: produtoAtual?.estoque ?? 0,
           });
         }
+      } else if (Object.keys(alterados).length > 0) {
+        await atualizarProduto(produtoId, { estoque: saldoPrevisto });
       }
 
       router.back();
@@ -317,13 +351,24 @@ export default function EditarProduto() {
           )}
         </Header>
 
+        <PhotoPicker onPress={escolherFoto}>
+          {fotoExibida ? (
+            <PhotoPreview source={{ uri: fotoExibida }} />
+          ) : (
+            <>
+              <Ionicons name="camera-outline" size={28} color="#8C7355" />
+              <PhotoPickerText>Adicionar{"\n"}foto</PhotoPickerText>
+            </>
+          )}
+        </PhotoPicker>
+
         <InputGroup>
           <Label>Nome do produto</Label>
           <InputContainer hasError={!!erros.nome}>
             <Input
               value={nome}
               onChangeText={setNome}
-              placeholder="Ex: Cerveja Império lata 269 ml"
+              placeholder="Ex: Cerveja Gelada"
               placeholderTextColor="#A99B8F"
             />
           </InputContainer>
@@ -343,64 +388,6 @@ export default function EditarProduto() {
         </InputGroup>
 
         <InputGroup>
-          <Label>Preço de venda (R$)</Label>
-          <InputContainer hasError={!!erros.preco}>
-            <Input
-              value={preco}
-              onChangeText={handleChangePreco}
-              placeholder="0,00"
-              keyboardType="numeric"
-              placeholderTextColor="#A99B8F"
-            />
-          </InputContainer>
-          {erros.preco && <ErrorText>{erros.preco}</ErrorText>}
-        </InputGroup>
-
-        <InputGroup>
-          <Label>Custo unitário (R$)</Label>
-          <InputContainer hasError={!!erros.custoUnitario}>
-            <Input
-              value={custoUnitario}
-              onChangeText={handleChangeCustoUnitario}
-              placeholder="0,00"
-              keyboardType="numeric"
-              placeholderTextColor="#A99B8F"
-            />
-          </InputContainer>
-          {erros.custoUnitario && <ErrorText>{erros.custoUnitario}</ErrorText>}
-        </InputGroup>
-
-        <InputGroup>
-          <Label>Estoque atual</Label>
-          <ReadOnlyContainer>
-            <ReadOnlyText>{estoqueAtual} un</ReadOnlyText>
-            <Ionicons name="lock-closed-outline" size={16} color="#A99B8F" />
-          </ReadOnlyContainer>
-          <HelperText>
-            Para alterar o estoque, use ENTRADA (compra) ou − (perda/ajuste) na tela de Estoque.
-            Assim a mudança fica registrada no histórico.
-          </HelperText>
-        </InputGroup>
-
-        <InputGroup>
-          <Label>Estoque mínimo</Label>
-          <InputContainer hasError={!!erros.limiteEstoqueBaixo}>
-            <Input
-              value={limiteEstoqueBaixo}
-              onChangeText={setLimiteEstoqueBaixo}
-              placeholder="5"
-              keyboardType="decimal-pad"
-              placeholderTextColor="#A99B8F"
-            />
-          </InputContainer>
-          {erros.limiteEstoqueBaixo ? (
-            <ErrorText>{erros.limiteEstoqueBaixo}</ErrorText>
-          ) : (
-            <HelperText>Avisa quando o estoque chegar a este número.</HelperText>
-          )}
-        </InputGroup>
-
-        <InputGroup>
           <Label>Categoria (opcional)</Label>
           <ChipsWrap>
             {CATEGORIAS_PRODUTO.map((nomeCategoria) => (
@@ -417,51 +404,105 @@ export default function EditarProduto() {
           </ChipsWrap>
         </InputGroup>
 
-        {caixaAberto && movimentoDoDia && (
-          <MovimentoBox>
-            <MovimentoTitulo>MOVIMENTO DO DIA (CONTROLE DO DIA)</MovimentoTitulo>
-            <MovimentoLinha>
-              <MovimentoLabel>Estoque inicial do dia</MovimentoLabel>
-              <MovimentoValor>{movimentoDoDia.estoqueInicial ?? 0} un</MovimentoValor>
-            </MovimentoLinha>
-            <MovimentoLinha>
-              <MovimentoLabel>Entrada (qtd.)</MovimentoLabel>
-              <MovimentoValor>{movimentoDoDia.entradaQtd ?? 0} un</MovimentoValor>
-            </MovimentoLinha>
-            <MovimentoLinha>
-              <MovimentoLabel>Valor entradas</MovimentoLabel>
-              <MovimentoValor>{formatPrice(movimentoDoDia.valorEntradas || 0)}</MovimentoValor>
-            </MovimentoLinha>
-            <MovimentoLinha>
-              <MovimentoLabel>Saída / Venda (qtd.)</MovimentoLabel>
-              <MovimentoValor>{movimentoDoDia.saidaQtd ?? 0} un</MovimentoValor>
-            </MovimentoLinha>
-            <MovimentoLinha>
-              <MovimentoLabel>Valor saídas</MovimentoLabel>
-              <MovimentoValor>{formatPrice(movimentoDoDia.valorSaidas || 0)}</MovimentoValor>
-            </MovimentoLinha>
-            {movimentoDoDia.ajusteSaidaQtd > 0 && (
-              <MovimentoLinha>
-                <MovimentoLabel>Perdas / ajustes</MovimentoLabel>
-                <MovimentoValor>{movimentoDoDia.ajusteSaidaQtd} un</MovimentoValor>
-              </MovimentoLinha>
-            )}
-            <HelperText>Preenchido automaticamente pelas vendas e pelos botões ENTRADA e −.</HelperText>
-          </MovimentoBox>
-        )}
+        <Row>
+          <InputGroup style={{ flex: 1, marginRight: 10 }}>
+            <Label>Preço (R$)</Label>
+            <InputContainer hasError={!!erros.preco}>
+              <Input
+                value={preco}
+                onChangeText={handleChangePreco}
+                placeholder="0,00"
+                keyboardType="numeric"
+                placeholderTextColor="#A99B8F"
+              />
+            </InputContainer>
+            {erros.preco && <ErrorText>{erros.preco}</ErrorText>}
+          </InputGroup>
+
+          <InputGroup style={{ flex: 1 }}>
+            <Label>Estoque Inicial</Label>
+            <InputContainer hasError={!!erros.estoqueInicial}>
+              <Input
+                value={estoqueInicial}
+                onChangeText={setEstoqueInicial}
+                placeholder="0"
+                keyboardType="decimal-pad"
+                placeholderTextColor="#A99B8F"
+              />
+            </InputContainer>
+            {erros.estoqueInicial && <ErrorText>{erros.estoqueInicial}</ErrorText>}
+          </InputGroup>
+        </Row>
+
+        <Row>
+          <InputGroup style={{ flex: 1, marginRight: 10 }}>
+            <Label>Entrada (Qtd.)</Label>
+            <InputContainer style={{ backgroundColor: "#F0EAE1" }}>
+              <Input value={entradaQtd} editable={false} style={{ color: "#8C7355" }} />
+            </InputContainer>
+          </InputGroup>
+
+          <InputGroup style={{ flex: 1 }}>
+            <Label>Valor Entradas (R$)</Label>
+            <InputContainer style={{ backgroundColor: "#F0EAE1" }}>
+              <Input value={valorEntradas} editable={false} style={{ color: "#8C7355" }} />
+            </InputContainer>
+          </InputGroup>
+        </Row>
+        <HelperText>
+          Entradas de mercadoria agora são registradas só pelo botão ENTRADA (no Controle do
+          Dia ou no + do Estoque), que pede o custo da compra e atualiza o custo médio.
+        </HelperText>
+
+        <Row>
+          <InputGroup style={{ flex: 1, marginRight: 10 }}>
+            <Label>Saída / Venda (Qtd.)</Label>
+            <InputContainer style={{ backgroundColor: "#F0EAE1" }}>
+              <Input value={saidaQtd} editable={false} style={{ color: "#8C7355" }} />
+            </InputContainer>
+          </InputGroup>
+
+          <InputGroup style={{ flex: 1 }}>
+            <Label>Valor Saídas (R$)</Label>
+            <InputContainer style={{ backgroundColor: "#F0EAE1" }}>
+              <Input value={valorSaidas} editable={false} style={{ color: "#8C7355" }} />
+            </InputContainer>
+          </InputGroup>
+        </Row>
+
+        <Row>
+          <InputGroup style={{ flex: 1 }}>
+            <Label>Custo Unitário (R$)</Label>
+            <InputContainer hasError={!!erros.custoUnitario}>
+              <Input
+                value={custoUnitario}
+                onChangeText={handleChangeCustoUnitario}
+                placeholder="0,00"
+                keyboardType="numeric"
+                placeholderTextColor="#A99B8F"
+              />
+            </InputContainer>
+            {erros.custoUnitario && <ErrorText>{erros.custoUnitario}</ErrorText>}
+          </InputGroup>
+        </Row>
+
+        <PreviewBox>
+          <PreviewLabel>SALDO EM ESTOQUE</PreviewLabel>
+          <PreviewValue>{saldoPrevisto}</PreviewValue>
+        </PreviewBox>
 
         <InputGroup>
-          <Label>Foto</Label>
-          <PhotoPicker onPress={escolherFoto} style={{ marginBottom: 0 }}>
-            {fotoExibida ? (
-              <PhotoPreview source={{ uri: fotoExibida }} />
-            ) : (
-              <>
-                <Ionicons name="camera-outline" size={28} color="#8C7355" />
-                <PhotoPickerText>Adicionar{"\n"}foto</PhotoPickerText>
-              </>
-            )}
-          </PhotoPicker>
+          <Label>Avisar quando o estoque for menor que</Label>
+          <InputContainer hasError={!!erros.limiteEstoqueBaixo}>
+            <Input
+              value={limiteEstoqueBaixo}
+              onChangeText={setLimiteEstoqueBaixo}
+              placeholder="5"
+              keyboardType="decimal-pad"
+              placeholderTextColor="#A99B8F"
+            />
+          </InputContainer>
+          {erros.limiteEstoqueBaixo && <ErrorText>{erros.limiteEstoqueBaixo}</ErrorText>}
         </InputGroup>
 
         <InputGroup>

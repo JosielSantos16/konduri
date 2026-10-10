@@ -185,12 +185,6 @@ export const GeneralErrorText = styled.Text`
   text-align: center;
 `;
 
-export const HelperText = styled.Text`
-  font-size: 12px;
-  color: #8C7355;
-  margin-top: 4px;
-`;
-
 export const ChipsWrap = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
