@@ -108,7 +108,7 @@ export default function FechamentoCaixa() {
     return (
       <Container style={{ paddingTop: insets.top }}>
         <LoadingContainer>
-          <ActivityIndicator size="large" color="#2E5A1E" />
+          <ActivityIndicator size="large" color="#1A1A1A" />
         </LoadingContainer>
       </Container>
     );
@@ -119,7 +119,7 @@ export default function FechamentoCaixa() {
       <ScrollContainer showsVerticalScrollIndicator={false}>
         <Header>
           <BackButton onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color="#2E5A1E" />
+            <Ionicons name="arrow-back" size={22} color="#1A1A1A" />
           </BackButton>
           <HeaderTitles>
             <HeaderTitle>Fechamento de Caixa</HeaderTitle>
@@ -161,7 +161,7 @@ export default function FechamentoCaixa() {
             <Label>CONFERIDO POR</Label>
             <InputContainer>
               <InputText>{usuario?.nome || 'Carregando...'}</InputText>
-              <Ionicons name="person-outline" size={18} color="#A99B8F" />
+              <Ionicons name="person-outline" size={18} color="#9E9E9E" />
             </InputContainer>
           </InputGroup>
 
@@ -169,7 +169,7 @@ export default function FechamentoCaixa() {
             <Label>DATA DA DIGITAÇÃO</Label>
             <InputContainer>
               <InputText>{formatDataCompleta()}</InputText>
-              <Ionicons name="calendar-outline" size={18} color="#D35400" />
+              <Ionicons name="calendar-outline" size={18} color="#6B5300" />
             </InputContainer>
           </InputGroup>
         </Card>
@@ -183,10 +183,10 @@ export default function FechamentoCaixa() {
         
         <FinalizeButton onPress={handleFinalizar} disabled={salvando}>
           {salvando ? (
-            <ActivityIndicator color="#FFFFFF" />
+            <ActivityIndicator color="#1A1A1A" />
           ) : (
             <>
-              <Ionicons name="save-outline" size={18} color="#FFFFFF" />
+              <Ionicons name="save-outline" size={18} color="#1A1A1A" />
               <FinalizeButtonText>Finalizar e Salvar</FinalizeButtonText>
             </>
           )}

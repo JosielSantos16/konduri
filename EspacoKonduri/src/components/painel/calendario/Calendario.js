@@ -46,7 +46,7 @@ const CalendarHeader = styled.View`
 const CalendarTitle = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 const LegendRow = styled.View`
@@ -71,7 +71,7 @@ const LegendDot = styled.View`
 
 const LegendText = styled.Text`
   font-size: 11px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 function paraDataISO(data) {
@@ -103,11 +103,11 @@ export default function Calendario({
     markedDates[dataISO] = {
       customStyles: {
         container: {
-          backgroundColor: jaTemComissao ? '#D4EDDA' : '#FDEBD3',
+          backgroundColor: jaTemComissao ? '#D4EDDA' : '#FFF7D1',
           borderRadius: 8,
         },
         text: {
-          color: jaTemComissao ? '#1E7E34' : '#B85D00',
+          color: jaTemComissao ? '#1E7E34' : '#6B5300',
           fontWeight: 'bold',
         },
       },
@@ -119,7 +119,7 @@ export default function Calendario({
   markedDates[dataSelecionadaISO] = {
     customStyles: {
       container: {
-        backgroundColor: '#3D2C22',
+        backgroundColor: '#1A1A1A',
         borderRadius: 8,
       },
       text: {
@@ -146,7 +146,7 @@ export default function Calendario({
             <CalendarHeader>
               <CalendarTitle>Selecionar Data</CalendarTitle>
               <TouchableOpacity onPress={() => setVisible(false)}>
-                <Ionicons name="close" size={22} color="#3D2C22" />
+                <Ionicons name="close" size={22} color="#1A1A1A" />
               </TouchableOpacity>
             </CalendarHeader>
 
@@ -162,8 +162,8 @@ export default function Calendario({
                 }
               }}
               theme={{
-                todayTextColor: '#E67E22',
-                arrowColor: '#2E5A1E',
+                todayTextColor: '#8A6A00',
+                arrowColor: '#1A1A1A',
                 textDayFontWeight: '500',
                 textMonthFontWeight: 'bold',
               }}
@@ -171,7 +171,7 @@ export default function Calendario({
 
             <LegendRow>
               <LegendItem>
-                <LegendDot color="#FDEBD3" />
+                <LegendDot color="#FFF7D1" />
                 <LegendText>Venda registrada</LegendText>
               </LegendItem>
               <LegendItem>

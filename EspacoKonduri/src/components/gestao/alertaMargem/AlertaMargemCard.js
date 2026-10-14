@@ -41,10 +41,10 @@ export default function AlertaMargemCard({ produtos, margemMinima, onEditarMarge
   return (
     <Card borda={abaixoDoMinimo.length > 0 ? '#F5B7B1' : undefined}>
       <CardHeader>
-        <Ionicons name="warning-outline" size={18} color={abaixoDoMinimo.length > 0 ? '#C0392B' : '#8C7355'} />
+        <Ionicons name="warning-outline" size={18} color={abaixoDoMinimo.length > 0 ? '#C0392B' : '#6B6B6B'} />
         <CardTitulo>MARGEM DOS PRODUTOS</CardTitulo>
         <CardAcao onPress={onEditarMargem}>
-          <Ionicons name="options-outline" size={14} color="#E67E22" />
+          <Ionicons name="options-outline" size={14} color="#8A6A00" />
           <CardAcaoTexto>Mínima: {formatarPercentual(margemMinima)}</CardAcaoTexto>
         </CardAcao>
       </CardHeader>

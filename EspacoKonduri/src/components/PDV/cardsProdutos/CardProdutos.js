@@ -68,7 +68,7 @@ export default function CardProd({
           <ProductImage source={{ uri: item.image }} resizeMode="cover" />
         ) : (
           <ProductImagePlaceholder>
-            <Ionicons name="image-outline" size={28} color="#C9BBA8" />
+            <Ionicons name="image-outline" size={28} color="#C4C4BE" />
           </ProductImagePlaceholder>
         )}
 
@@ -89,7 +89,7 @@ export default function CardProd({
             ) : qty > 0 ? (
               <QtyControls>
                 <QtyButton onPress={onDecrease} hitSlop={HIT_SLOP}>
-                  <Ionicons name="remove" size={14} color="#D35400" />
+                  <Ionicons name="remove" size={14} color="#6B5300" />
                 </QtyButton>
                 <QtyText>{qty}</QtyText>
                 <QtyButton
@@ -100,13 +100,13 @@ export default function CardProd({
                   <Ionicons
                     name="add"
                     size={14}
-                    color={atingiuLimite ? "#C9BBA8" : "#D35400"}
+                    color={atingiuLimite ? "#C4C4BE" : "#6B5300"}
                   />
                 </QtyButton>
               </QtyControls>
             ) : (
               <AddButton onPress={handlePressCard} hitSlop={HIT_SLOP}>
-                <Ionicons name="add" size={16} color="#D35400" />
+                <Ionicons name="add" size={16} color="#6B5300" />
               </AddButton>
             )}
           </ProductFooter>

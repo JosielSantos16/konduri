@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const Header = styled.View`
@@ -18,12 +18,12 @@ export const HeaderTopRow = styled.View`
 export const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-bottom: 15px;
 `;
 
@@ -33,7 +33,7 @@ export const SearchIconButton = styled.TouchableOpacity`
   border-radius: 20px;
   background-color: #FFFFFF;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   justify-content: center;
   align-items: center;
 `;
@@ -44,7 +44,7 @@ export const InlineSearchRow = styled.View`
   background-color: #FFFFFF;
   border-radius: 12px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding-horizontal: 14px;
   height: 44px;
   margin-bottom: 10px;
@@ -52,10 +52,10 @@ export const InlineSearchRow = styled.View`
 export const InlineSearchInput = styled.TextInput`
   flex: 1;
   font-size: 13px;
-  color: #3D2C22;
+  color: #1A1A1A;
   background-color: #FFFFFF;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   border-radius: 12px;
   padding-horizontal: 14px;
   height: 44px;
@@ -74,7 +74,7 @@ export const DateFilterButton = styled.TouchableOpacity`
   align-items: center;
   background-color: #FFFFFF;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   border-radius: 12px;
   padding: 8px 12px;
 `;
@@ -82,21 +82,21 @@ export const DateFilterButton = styled.TouchableOpacity`
 export const DateFilterText = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-left: 6px;
   margin-right: 6px;
 `;
 
 export const TotalRecordsText = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   font-weight: bold;
 `;
 export const TodayButton = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color:  #3D2C22;
+  background-color:  #1A1A1A;
   border-radius: 12px;
   padding-horizontal: 14px;
   height: 40px;
@@ -120,7 +120,7 @@ export const OrderToggleButton = styled.TouchableOpacity`
 export const OrderToggleText = styled.Text`
   font-size: 12px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-left: 4px;
 `;
 
@@ -130,7 +130,7 @@ export const PaymentFilterRow = styled.View`
 `;
 
 export const PaymentChip = styled.TouchableOpacity`
-  background-color: ${(props) => (props.active ? '#E67E22' : '#F0EAE1')};
+  background-color: ${(props) => (props.active ? '#FFD000' : '#F1F1EB')};
   padding-horizontal: 12px;
   padding-vertical: 6px;
   border-radius: 14px;
@@ -140,7 +140,7 @@ export const PaymentChip = styled.TouchableOpacity`
 export const PaymentChipText = styled.Text`
   font-size: 12px;
   font-weight: bold;
-  color: ${(props) => (props.active ? '#FFFFFF' : '#8C7355')};
+  color: ${(props) => (props.active ? '#1A1A1A' : '#6B6B6B')};
 `;
 
 export const AtendenteResumoSection = styled.View`
@@ -159,26 +159,26 @@ export const AtendenteResumoCard = styled.View`
   padding: 10px 12px;
   margin-right: 8px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
 `;
 
 export const AtendenteResumoNome = styled.Text`
   font-size: 12px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const AtendenteResumoValor = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-top: 2px;
 `;
 
 export const ClosedOperationBanner = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: #FDF3E7;
+  background-color: #FFF7D1;
   border-radius: 10px;
   padding: 10px 14px;
   margin-horizontal: 20px;
@@ -189,7 +189,7 @@ export const ClosedOperationText = styled.Text`
   flex: 1;
   font-size: 12px;
   font-weight: bold;
-  color: #B85D00;
+  color: #6B5300;
   margin-left: 8px;
 `;
 
@@ -206,7 +206,7 @@ export const EmptyState = styled.View`
 
 export const EmptyStateText = styled.Text`
   font-size: 14px;
-  color: #8C7355;
+  color: #6B6B6B;
   text-align: center;
   margin-top: 12px;
 `;
@@ -220,7 +220,7 @@ export const ComissaoSection = styled.View`
 export const ComissaoSectionTitle = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-bottom: 10px;
   letter-spacing: 0.3px;
 `;
@@ -228,7 +228,7 @@ export const ComissaoSectionTitle = styled.Text`
 export const ComissaoButton = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  background-color: #2E5A1E;
+  background-color: #1A1A1A;
   border-radius: 12px;
   padding-horizontal: 14px;
   height: 40px;
@@ -243,7 +243,7 @@ export const ComissaoButtonText = styled.Text`
 `;
 
 export const ComissaoBadge = styled.View`
-  background-color: #E67E22;
+  background-color: #FFD000;
   width: 18px;
   height: 18px;
   border-radius: 9px;
@@ -255,7 +255,7 @@ export const ComissaoBadge = styled.View`
 export const ComissaoBadgeText = styled.Text`
   font-size: 10px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #1A1A1A;
 `;
 
 export const ComissaoModalOverlay = styled.View`
@@ -265,7 +265,7 @@ export const ComissaoModalOverlay = styled.View`
 `;
 
 export const ComissaoModalContent = styled.View`
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
   padding: 20px;
@@ -282,7 +282,7 @@ export const ComissaoModalHeader = styled.View`
 export const ComissaoModalTitle = styled.Text`
   font-size: 18px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const ComissaoModalCloseButton = styled.TouchableOpacity`
@@ -291,13 +291,13 @@ export const ComissaoModalCloseButton = styled.TouchableOpacity`
 
 export const ComissaoModalSubtitle = styled.Text`
   font-size: 12px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-bottom: 16px;
 `;
 
 export const ComissaoModalEmptyText = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   text-align: center;
   padding-vertical: 20px;
 `;

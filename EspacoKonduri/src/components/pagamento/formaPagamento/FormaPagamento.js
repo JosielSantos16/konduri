@@ -11,7 +11,7 @@ import {
 } from './formaPagamentoStyle';
 
 const METHODS = [
-  { key: 'pix', title: 'PIX', subtitle: 'Na Maquininha', icon: 'qr-code-outline', color: '#E67E22' },
+  { key: 'pix', title: 'PIX', subtitle: 'Na Maquininha', icon: 'qr-code-outline', color: '#8A6A00' },
   { key: 'cartao', title: 'Cartão', subtitle: 'Na Maquininha', icon: 'card-outline', color: '#1A73C0' },
   { key: 'dinheiro', title: 'Dinheiro', subtitle: 'Espécie em Mãos', icon: 'cash-outline', color: '#137333' },
 ];

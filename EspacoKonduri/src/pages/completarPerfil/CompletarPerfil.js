@@ -102,7 +102,7 @@ export default function CompletarPerfil() {
           <PhotoPreview source={{ uri: fotoLocal }} />
         ) : (
           <>
-            <Ionicons name="camera-outline" size={28} color="#8C7355" />
+            <Ionicons name="camera-outline" size={28} color="#6B6B6B" />
             <PhotoPickerText>Adicionar{'\n'}foto</PhotoPickerText>
           </>
         )}
@@ -118,7 +118,7 @@ export default function CompletarPerfil() {
               if (erroNome) setErroNome(null);
             }}
             placeholder="Digite seu nome"
-            placeholderTextColor="#A99B8F"
+            placeholderTextColor="#9E9E9E"
             maxLength={60}
           />
         </InputContainer>
@@ -127,10 +127,10 @@ export default function CompletarPerfil() {
 
       <SaveButton onPress={handleSalvar} disabled={salvando}>
         {salvando ? (
-          <ActivityIndicator color="#FFFFFF" />
+          <ActivityIndicator color="#1A1A1A" />
         ) : (
           <>
-            <Ionicons name="checkmark-circle-outline" size={18} color="#FFFFFF" />
+            <Ionicons name="checkmark-circle-outline" size={18} color="#1A1A1A" />
             <SaveButtonText>Continuar</SaveButtonText>
           </>
         )}

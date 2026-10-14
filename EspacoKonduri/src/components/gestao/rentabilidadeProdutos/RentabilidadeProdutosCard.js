@@ -54,7 +54,7 @@ export default function RentabilidadeProdutosCard({ vendas, margemMinima }) {
   return (
     <Card>
       <CardHeader>
-        <Ionicons name="podium-outline" size={18} color="#8C7355" />
+        <Ionicons name="podium-outline" size={18} color="#6B6B6B" />
         <CardTitulo>RENTABILIDADE DOS PRODUTOS</CardTitulo>
       </CardHeader>
 

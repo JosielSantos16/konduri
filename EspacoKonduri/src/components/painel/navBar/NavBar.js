@@ -45,7 +45,7 @@ export default function NavBar() {
             <Ionicons
               name={tab.icon}
               size={22}
-              color={isActive ? "#E67E22" : "#8C7355"}
+              color={isActive ? "#8A6A00" : "#6B6B6B"}
             />
             <NavText active={isActive}>{tab.label}</NavText>
           </NavItem>

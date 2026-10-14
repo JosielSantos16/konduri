@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RefreshControl, Alert } from "react-native";
+import { RefreshControl, Alert, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -45,11 +45,16 @@ export default function Notificacoes() {
   const insets = useSafeAreaInsets();
   const { usuario } = useAuth();
   const [notificacoes, setNotificacoes] = useState([]);
+  const [carregando, setCarregando] = useState(true);
   const [atualizando, setAtualizando] = useState(false);
 
   useEffect(() => {
-    if (!usuario) return;
-    const unsubscribe = subscribeToNotificacoes(usuario, setNotificacoes);
+    if (!usuario) return undefined;
+    setCarregando(true);
+    const unsubscribe = subscribeToNotificacoes(usuario, (lista, { carregado }) => {
+      setNotificacoes(lista);
+      if (carregado) setCarregando(false);
+    });
     return unsubscribe;
   }, [usuario?.uid, usuario?.perfil]);
 
@@ -110,7 +115,7 @@ export default function Notificacoes() {
       <HeaderRow>
         <HeaderLeftGroup>
           <BackButton onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color="#3D2C22" />
+            <Ionicons name="arrow-back" size={22} color="#1A1A1A" />
           </BackButton>
           <Title>Notificações</Title>
         </HeaderLeftGroup>
@@ -122,9 +127,16 @@ export default function Notificacoes() {
         )}
       </HeaderRow>
 
-      {notificacoes.length === 0 ? (
+      {/* Enquanto busca, mostra que está carregando (antes aparecia
+          "Nenhuma notificação" até os dados chegarem) */}
+      {notificacoes.length === 0 && (carregando || !usuario) ? (
         <EmptyState>
-          <Ionicons name="notifications-outline" size={40} color="#C9BBA8" />
+          <ActivityIndicator size="large" color="#8A6A00" />
+          <EmptyText>Carregando notificações…</EmptyText>
+        </EmptyState>
+      ) : notificacoes.length === 0 ? (
+        <EmptyState>
+          <Ionicons name="notifications-outline" size={40} color="#C4C4BE" />
           <EmptyText>Nenhuma notificação ainda.</EmptyText>
         </EmptyState>
       ) : (
@@ -135,8 +147,8 @@ export default function Notificacoes() {
             <RefreshControl
               refreshing={atualizando}
               onRefresh={handleRefresh}
-              colors={["#E67E22"]}
-              tintColor="#E67E22"
+              colors={["#8A6A00"]}
+              tintColor="#8A6A00"
             />
           }
         >
@@ -174,7 +186,7 @@ export default function Notificacoes() {
                         <Ionicons
                           name="notifications"
                           size={20}
-                          color="#B0A08F"
+                          color="#C4C4BE"
                         />
                       </NotifImagePlaceholder>
                     )}
@@ -204,7 +216,7 @@ export default function Notificacoes() {
                         <Ionicons
                           name="chevron-forward"
                           size={18}
-                          color="#A99B8F"
+                          color="#9E9E9E"
                         />
                       </NotifChevron>
                     )}

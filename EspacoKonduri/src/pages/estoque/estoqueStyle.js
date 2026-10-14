@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const Header = styled.View`
@@ -12,12 +12,12 @@ export const Header = styled.View`
 export const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-bottom: 15px;
 `;
 
@@ -27,7 +27,7 @@ export const SearchContainer = styled.View`
   background-color: #FFFFFF;
   border-radius: 14px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding-horizontal: 14px;
   height: 50px;
   margin-bottom: 10px;
@@ -36,7 +36,7 @@ export const SearchContainer = styled.View`
 export const SearchInput = styled.TextInput`
   flex: 1;
   font-size: 15px;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-left: 10px;
 `;
 
@@ -53,7 +53,7 @@ export const StockCard = styled.View`
   justify-content: space-between;
   margin-bottom: 12px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   elevation: 1;
 `;
 
@@ -65,7 +65,7 @@ export const StockInfo = styled.View`
 export const StockItemTitle = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-bottom: 6px;
 `;
 
@@ -77,7 +77,7 @@ export const StockDetailsRow = styled.View`
 export const StockQuantityText = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-right: 8px;
 `;
 
@@ -87,7 +87,7 @@ export const StatusBadge = styled.View`
   border-radius: 8px;
   background-color: ${props => {
     if (props.status === 'ok') return '#E8F8F5';
-    if (props.status === 'baixo') return '#FEF9E7';
+    if (props.status === 'baixo') return '#FFF7D1';
     return '#FDEDEC';
   }};
 `;
@@ -97,7 +97,7 @@ export const StatusText = styled.Text`
   font-weight: bold;
   color: ${props => {
     if (props.status === 'ok') return '#16A085';
-    if (props.status === 'baixo') return '#F39C12';
+    if (props.status === 'baixo') return '#8A6A00';
     return '#E74C3C';
   }};
 `;
@@ -111,7 +111,7 @@ export const ActionButtonMinus = styled.TouchableOpacity`
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   justify-content: center;
   align-items: center;
   margin-right: 8px;
@@ -121,7 +121,7 @@ export const ActionButtonPlus = styled.TouchableOpacity`
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   justify-content: center;
   align-items: center;
 `;
@@ -130,7 +130,7 @@ export const BottomNavBar = styled.View`
   flex-direction: row;
   background-color: #FFFFFF;
   border-top-width: 1px;
-  border-top-color: #E6DFD5;
+  border-top-color: #E6E6E0;
   padding-vertical: 10px;
   padding-horizontal: 10px;
   justify-content: space-around;
@@ -147,7 +147,7 @@ export const NavItem = styled.TouchableOpacity`
 export const NavText = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: ${props => (props.active ? '#E67E22' : '#8C7355')};
+  color: ${props => (props.active ? '#8A6A00' : '#6B6B6B')};
   margin-top: 4px;
 `;
 
@@ -160,7 +160,7 @@ export const EmptyState = styled.View`
 
 export const EmptyStateText = styled.Text`
   font-size: 14px;
-  color: #8C7355;
+  color: #6B6B6B;
   text-align: center;
   margin-top: 12px;
 `;

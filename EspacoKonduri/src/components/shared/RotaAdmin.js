@@ -13,8 +13,8 @@ export default function RotaAdmin({ children }) {
 
   if (carregando) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FAF8F5' }}>
-        <ActivityIndicator size="large" color="#2E5A1E" />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FAFAF7' }}>
+        <ActivityIndicator size="large" color="#1A1A1A" />
       </View>
     );
   }

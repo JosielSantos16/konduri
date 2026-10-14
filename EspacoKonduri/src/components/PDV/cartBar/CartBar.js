@@ -44,21 +44,21 @@ export default function CartBar({
         <CartBarInfo>
           <CartItemsText>
             Carrinho Atual{'\n'}
-            <Text style={{ fontWeight: 'bold', color: '#3D2C22' }}>
+            <Text style={{ fontWeight: 'bold', color: '#1A1A1A' }}>
               {totalItems} {totalItems === 1 ? 'item selecionado' : 'itens selecionados'}
             </Text>
           </CartItemsText>
         </CartBarInfo>
-        <Ionicons name="chevron-up-outline" size={20} color="#8C7355" />
+        <Ionicons name="chevron-up-outline" size={20} color="#6B6B6B" />
       </CartBarTouchable>
 
       {onPressObservacao && (
         <ObservacaoRow onPress={onPressObservacao}>
-          <Ionicons name="chatbubble-ellipses-outline" size={16} color="#8C7355" />
+          <Ionicons name="chatbubble-ellipses-outline" size={16} color="#6B6B6B" />
           <ObservacaoText temTexto={!!observacoes} numberOfLines={1}>
             {observacoes ? observacoes : 'Escrever mensagem (opcional)'}
           </ObservacaoText>
-          <Ionicons name="chevron-forward" size={14} color="#A99B8F" />
+          <Ionicons name="chevron-forward" size={14} color="#9E9E9E" />
         </ObservacaoRow>
       )}
 

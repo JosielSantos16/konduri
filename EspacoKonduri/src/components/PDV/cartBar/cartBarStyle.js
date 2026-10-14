@@ -7,7 +7,7 @@ export const CartBar = styled.View`
   padding: 16px 20px 40px 20px;
   margin-bottom: -20px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   elevation: 10;
 `;
 
@@ -25,7 +25,7 @@ export const CartBarInfo = styled.View`
 
 export const CartItemsText = styled.Text`
   font-size: 14px;
-  color: #7A6555;
+  color: #5E5E5E;
 `;
 
 export const CartTotalRow = styled.View`
@@ -36,7 +36,7 @@ export const CartTotalRow = styled.View`
 export const CartTotalText = styled.Text`
   font-size: 20px;
   font-weight: bold;
-  color: #D35400;
+  color: #6B5300;
   margin-right: 6px;
 `;
 
@@ -50,7 +50,7 @@ export const ClearButton = styled.TouchableOpacity`
   height: 52px;
   border-radius: 12px;
   border-width: 1.5px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   justify-content: center;
   align-items: center;
   margin-right: 10px;
@@ -58,7 +58,7 @@ export const ClearButton = styled.TouchableOpacity`
 
 export const FinalizeButton = styled.TouchableOpacity`
   flex: 1;
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   border-radius: 12px;
   height: 52px;
   flex-direction: row;
@@ -83,7 +83,7 @@ export const ObservacaoRow = styled.TouchableOpacity`
 export const ObservacaoText = styled.Text`
   flex: 1;
   font-size: 12px;
-  color: ${(props) => (props.temTexto ? '#3D2C22' : '#A99B8F')};
+  color: ${(props) => (props.temTexto ? '#1A1A1A' : '#9E9E9E')};
   font-weight: ${(props) => (props.temTexto ? 'bold' : 'normal')};
   margin-left: 6px;
 `;

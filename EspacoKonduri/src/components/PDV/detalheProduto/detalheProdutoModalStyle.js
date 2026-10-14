@@ -27,7 +27,7 @@ export const ImagemGrande = styled.Image`
   width: 100%;
   height: 180px;
   border-radius: 14px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   margin-bottom: 16px;
 `;
 
@@ -35,7 +35,7 @@ export const ImagemPlaceholder = styled.View`
   width: 100%;
   height: 180px;
   border-radius: 14px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   justify-content: center;
   align-items: center;
   margin-bottom: 16px;
@@ -44,14 +44,14 @@ export const ImagemPlaceholder = styled.View`
 export const Titulo = styled.Text`
   font-size: 18px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-bottom: 4px;
 `;
 
 export const Preco = styled.Text`
   font-size: 20px;
   font-weight: bold;
-  color: #D35400;
+  color: #6B5300;
   margin-bottom: 16px;
 `;
 
@@ -60,23 +60,23 @@ export const InfoRow = styled.View`
   justify-content: space-between;
   padding-vertical: 8px;
   border-top-width: 1px;
-  border-top-color: #F0EAE1;
+  border-top-color: #F1F1EB;
 `;
 
 export const InfoLabel = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const InfoValue = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const Observacoes = styled.Text`
   font-size: 12px;
-  color: #8C5A2E;
+  color: #6B5300;
   margin-top: 12px;
   font-style: italic;
 `;

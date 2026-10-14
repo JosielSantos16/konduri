@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 
 export const TotalCard = styled.View`
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 20px;
@@ -11,7 +11,7 @@ export const TotalCard = styled.View`
 export const TotalLabel = styled.Text`
   font-size: 12px;
   font-weight: bold;
-  color: #A99B8F;
+  color: #9E9E9E;
   letter-spacing: 0.8px;
   margin-bottom: 5px;
 `;
@@ -19,17 +19,17 @@ export const TotalLabel = styled.Text`
 export const TotalValue = styled.Text`
   font-size: 32px;
   font-weight: bold;
-  color: #E67E22;
+  color: #8A6A00;
   margin-bottom: 15px;
 `;
 
 export const TotalDivider = styled.View`
   height: 1px;
-  background-color: #5C4033;
+  background-color: #333333;
   margin-bottom: 12px;
 `;
 
 export const TotalDetails = styled.Text`
   font-size: 12px;
-  color: #D3C5B4;
+  color: #C4C4BE;
 `;

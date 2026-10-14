@@ -35,7 +35,7 @@ export default function ProdutoControleCard({ produto, onEdit, onEntrada }) {
             <ProductImage source={{ uri: produto.image }} resizeMode="cover" />
           ) : (
             <ImagePlaceholder>
-              <Ionicons name="cube-outline" size={26} color="#C9BBA8" />
+              <Ionicons name="cube-outline" size={26} color="#C4C4BE" />
             </ImagePlaceholder>
           )}
           <ProductName numberOfLines={1}>{produto.nome}</ProductName>
@@ -59,7 +59,7 @@ export default function ProdutoControleCard({ produto, onEdit, onEntrada }) {
 
       {estoqueBaixo && (
         <AlertaEstoque baixo>
-          <Ionicons name="warning" size={16} color="#D35400" />
+          <Ionicons name="warning" size={16} color="#6B5300" />
           <AlertaEstoqueText baixo>Estoque baixo — considere reabastecer</AlertaEstoqueText>
         </AlertaEstoque>
       )}
@@ -101,11 +101,11 @@ export default function ProdutoControleCard({ produto, onEdit, onEntrada }) {
           <StatValue>{formatPrice(produto.valorSaidas || 0)}</StatValue>
         </StatBlock>
         <EditButton onPress={onEntrada} activeOpacity={0.8} style={{ marginRight: 8 }}>
-          <Ionicons name="add" size={14} color="#FFFFFF" />
+          <Ionicons name="add" size={14} color="#1A1A1A" />
           <EditButtonText>ENTRADA</EditButtonText>
         </EditButton>
         <EditButton onPress={onEdit} activeOpacity={0.8}>
-          <Ionicons name="pencil" size={13} color="#FFFFFF" />
+          <Ionicons name="pencil" size={13} color="#1A1A1A" />
           <EditButtonText>EDITAR</EditButtonText>
         </EditButton>
       </StatsRow>

@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const Header = styled.View`
@@ -18,12 +18,12 @@ export const BackButton = styled.TouchableOpacity`
 export const Title = styled.Text`
   font-size: 19px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 12px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 2px;
 `;
 

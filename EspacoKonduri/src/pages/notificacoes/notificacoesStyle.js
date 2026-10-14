@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const Header = styled.View`
@@ -18,7 +18,7 @@ export const BackButton = styled.TouchableOpacity`
 export const Title = styled.Text`
   font-size: 19px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const List = styled.ScrollView`
@@ -39,7 +39,7 @@ export const NotifItem = styled.TouchableOpacity`
   border-radius: 12px;
   margin-bottom: 10px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   overflow: hidden;
   opacity: ${(props) => (props.lida ? 0.55 : 1)};
 `;
@@ -48,7 +48,7 @@ export const NotifAccentBar = styled.View`
   width: 4px;
   background-color: ${(props) => {
     const cor = CORES_POR_TIPO[props.tipo];
-    return cor ? cor.accent : '#D6CFC4';
+    return cor ? cor.accent : '#C4C4BE';
   }};
   opacity: ${(props) => (props.lida ? 0.35 : 1)};
 `;
@@ -62,25 +62,25 @@ export const UnreadDot = styled.View`
   width: 8px;
   height: 8px;
   border-radius: 4px;
-  background-color: #E67E22;
+  background-color: #FFD000;
   margin-left: 8px;
 `;
 
 export const NotifTitulo = styled.Text`
   font-size: 14px;
   font-weight: ${(props) => (props.lida ? '600' : 'bold')};
-  color: ${(props) => (props.lida ? '#7A6555' : '#3D2C22')};
+  color: ${(props) => (props.lida ? '#5E5E5E' : '#1A1A1A')};
   margin-bottom: 3px;
 `;
 
 export const NotifMensagem = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const NotifHora = styled.Text`
   font-size: 11px;
-  color: #A99B8F;
+  color: #9E9E9E;
   margin-top: 6px;
 `;
 
@@ -93,7 +93,7 @@ export const EmptyState = styled.View`
 
 export const EmptyText = styled.Text`
   font-size: 14px;
-  color: #8C7355;
+  color: #6B6B6B;
   text-align: center;
   margin-top: 10px;
 `;
@@ -102,7 +102,7 @@ export const NotifImage = styled.Image`
   width: 48px;
   height: 48px;
   border-radius: 10px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   margin-right: 12px;
 `;
 
@@ -110,7 +110,7 @@ export const NotifImagePlaceholder = styled.View`
   width: 48px;
   height: 48px;
   border-radius: 10px;
-  background-color: #FDEBD3;
+  background-color: #FFF7D1;
   margin-right: 12px;
   justify-content: center;
   align-items: center;
@@ -126,7 +126,7 @@ export const NotifTextGroup = styled.View`
 `;
 
 export const NotifValorBadge = styled.View`
-  background-color: #FDF3E7;
+  background-color: #FFF7D1;
   border-radius: 8px;
   padding-horizontal: 8px;
   padding-vertical: 3px;
@@ -137,7 +137,7 @@ export const NotifValorBadge = styled.View`
 export const NotifValorText = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: #B85D00;
+  color: #6B5300;
 `;
 
 export const NotifChevron = styled.View`
@@ -155,7 +155,7 @@ export const StackedImage = styled.Image`
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   border-width: 2px;
   border-color: #FFFFFF;
   position: absolute;

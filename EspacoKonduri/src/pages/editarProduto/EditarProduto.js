@@ -323,7 +323,7 @@ export default function EditarProduto() {
     return (
       <Container style={{ paddingTop: insets.top }}>
         <LoadingContainer>
-          <ActivityIndicator size="large" color="#2E5A1E" />
+          <ActivityIndicator size="large" color="#1A1A1A" />
         </LoadingContainer>
       </Container>
     );
@@ -336,7 +336,7 @@ export default function EditarProduto() {
       <ScrollContainer showsVerticalScrollIndicator={false}>
         <Header>
           <BackButton onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color="#2E5A1E" />
+            <Ionicons name="arrow-back" size={22} color="#1A1A1A" />
           </BackButton>
           <HeaderTitle>Editar Produto</HeaderTitle>
 
@@ -356,7 +356,7 @@ export default function EditarProduto() {
             <PhotoPreview source={{ uri: fotoExibida }} />
           ) : (
             <>
-              <Ionicons name="camera-outline" size={28} color="#8C7355" />
+              <Ionicons name="camera-outline" size={28} color="#6B6B6B" />
               <PhotoPickerText>Adicionar{"\n"}foto</PhotoPickerText>
             </>
           )}
@@ -369,7 +369,7 @@ export default function EditarProduto() {
               value={nome}
               onChangeText={setNome}
               placeholder="Ex: Cerveja Gelada"
-              placeholderTextColor="#A99B8F"
+              placeholderTextColor="#9E9E9E"
             />
           </InputContainer>
           {erros.nome && <ErrorText>{erros.nome}</ErrorText>}
@@ -413,7 +413,7 @@ export default function EditarProduto() {
                 onChangeText={handleChangePreco}
                 placeholder="0,00"
                 keyboardType="numeric"
-                placeholderTextColor="#A99B8F"
+                placeholderTextColor="#9E9E9E"
               />
             </InputContainer>
             {erros.preco && <ErrorText>{erros.preco}</ErrorText>}
@@ -427,7 +427,7 @@ export default function EditarProduto() {
                 onChangeText={setEstoqueInicial}
                 placeholder="0"
                 keyboardType="decimal-pad"
-                placeholderTextColor="#A99B8F"
+                placeholderTextColor="#9E9E9E"
               />
             </InputContainer>
             {erros.estoqueInicial && <ErrorText>{erros.estoqueInicial}</ErrorText>}
@@ -437,15 +437,15 @@ export default function EditarProduto() {
         <Row>
           <InputGroup style={{ flex: 1, marginRight: 10 }}>
             <Label>Entrada (Qtd.)</Label>
-            <InputContainer style={{ backgroundColor: "#F0EAE1" }}>
-              <Input value={entradaQtd} editable={false} style={{ color: "#8C7355" }} />
+            <InputContainer style={{ backgroundColor: "#F1F1EB" }}>
+              <Input value={entradaQtd} editable={false} style={{ color: "#6B6B6B" }} />
             </InputContainer>
           </InputGroup>
 
           <InputGroup style={{ flex: 1 }}>
             <Label>Valor Entradas (R$)</Label>
-            <InputContainer style={{ backgroundColor: "#F0EAE1" }}>
-              <Input value={valorEntradas} editable={false} style={{ color: "#8C7355" }} />
+            <InputContainer style={{ backgroundColor: "#F1F1EB" }}>
+              <Input value={valorEntradas} editable={false} style={{ color: "#6B6B6B" }} />
             </InputContainer>
           </InputGroup>
         </Row>
@@ -457,15 +457,15 @@ export default function EditarProduto() {
         <Row>
           <InputGroup style={{ flex: 1, marginRight: 10 }}>
             <Label>Saída / Venda (Qtd.)</Label>
-            <InputContainer style={{ backgroundColor: "#F0EAE1" }}>
-              <Input value={saidaQtd} editable={false} style={{ color: "#8C7355" }} />
+            <InputContainer style={{ backgroundColor: "#F1F1EB" }}>
+              <Input value={saidaQtd} editable={false} style={{ color: "#6B6B6B" }} />
             </InputContainer>
           </InputGroup>
 
           <InputGroup style={{ flex: 1 }}>
             <Label>Valor Saídas (R$)</Label>
-            <InputContainer style={{ backgroundColor: "#F0EAE1" }}>
-              <Input value={valorSaidas} editable={false} style={{ color: "#8C7355" }} />
+            <InputContainer style={{ backgroundColor: "#F1F1EB" }}>
+              <Input value={valorSaidas} editable={false} style={{ color: "#6B6B6B" }} />
             </InputContainer>
           </InputGroup>
         </Row>
@@ -479,7 +479,7 @@ export default function EditarProduto() {
                 onChangeText={handleChangeCustoUnitario}
                 placeholder="0,00"
                 keyboardType="numeric"
-                placeholderTextColor="#A99B8F"
+                placeholderTextColor="#9E9E9E"
               />
             </InputContainer>
             {erros.custoUnitario && <ErrorText>{erros.custoUnitario}</ErrorText>}
@@ -499,7 +499,7 @@ export default function EditarProduto() {
               onChangeText={setLimiteEstoqueBaixo}
               placeholder="5"
               keyboardType="decimal-pad"
-              placeholderTextColor="#A99B8F"
+              placeholderTextColor="#9E9E9E"
             />
           </InputContainer>
           {erros.limiteEstoqueBaixo && <ErrorText>{erros.limiteEstoqueBaixo}</ErrorText>}
@@ -512,7 +512,7 @@ export default function EditarProduto() {
               value={observacoes}
               onChangeText={setObservacoes}
               placeholder="Ex: 2 unidades amassadas na entrega"
-              placeholderTextColor="#A99B8F"
+              placeholderTextColor="#9E9E9E"
               multiline
               numberOfLines={3}
             />

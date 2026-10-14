@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 
 const StyledView = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export default function SafeContainer({ children, style }) {

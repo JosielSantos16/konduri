@@ -5,7 +5,7 @@ export const SheetContainer = styled.View`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   elevation: 12;
@@ -47,7 +47,7 @@ export const SheetRow = styled.View`
 
 export const SheetRowLabel = styled.Text`
   font-size: 13px;
-  color: #D3C5B4;
+  color: #C4C4BE;
 `;
 
 export const SheetRowValue = styled.Text`
@@ -59,7 +59,7 @@ export const SheetRowValue = styled.Text`
 export const SheetSectionTitle = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: #A99B8F;
+  color: #9E9E9E;
   letter-spacing: 0.5px;
   margin-bottom: 10px;
 `;

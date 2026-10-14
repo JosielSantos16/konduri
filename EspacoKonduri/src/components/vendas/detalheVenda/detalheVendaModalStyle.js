@@ -24,7 +24,7 @@ export const DetalheHeader = styled.View`
 export const DetalheTitle = styled.Text`
   font-size: 18px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const DetalheCloseButton = styled.TouchableOpacity`
@@ -39,18 +39,18 @@ export const DetalheInfoRow = styled.View`
 
 export const DetalheInfoLabel = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const DetalheInfoValue = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const DetalheDivider = styled.View`
   height: 1px;
-  background-color: #E6DFD5;
+  background-color: #E6E6E0;
   margin-vertical: 14px;
 `;
 
@@ -59,14 +59,14 @@ export const DetalheItemRow = styled.View`
   align-items: center;
   padding-vertical: 10px;
   border-bottom-width: 1px;
-  border-bottom-color: #F0EAE1;
+  border-bottom-color: #F1F1EB;
 `;
 
 export const DetalheItemImage = styled.Image`
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   margin-right: 12px;
 `;
 
@@ -74,7 +74,7 @@ export const DetalheItemImagePlaceholder = styled.View`
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   margin-right: 12px;
   justify-content: center;
   align-items: center;
@@ -87,19 +87,19 @@ export const DetalheItemInfo = styled.View`
 export const DetalheItemNome = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const DetalheItemQty = styled.Text`
   font-size: 12px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 2px;
 `;
 
 export const DetalheItemSubtotal = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #D35400;
+  color: #6B5300;
 `;
 
 export const DetalheTotalRow = styled.View`
@@ -112,13 +112,13 @@ export const DetalheTotalRow = styled.View`
 export const DetalheTotalLabel = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const DetalheTotalValue = styled.Text`
   font-size: 22px;
   font-weight: bold;
-  color: ${(props) => (props.cancelada ? '#A99B8F' : '#D35400')};
+  color: ${(props) => (props.cancelada ? '#9E9E9E' : '#6B5300')};
   text-decoration-line: ${(props) => (props.cancelada ? 'line-through' : 'none')};
 `;
 
@@ -163,33 +163,33 @@ export const CancelarButtonText = styled.Text`
 export const CancelamentoTitulo = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-top: 16px;
   margin-bottom: 8px;
 `;
 
 export const MotivoInput = styled.TextInput`
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   border-radius: 12px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding: 12px 14px;
   font-size: 14px;
-  color: #3D2C22;
+  color: #1A1A1A;
   min-height: 70px;
   text-align-vertical: top;
 `;
 
 export const MotivoContador = styled.Text`
   font-size: 11px;
-  color: #A99B8F;
+  color: #9E9E9E;
   text-align: right;
   margin-top: 4px;
 `;
 
 export const AvisoBox = styled.View`
   flex-direction: row;
-  background-color: ${(props) => props.bg || '#FEF5E7'};
+  background-color: ${(props) => props.bg || '#FFF7D1'};
   border-radius: 12px;
   padding: 12px;
   margin-top: 12px;
@@ -199,7 +199,7 @@ export const AvisoTexto = styled.Text`
   flex: 1;
   font-size: 13px;
   line-height: 18px;
-  color: ${(props) => props.cor || '#8C5A2E'};
+  color: ${(props) => props.cor || '#6B5300'};
   margin-left: 8px;
 `;
 
@@ -212,7 +212,7 @@ export const BotaoSecundario = styled.TouchableOpacity`
   flex: 1;
   height: 48px;
   border-radius: 12px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   justify-content: center;
   align-items: center;
   margin-right: 8px;
@@ -221,7 +221,7 @@ export const BotaoSecundario = styled.TouchableOpacity`
 export const BotaoSecundarioTexto = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #5C4033;
+  color: #333333;
 `;
 
 export const BotaoPerigo = styled.TouchableOpacity`

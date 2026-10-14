@@ -80,6 +80,7 @@ export function VendasProvider({ children }) {
   const contagem = {};
   vendasValidasHoje.forEach((venda) => {
     (venda.itens || []).forEach((item) => {
+      if (item.tipo === 'entrada') return; // entradas não são "mais vendidos"
       if (!contagem[item.title]) {
         contagem[item.title] = { title: item.title, qty: 0, image: item.image || null };
       }

@@ -136,7 +136,7 @@ export default function DetalheVendaModal({ venda, onClose, podeCancelar, usuari
             <DetalheHeader>
               <DetalheTitle>Detalhes da Venda</DetalheTitle>
               <DetalheCloseButton onPress={fechar}>
-                <Ionicons name="close" size={24} color="#3D2C22" />
+                <Ionicons name="close" size={24} color="#1A1A1A" />
               </DetalheCloseButton>
             </DetalheHeader>
 
@@ -192,7 +192,7 @@ export default function DetalheVendaModal({ venda, onClose, podeCancelar, usuari
                     <DetalheItemImage source={{ uri: produto.image }} resizeMode="cover" />
                   ) : (
                     <DetalheItemImagePlaceholder>
-                      <Ionicons name="cube-outline" size={20} color="#C9BBA8" />
+                      <Ionicons name="cube-outline" size={20} color="#C4C4BE" />
                     </DetalheItemImagePlaceholder>
                   )}
                   <DetalheItemInfo>
@@ -219,12 +219,12 @@ export default function DetalheVendaModal({ venda, onClose, podeCancelar, usuari
                     </AvisoTexto>
                   </AvisoBox>
                   <AvisoBox>
-                    <Ionicons name="cash-outline" size={18} color="#8C5A2E" />
+                    <Ionicons name="cash-outline" size={18} color="#6B5300" />
                     <AvisoTexto>{AVISO_DEVOLUCAO}</AvisoTexto>
                   </AvisoBox>
                   {resultado.caixaDaVendaFechado && (
                     <AvisoBox>
-                      <Ionicons name="lock-closed-outline" size={18} color="#8C5A2E" />
+                      <Ionicons name="lock-closed-outline" size={18} color="#6B5300" />
                       <AvisoTexto>
                         O caixa desta venda já foi fechado. O estoque foi devolvido, mas o fechamento
                         daquele dia não foi alterado.
@@ -233,7 +233,7 @@ export default function DetalheVendaModal({ venda, onClose, podeCancelar, usuari
                   )}
                   {resultado.comissaoAjustada && (
                     <AvisoBox>
-                      <Ionicons name="people-outline" size={18} color="#8C5A2E" />
+                      <Ionicons name="people-outline" size={18} color="#6B5300" />
                       <AvisoTexto>
                         Comissão de {resultado.comissaoAjustada.atendente} ajustada de{" "}
                         {formatPrice(resultado.comissaoAjustada.de)} para{" "}
@@ -267,7 +267,7 @@ export default function DetalheVendaModal({ venda, onClose, podeCancelar, usuari
                     value={motivo}
                     onChangeText={setMotivo}
                     placeholder="Ex: registrada em duplicidade"
-                    placeholderTextColor="#A99B8F"
+                    placeholderTextColor="#9E9E9E"
                     maxLength={LIMITE_MOTIVO}
                     multiline
                     autoFocus
@@ -278,7 +278,7 @@ export default function DetalheVendaModal({ venda, onClose, podeCancelar, usuari
                   </MotivoContador>
 
                   <AvisoBox>
-                    <Ionicons name="cash-outline" size={18} color="#8C5A2E" />
+                    <Ionicons name="cash-outline" size={18} color="#6B5300" />
                     <AvisoTexto>{AVISO_DEVOLUCAO}</AvisoTexto>
                   </AvisoBox>
 

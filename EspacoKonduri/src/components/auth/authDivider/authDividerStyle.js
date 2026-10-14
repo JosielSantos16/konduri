@@ -9,11 +9,11 @@ export const DividerRow = styled.View`
 export const DividerLine = styled.View`
   flex: 1;
   height: 1px;
-  background-color: #e6dfd5;
+  background-color: #E6E6E0;
 `;
 
 export const DividerText = styled.Text`
   font-size: 12px;
-  color: #a99b8f;
+  color: #9E9E9E;
   margin-horizontal: 10px;
 `;

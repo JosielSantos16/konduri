@@ -26,14 +26,14 @@ export default function DetalheProdutoModal({ visible, item, onClose }) {
       <Overlay activeOpacity={1} onPress={onClose}>
         <Content onStartShouldSetResponder={() => true}>
           <CloseButton onPress={onClose}>
-            <Ionicons name="close" size={22} color="#3D2C22" />
+            <Ionicons name="close" size={22} color="#1A1A1A" />
           </CloseButton>
 
           {item.image ? (
             <ImagemGrande source={{ uri: item.image }} resizeMode="cover" />
           ) : (
             <ImagemPlaceholder>
-              <Ionicons name="image-outline" size={36} color="#C9BBA8" />
+              <Ionicons name="image-outline" size={36} color="#C4C4BE" />
             </ImagemPlaceholder>
           )}
 

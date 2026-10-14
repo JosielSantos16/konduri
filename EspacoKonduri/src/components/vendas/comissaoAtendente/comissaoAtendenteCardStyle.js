@@ -6,7 +6,7 @@ export const ComissaoCard = styled.View`
   padding: 14px;
   margin-bottom: 10px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
 `;
 
 export const ComissaoHeader = styled.View`
@@ -19,12 +19,12 @@ export const ComissaoHeader = styled.View`
 export const ComissaoNome = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const ComissaoBase = styled.Text`
   font-size: 12px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const ComissaoInputRow = styled.View`
@@ -36,7 +36,7 @@ export const ComissaoInputContainer = styled.View`
   flex: 1;
   flex-direction: row;
   align-items: center;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   border-radius: 10px;
   padding-horizontal: 12px;
   height: 44px;
@@ -47,17 +47,17 @@ export const ComissaoInput = styled.TextInput`
   flex: 1;
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const ComissaoPercentSymbol = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const ComissaoSaveButton = styled.TouchableOpacity`
-  background-color: #2E5A1E;
+  background-color: #1A1A1A;
   border-radius: 10px;
   height: 44px;
   padding-horizontal: 16px;
@@ -83,11 +83,11 @@ export const ComissaoSavedBox = styled.View`
 
 export const ComissaoSavedText = styled.Text`
   font-size: 12px;
-  color: #2E5A1E;
+  color: #1A1A1A;
 `;
 
 export const ComissaoSavedValue = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #2E5A1E;
+  color: #1A1A1A;
 `;

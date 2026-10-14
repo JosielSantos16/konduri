@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const ScrollContainer = styled.ScrollView`
@@ -16,12 +16,12 @@ export const Header = styled.View`
 export const Title = styled.Text`
   font-size: 23px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 2px;
 `;
 
@@ -36,20 +36,20 @@ export const PeriodoChip = styled.TouchableOpacity`
   border-radius: 18px;
   margin-right: 8px;
   border-width: 1px;
-  border-color: ${(props) => (props.selected ? '#E67E22' : '#E6DFD5')};
-  background-color: ${(props) => (props.selected ? '#E67E22' : '#FFFFFF')};
+  border-color: ${(props) => (props.selected ? '#E0A800' : '#E6E6E0')};
+  background-color: ${(props) => (props.selected ? '#FFD000' : '#FFFFFF')};
 `;
 
 export const PeriodoChipText = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: ${(props) => (props.selected ? '#FFFFFF' : '#8C7355')};
+  color: ${(props) => (props.selected ? '#1A1A1A' : '#6B6B6B')};
 `;
 
 export const PeriodoLabel = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #5C4033;
+  color: #333333;
   padding-horizontal: 20px;
   margin-bottom: 14px;
 `;
@@ -68,18 +68,18 @@ export const DataBotao = styled.View`
   background-color: #FFFFFF;
   border-radius: 12px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding: 10px 12px;
 `;
 
 export const DataBotaoTexto = styled.Text`
   font-size: 14px;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const DataSeparador = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-horizontal: 8px;
 `;
 
@@ -89,9 +89,9 @@ export const Conteudo = styled.View`
 
 export const AvisoBox = styled.View`
   flex-direction: row;
-  background-color: ${(props) => props.bg || '#FEF5E7'};
+  background-color: ${(props) => props.bg || '#FFF7D1'};
   border-width: 1px;
-  border-color: ${(props) => props.borda || '#F8D7A9'};
+  border-color: ${(props) => props.borda || '#F2DC7C'};
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 14px;
@@ -101,12 +101,12 @@ export const AvisoTexto = styled.Text`
   flex: 1;
   font-size: 12px;
   line-height: 17px;
-  color: ${(props) => props.cor || '#8C5A2E'};
+  color: ${(props) => props.cor || '#6B5300'};
   margin-left: 8px;
 `;
 
 export const FaturamentoCard = styled.View`
-  background-color: #F39C12;
+  background-color: #FFD000;
   border-radius: 18px;
   padding: 20px;
   margin-bottom: 12px;
@@ -124,18 +124,18 @@ export const CardTitle = styled.Text`
   font-weight: bold;
   letter-spacing: 0.8px;
   margin-left: 8px;
-  color: ${(props) => props.cor || '#8C7355'};
+  color: ${(props) => props.cor || '#6B6B6B'};
 `;
 
 export const FaturamentoValor = styled.Text`
   font-size: 30px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #1A1A1A;
 `;
 
 export const FaturamentoDetalhe = styled.Text`
   font-size: 12px;
-  color: #FFFFFF;
+  color: #1A1A1A;
   opacity: 0.95;
   margin-top: 6px;
 `;
@@ -151,7 +151,7 @@ export const IndicadorCard = styled.View`
   background-color: ${(props) => props.bg || '#FFFFFF'};
   border-radius: 16px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding: 16px;
   margin-horizontal: 5px;
 `;
@@ -159,12 +159,12 @@ export const IndicadorCard = styled.View`
 export const IndicadorValor = styled.Text`
   font-size: 19px;
   font-weight: bold;
-  color: ${(props) => props.cor || '#3D2C22'};
+  color: ${(props) => props.cor || '#1A1A1A'};
 `;
 
 export const IndicadorDetalhe = styled.Text`
   font-size: 12px;
-  color: ${(props) => props.cor || '#8C7355'};
+  color: ${(props) => props.cor || '#6B6B6B'};
   margin-top: 4px;
 `;
 
@@ -172,7 +172,7 @@ export const ResultadoCard = styled.View`
   background-color: #FFFFFF;
   border-radius: 16px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding: 18px;
   margin-bottom: 12px;
 `;
@@ -191,13 +191,13 @@ export const LinhaDetalhe = styled.View`
 
 export const LinhaDetalheLabel = styled.Text`
   font-size: 12px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const LinhaDetalheValor = styled.Text`
   font-size: 12px;
   font-weight: bold;
-  color: #5C4033;
+  color: #333333;
 `;
 
 export const LinkLinha = styled.TouchableOpacity`
@@ -206,7 +206,7 @@ export const LinkLinha = styled.TouchableOpacity`
   background-color: #FFFFFF;
   border-radius: 14px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding: 14px;
   margin-bottom: 12px;
 `;
@@ -215,7 +215,7 @@ export const LinkTexto = styled.Text`
   flex: 1;
   font-size: 14px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-left: 10px;
 `;
 

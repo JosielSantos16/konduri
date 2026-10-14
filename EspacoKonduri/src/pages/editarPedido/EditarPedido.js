@@ -197,7 +197,7 @@ export default function EditarPedido() {
     return (
       <Container style={{ paddingTop: insets.top }}>
         <LoadingContainer>
-          <ActivityIndicator size="large" color="#E67E22" />
+          <ActivityIndicator size="large" color="#8A6A00" />
         </LoadingContainer>
       </Container>
     );
@@ -207,7 +207,7 @@ export default function EditarPedido() {
     <Container style={{ paddingTop: insets.top }}>
       <Header>
         <BackButton onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={22} color="#3D2C22" />
+          <Ionicons name="arrow-back" size={22} color="#1A1A1A" />
         </BackButton>
         <HeaderTexts>
           <Title>Editar Pedido</Title>

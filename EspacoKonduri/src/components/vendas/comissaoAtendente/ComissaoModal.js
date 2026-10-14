@@ -31,7 +31,7 @@ export default function ComissaoModal({
             <ComissaoModalHeader>
               <ComissaoModalTitle>Comissão do Dia</ComissaoModalTitle>
               <ComissaoModalCloseButton onPress={onClose}>
-                <Ionicons name="close" size={24} color="#3D2C22" />
+                <Ionicons name="close" size={24} color="#1A1A1A" />
               </ComissaoModalCloseButton>
             </ComissaoModalHeader>
 

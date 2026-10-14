@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const ScrollContainer = styled.ScrollView`
@@ -21,19 +21,19 @@ export const Avatar = styled.Image`
   height: 90px;
   border-radius: 45px;
   border-width: 2px;
-  border-color: #2E5A1E;
+  border-color: #1A1A1A;
   margin-bottom: 14px;
 `;
 
 export const Nome = styled.Text`
   font-size: 20px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const Cargo = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 4px;
 `;
 
@@ -43,7 +43,7 @@ export const InfoCard = styled.View`
   padding: 16px;
   margin-bottom: 20px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
 `;
 
 export const InfoRow = styled.View`
@@ -51,7 +51,7 @@ export const InfoRow = styled.View`
   align-items: center;
   padding-vertical: 12px;
   border-bottom-width: 1px;
-  border-bottom-color: #F0EAE1;
+  border-bottom-color: #F1F1EB;
 `;
 
 export const InfoRowLast = styled(InfoRow)`
@@ -65,14 +65,14 @@ export const InfoTextGroup = styled.View`
 export const InfoLabel = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: #A99B8F;
+  color: #9E9E9E;
   letter-spacing: 0.3px;
 `;
 
 export const InfoValue = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-top: 2px;
 `;
 
@@ -117,7 +117,7 @@ export const EditButton = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   border-width: 1.5px;
-  border-color: #2E5A1E;
+  border-color: #1A1A1A;
   border-radius: 12px;
   height: 48px;
   margin-bottom: 12px;
@@ -126,7 +126,7 @@ export const EditButton = styled.TouchableOpacity`
 export const EditButtonText = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #2E5A1E;
+  color: #1A1A1A;
   margin-left: 8px;
 `;
 
@@ -153,13 +153,13 @@ export const ModalHeader = styled.View`
 export const ModalTitle = styled.Text`
   font-size: 17px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const ModalLabel = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #5C4033;
+  color: #333333;
   margin-bottom: 6px;
   margin-top: 10px;
 `;
@@ -167,10 +167,10 @@ export const ModalLabel = styled.Text`
 export const ModalInputRow = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   border-radius: 12px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding-horizontal: 14px;
   height: 50px;
 `;
@@ -178,11 +178,11 @@ export const ModalInputRow = styled.View`
 export const ModalInput = styled.TextInput`
   flex: 1;
   font-size: 14px;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const ModalSaveButton = styled.TouchableOpacity`
-  background-color: #2E5A1E;
+  background-color: #1A1A1A;
   border-radius: 12px;
   height: 50px;
   justify-content: center;
@@ -211,12 +211,12 @@ export const ToggleTextGroup = styled.View`
 export const ToggleTitle = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const ToggleSubtitle = styled.Text`
   font-size: 12px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 2px;
 `;
 

@@ -28,6 +28,10 @@ import { useVendas } from "../../contexts/VendasContext";
 import CardProd from "../../components/PDV/cardsProdutos/CardProdutos";
 import PdvHeader from "../../components/PDV/pdvHeader/PdvHeader";
 import TabSelector from "../../components/PDV/tabSelector/TabSelector";
+import PainelEntradaPDV from "../../components/entradas/PainelEntradaPDV";
+import { ehAdmin } from "../../utils/permissoes";
+import { vendaValida } from "../../utils/financeiro";
+import { ehVendaDeEntrada, resumirEntradasPorDia } from "../../utils/entradas";
 import CartBar from "../../components/PDV/cartBar/CartBar";
 import CartReviewModal from "../../components/PDV/cartReview/cartReviewModal";
 
@@ -49,8 +53,8 @@ export default function PDV() {
     totalPrice,
   } = useCart(produtos);
   const { usuario, carregando } = useAuth();
-  const { caixaAberto } = useCaixa();
-  const { maisVendidos } = useVendas();
+  const { caixaAberto, operacaoId } = useCaixa();
+  const { maisVendidos, vendasHoje } = useVendas();
 
   useKeepAwake();
 
@@ -95,10 +99,14 @@ export default function PDV() {
     return pertenceCategoria && bateBusca;
   });
 
-  const contagemPorCategoria = produtos.reduce((acc, item) => {
-    acc[item.category] = (acc[item.category] || 0) + 1;
-    return acc;
-  }, {});
+  // Entrada não é produto: a aba de entradas mostra quantas pessoas entraram hoje
+  const pessoasQueEntraramHoje = resumirEntradasPorDia(
+    vendasHoje.filter((v) => ehVendaDeEntrada(v) && vendaValida(v))
+  ).totais.pessoas;
+  const contagemPorCategoria = {
+    produtos: produtos.filter((item) => item.category === "produtos").length,
+    ingressos: pessoasQueEntraramHoje,
+  };
 
   const nomeExibido = carregando ? "Carregando..." : usuario?.nome || "Usuário";
   const cargoExibido = usuario?.perfil === "adm" ? "Administrador" : "PDV Operacional";
@@ -206,61 +214,67 @@ export default function PDV() {
           contagemPorCategoria={contagemPorCategoria}
         />
 
-        <SearchContainer>
-          <Ionicons name="search-outline" size={18} color="#8C7355" />
-          <SearchInput
-            placeholder="Buscar produto..."
-            placeholderTextColor="#A99B8F"
-            value={busca}
-            onChangeText={setBusca}
-          />
-          {busca.length > 0 && (
-            <ClearSearchButton onPress={() => setBusca("")}>
-              <Ionicons name="close-circle" size={18} color="#A99B8F" />
-            </ClearSearchButton>
-          )}
-        </SearchContainer>
-
-        {carregandoProdutos ? (
-          <LoadingContainer>
-            <ActivityIndicator size="large" color="#2E5A1E" />
-          </LoadingContainer>
+        {activeTab === "ingressos" ? (
+          <PainelEntradaPDV usuario={usuario} operacaoId={operacaoId} podeDarCortesia={ehAdmin(usuario)} />
         ) : (
-          <ProductList
-            data={filteredProducts}
-            renderItem={({ item }) => (
-              <CardProd
-                item={item}
-                qty={cart[item.id] || 0}
-                onIncrease={() => handleAdicionarComFeedback(item.id)}
-                onDecrease={() => handleDecrease(item.id)}
-                destaque={titulosMaisVendidos.has(item.title)}
+          <>
+            <SearchContainer>
+              <Ionicons name="search-outline" size={18} color="#6B6B6B" />
+              <SearchInput
+                placeholder="Buscar produto..."
+                placeholderTextColor="#9E9E9E"
+                value={busca}
+                onChangeText={setBusca}
+              />
+              {busca.length > 0 && (
+                <ClearSearchButton onPress={() => setBusca("")}>
+                  <Ionicons name="close-circle" size={18} color="#9E9E9E" />
+                </ClearSearchButton>
+              )}
+            </SearchContainer>
+
+            {carregandoProdutos ? (
+              <LoadingContainer>
+                <ActivityIndicator size="large" color="#1A1A1A" />
+              </LoadingContainer>
+            ) : (
+              <ProductList
+                data={filteredProducts}
+                renderItem={({ item }) => (
+                  <CardProd
+                    item={item}
+                    qty={cart[item.id] || 0}
+                    onIncrease={() => handleAdicionarComFeedback(item.id)}
+                    onDecrease={() => handleDecrease(item.id)}
+                    destaque={titulosMaisVendidos.has(item.title)}
+                  />
+                )}
+                keyExtractor={(item) => item.id}
+                numColumns={2}
+                columnWrapperStyle={{ justifyContent: "space-between" }}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 20 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={atualizando}
+                    onRefresh={handleRefresh}
+                    colors={["#1A1A1A"]}
+                    tintColor="#1A1A1A"
+                  />
+                }
+                ListEmptyComponent={
+                  <EmptyState>
+                    <Ionicons name="cube-outline" size={40} color="#C4C4BE" />
+                    <EmptyStateText>
+                      {busca
+                        ? `Nenhum produto encontrado para "${busca}".`
+                        : "Nenhum produto cadastrado nessa categoria ainda."}
+                    </EmptyStateText>
+                  </EmptyState>
+                }
               />
             )}
-            keyExtractor={(item) => item.id}
-            numColumns={2}
-            columnWrapperStyle={{ justifyContent: "space-between" }}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 20 }}
-            refreshControl={
-              <RefreshControl
-                refreshing={atualizando}
-                onRefresh={handleRefresh}
-                colors={["#2E5A1E"]}
-                tintColor="#2E5A1E"
-              />
-            }
-            ListEmptyComponent={
-              <EmptyState>
-                <Ionicons name="cube-outline" size={40} color="#C9BBA8" />
-                <EmptyStateText>
-                  {busca
-                    ? `Nenhum produto encontrado para "${busca}".`
-                    : "Nenhum produto cadastrado nessa categoria ainda."}
-                </EmptyStateText>
-              </EmptyState>
-            }
-          />
+          </>
         )}
 
         <CartBar

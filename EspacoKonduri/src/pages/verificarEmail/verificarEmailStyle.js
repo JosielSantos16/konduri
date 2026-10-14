@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   justify-content: center;
   align-items: center;
   padding: 30px;
@@ -12,7 +12,7 @@ export const IconCircle = styled.View`
   width: 90px;
   height: 90px;
   border-radius: 45px;
-  background-color: #FDEBD3;
+  background-color: #FFF7D1;
   justify-content: center;
   align-items: center;
   margin-bottom: 24px;
@@ -21,14 +21,14 @@ export const IconCircle = styled.View`
 export const Title = styled.Text`
   font-size: 20px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   text-align: center;
   margin-bottom: 10px;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 14px;
-  color: #8C7355;
+  color: #6B6B6B;
   text-align: center;
   line-height: 20px;
   margin-bottom: 8px;
@@ -37,13 +37,13 @@ export const Subtitle = styled.Text`
 export const EmailText = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #E67E22;
+  color: #8A6A00;
   text-align: center;
   margin-bottom: 30px;
 `;
 
 export const PrimaryButton = styled.TouchableOpacity`
-  background-color: #E67E22;
+  background-color: #FFD000;
   border-radius: 12px;
   height: 52px;
   width: 100%;
@@ -56,7 +56,7 @@ export const PrimaryButton = styled.TouchableOpacity`
 export const PrimaryButtonText = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #1A1A1A;
   margin-left: 8px;
 `;
 
@@ -69,7 +69,7 @@ export const SecondaryButton = styled.TouchableOpacity`
 export const SecondaryButtonText = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const LogoutText = styled.Text`
@@ -81,9 +81,9 @@ export const LogoutText = styled.Text`
 export const SpamNotice = styled.View`
   flex-direction: row;
   align-items: flex-start;
-  background-color: #FFF8E7;
+  background-color: #FFF7D1;
   border-width: 1px;
-  border-color: #F0D9A0;
+  border-color: #F2DC7C;
   border-radius: 10px;
   padding: 10px 12px;
   margin-top: 12px;
@@ -94,7 +94,7 @@ export const SpamNotice = styled.View`
 export const SpamNoticeText = styled.Text`
   flex: 1;
   font-size: 12px;
-  color: #8C5A2E;
+  color: #6B5300;
   margin-left: 8px;
   line-height: 17px;
 `;

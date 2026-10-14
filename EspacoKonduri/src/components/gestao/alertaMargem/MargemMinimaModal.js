@@ -58,7 +58,7 @@ export default function MargemMinimaModal({ visivel, margemAtual, onFechar, onSa
         <ModalConteudo>
           <CardHeader>
             <ModalTitulo>Margem mínima desejada</ModalTitulo>
-            <Ionicons name="close" size={22} color="#3D2C22" onPress={onFechar} />
+            <Ionicons name="close" size={22} color="#1A1A1A" onPress={onFechar} />
           </CardHeader>
           <TextoSuave>
             Produtos com margem abaixo deste valor aparecem com o aviso ⚠ Margem baixa.
@@ -79,7 +79,7 @@ export default function MargemMinimaModal({ visivel, margemAtual, onFechar, onSa
           {erro && <ModalErro>{erro}</ModalErro>}
 
           <ModalBotao onPress={handleSalvar} disabled={salvando}>
-            {salvando ? <ActivityIndicator color="#FFFFFF" /> : <ModalBotaoTexto>Salvar</ModalBotaoTexto>}
+            {salvando ? <ActivityIndicator color="#1A1A1A" /> : <ModalBotaoTexto>Salvar</ModalBotaoTexto>}
           </ModalBotao>
         </ModalConteudo>
       </ModalOverlay>

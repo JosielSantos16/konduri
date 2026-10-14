@@ -11,7 +11,7 @@ export const BackButton = styled.TouchableOpacity`
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   justify-content: center;
   align-items: center;
   margin-right: 15px;
@@ -24,10 +24,10 @@ export const HeaderTitleContainer = styled.View`
 export const HeaderTitle = styled.Text`
   font-size: 22px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const HeaderSubtitle = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;

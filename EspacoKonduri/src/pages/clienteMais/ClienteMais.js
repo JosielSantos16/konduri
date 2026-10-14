@@ -6,7 +6,7 @@ import NavBarCliente from '../../components/cliente/navBar/NavBarCliente';
 
 const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 const Content = styled.View`
@@ -19,14 +19,14 @@ const Content = styled.View`
 const Title = styled.Text`
   font-size: 18px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-top: 16px;
   text-align: center;
 `;
 
 const Subtitle = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 8px;
   text-align: center;
 `;
@@ -37,7 +37,7 @@ export default function ClienteMais() {
   return (
     <Container style={{ paddingTop: insets.top }}>
       <Content>
-        <Ionicons name="sparkles-outline" size={48} color="#C9BBA8" />
+        <Ionicons name="sparkles-outline" size={48} color="#C4C4BE" />
         <Title>Em breve</Title>
         <Subtitle>Estamos preparando uma novidade especial pra essa área.</Subtitle>
       </Content>

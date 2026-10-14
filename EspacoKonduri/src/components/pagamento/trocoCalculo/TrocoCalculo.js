@@ -35,7 +35,7 @@ export default function TrocoCalculator({ valorRecebido, onChangeValorRecebido, 
             onChangeText={onChangeValorRecebido}
             keyboardType="numeric"
             placeholder="0,00"
-            placeholderTextColor="#B8AA9C"
+            placeholderTextColor="#C4C4BE"
           />
         </InputWrapper>
 

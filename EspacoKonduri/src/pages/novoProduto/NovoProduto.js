@@ -8,6 +8,7 @@ import { useProdutos } from '../../contexts/ProdutosContext';
 import { useCaixa } from '../../contexts/CaixaContext';
 import { adicionarProdutoAOperacao } from '../../services/queries/operacoesQueries';
 import { CATEGORIAS_PRODUTO } from '../../utils/categoriasProduto';
+import PainelEntradasCadastro from '../../components/entradas/PainelEntradasCadastro';
 import {
   Container,
   ScrollContainer,
@@ -107,9 +108,9 @@ export default function NovoProduto() {
   };
 
   const handleChangeCustoUnitario = (texto) => {
-  setCustoUnitario(aplicarMascaraMoeda(texto));
-  if (erros.custoUnitario) setErros((prev) => ({ ...prev, custoUnitario: null }));
-};
+    setCustoUnitario(aplicarMascaraMoeda(texto));
+    if (erros.custoUnitario) setErros((prev) => ({ ...prev, custoUnitario: null }));
+  };
 
   const parseNumero = (valor) => Number((valor || '0').replace(',', '.')) || 0;
 
@@ -132,9 +133,9 @@ export default function NovoProduto() {
     if (!preco || precoNumero <= 0) novosErros.preco = 'Informe um preço válido.';
 
     const custoNumero = parseNumero(custoUnitario);
-if (custoUnitario && custoNumero > parseNumero(preco)) {
-  novosErros.custoUnitario = 'O custo não pode ser maior que o preço de venda.';
-}
+    if (custoUnitario && custoNumero > parseNumero(preco)) {
+      novosErros.custoUnitario = 'O custo não pode ser maior que o preço de venda.';
+    }
 
     if (validarNumero(estoqueInicial)) novosErros.estoqueInicial = 'Informe uma quantidade válida.';
     if (validarNumero(entradaQtd)) novosErros.entradaQtd = 'Informe uma quantidade válida.';
@@ -168,7 +169,7 @@ if (custoUnitario && custoNumero > parseNumero(preco)) {
           observacoes: observacoes.trim(),
           limiteEstoqueBaixo: Number(limiteEstoqueBaixo) || 5,
         },
-        foto
+        foto,
       );
 
       // Com o caixa aberto, o produto já entra no Controle do Dia
@@ -196,34 +197,40 @@ if (custoUnitario && custoNumero > parseNumero(preco)) {
       <ScrollContainer showsVerticalScrollIndicator={false}>
         <Header>
           <BackButton onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color="#2E5A1E" />
+            <Ionicons name="arrow-back" size={22} color="#1A1A1A" />
           </BackButton>
           <HeaderTitle>Novo Produto</HeaderTitle>
         </Header>
 
-        <PhotoPicker onPress={escolherFoto}>
-          {foto ? (
-            <PhotoPreview source={{ uri: foto }} />
-          ) : (
-            <>
-              <Ionicons name="camera-outline" size={28} color="#8C7355" />
-              <PhotoPickerText>Adicionar{'\n'}foto</PhotoPickerText>
-            </>
-          )}
-        </PhotoPicker>
+        {/* Entrada não é produto: com "Ingresso" selecionado, o formulário dá
+            lugar ao painel de entradas (valor e lotação ficam na tela Entradas) */}
+        {categoria === 'produtos' && (
+          <>
+            <PhotoPicker onPress={escolherFoto}>
+              {foto ? (
+                <PhotoPreview source={{ uri: foto }} />
+              ) : (
+                <>
+                  <Ionicons name="camera-outline" size={28} color="#6B6B6B" />
+                  <PhotoPickerText>Adicionar{'\n'}foto</PhotoPickerText>
+                </>
+              )}
+            </PhotoPicker>
 
-        <InputGroup>
-          <Label>Nome do produto</Label>
-          <InputContainer hasError={!!erros.nome}>
-            <Input
-              value={nome}
-              onChangeText={setNome}
-              placeholder="Ex: Cerveja Gelada"
-              placeholderTextColor="#A99B8F"
-            />
-          </InputContainer>
-          {erros.nome && <ErrorText>{erros.nome}</ErrorText>}
-        </InputGroup>
+            <InputGroup>
+              <Label>Nome do produto</Label>
+              <InputContainer hasError={!!erros.nome}>
+                <Input
+                  value={nome}
+                  onChangeText={setNome}
+                  placeholder="Ex: Cerveja Gelada"
+                  placeholderTextColor="#9E9E9E"
+                />
+              </InputContainer>
+              {erros.nome && <ErrorText>{erros.nome}</ErrorText>}
+            </InputGroup>
+          </>
+        )}
 
         <InputGroup>
           <Label>Vender como</Label>
@@ -237,178 +244,184 @@ if (custoUnitario && custoNumero > parseNumero(preco)) {
           </CategoryOptions>
         </InputGroup>
 
-        <InputGroup>
-          <Label>Categoria (opcional)</Label>
-          <ChipsWrap>
-            {CATEGORIAS_PRODUTO.map((nomeCategoria) => (
-              <Chip
-                key={nomeCategoria}
-                selected={categoriaProduto === nomeCategoria}
-                onPress={() =>
-                  setCategoriaProduto(categoriaProduto === nomeCategoria ? null : nomeCategoria)
-                }
-              >
-                <ChipText selected={categoriaProduto === nomeCategoria}>{nomeCategoria}</ChipText>
-              </Chip>
-            ))}
-          </ChipsWrap>
-        </InputGroup>
+        {categoria === 'ingressos' ? (
+          <PainelEntradasCadastro />
+        ) : (
+          <>
+            <InputGroup>
+              <Label>Categoria (opcional)</Label>
+              <ChipsWrap>
+                {CATEGORIAS_PRODUTO.map((nomeCategoria) => (
+                  <Chip
+                    key={nomeCategoria}
+                    selected={categoriaProduto === nomeCategoria}
+                    onPress={() =>
+                      setCategoriaProduto(categoriaProduto === nomeCategoria ? null : nomeCategoria)
+                    }
+                  >
+                    <ChipText selected={categoriaProduto === nomeCategoria}>{nomeCategoria}</ChipText>
+                  </Chip>
+                ))}
+              </ChipsWrap>
+            </InputGroup>
 
-        <Row>
-          <InputGroup style={{ flex: 1, marginRight: 10 }}>
-            <Label>Preço (R$)</Label>
-            <InputContainer hasError={!!erros.preco}>
-              <Input
-                value={preco}
-                onChangeText={handleChangePreco}
-                placeholder="0,00"
-                keyboardType="numeric"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.preco && <ErrorText>{erros.preco}</ErrorText>}
-          </InputGroup>
+            <Row>
+              <InputGroup style={{ flex: 1, marginRight: 10 }}>
+                <Label>Preço (R$)</Label>
+                <InputContainer hasError={!!erros.preco}>
+                  <Input
+                    value={preco}
+                    onChangeText={handleChangePreco}
+                    placeholder="0,00"
+                    keyboardType="numeric"
+                    placeholderTextColor="#9E9E9E"
+                  />
+                </InputContainer>
+                {erros.preco && <ErrorText>{erros.preco}</ErrorText>}
+              </InputGroup>
 
-          <InputGroup style={{ flex: 1 }}>
-            <Label>Estoque Inicial</Label>
-            <InputContainer hasError={!!erros.estoqueInicial}>
-              <Input
-                value={estoqueInicial}
-                onChangeText={setEstoqueInicial}
-                placeholder="0"
-                keyboardType="decimal-pad"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.estoqueInicial && <ErrorText>{erros.estoqueInicial}</ErrorText>}
-          </InputGroup>
-        </Row>
+              <InputGroup style={{ flex: 1 }}>
+                <Label>Estoque Inicial</Label>
+                <InputContainer hasError={!!erros.estoqueInicial}>
+                  <Input
+                    value={estoqueInicial}
+                    onChangeText={setEstoqueInicial}
+                    placeholder="0"
+                    keyboardType="decimal-pad"
+                    placeholderTextColor="#9E9E9E"
+                  />
+                </InputContainer>
+                {erros.estoqueInicial && <ErrorText>{erros.estoqueInicial}</ErrorText>}
+              </InputGroup>
+            </Row>
 
-        <Row>
-          <InputGroup style={{ flex: 1, marginRight: 10 }}>
-            <Label>Entrada (Qtd.)</Label>
-            <InputContainer hasError={!!erros.entradaQtd}>
-              <Input
-                value={entradaQtd}
-                onChangeText={setEntradaQtd}
-                placeholder="0"
-                keyboardType="decimal-pad"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.entradaQtd && <ErrorText>{erros.entradaQtd}</ErrorText>}
-          </InputGroup>
+            <Row>
+              <InputGroup style={{ flex: 1, marginRight: 10 }}>
+                <Label>Entrada (Qtd.)</Label>
+                <InputContainer hasError={!!erros.entradaQtd}>
+                  <Input
+                    value={entradaQtd}
+                    onChangeText={setEntradaQtd}
+                    placeholder="0"
+                    keyboardType="decimal-pad"
+                    placeholderTextColor="#9E9E9E"
+                  />
+                </InputContainer>
+                {erros.entradaQtd && <ErrorText>{erros.entradaQtd}</ErrorText>}
+              </InputGroup>
 
-          <InputGroup style={{ flex: 1 }}>
-            <Label>Valor Entradas (R$)</Label>
-            <InputContainer hasError={!!erros.valorEntradas}>
-              <Input
-                value={valorEntradas}
-                onChangeText={handleChangeValorEntradas}
-                placeholder="0,00"
-                keyboardType="numeric"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.valorEntradas && <ErrorText>{erros.valorEntradas}</ErrorText>}
-          </InputGroup>
-        </Row>
+              <InputGroup style={{ flex: 1 }}>
+                <Label>Valor Entradas (R$)</Label>
+                <InputContainer hasError={!!erros.valorEntradas}>
+                  <Input
+                    value={valorEntradas}
+                    onChangeText={handleChangeValorEntradas}
+                    placeholder="0,00"
+                    keyboardType="numeric"
+                    placeholderTextColor="#9E9E9E"
+                  />
+                </InputContainer>
+                {erros.valorEntradas && <ErrorText>{erros.valorEntradas}</ErrorText>}
+              </InputGroup>
+            </Row>
 
-        <Row>
-          <InputGroup style={{ flex: 1, marginRight: 10 }}>
-            <Label>Saída / Venda (Qtd.)</Label>
-            <InputContainer hasError={!!erros.saidaQtd}>
-              <Input
-                value={saidaQtd}
-                onChangeText={setSaidaQtd}
-                placeholder="0"
-                keyboardType="decimal-pad"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.saidaQtd && <ErrorText>{erros.saidaQtd}</ErrorText>}
-          </InputGroup>
+            <Row>
+              <InputGroup style={{ flex: 1, marginRight: 10 }}>
+                <Label>Saída / Venda (Qtd.)</Label>
+                <InputContainer hasError={!!erros.saidaQtd}>
+                  <Input
+                    value={saidaQtd}
+                    onChangeText={setSaidaQtd}
+                    placeholder="0"
+                    keyboardType="decimal-pad"
+                    placeholderTextColor="#9E9E9E"
+                  />
+                </InputContainer>
+                {erros.saidaQtd && <ErrorText>{erros.saidaQtd}</ErrorText>}
+              </InputGroup>
 
-          <InputGroup style={{ flex: 1 }}>
-            <Label>Valor Saídas (R$)</Label>
-            <InputContainer hasError={!!erros.valorSaidas}>
-              <Input
-                value={valorSaidas}
-                onChangeText={handleChangeValorSaidas}
-                placeholder="0,00"
-                keyboardType="numeric"
-                placeholderTextColor="#A99B8F"
-              />
-            </InputContainer>
-            {erros.valorSaidas && <ErrorText>{erros.valorSaidas}</ErrorText>}
-          </InputGroup>
-        </Row>
+              <InputGroup style={{ flex: 1 }}>
+                <Label>Valor Saídas (R$)</Label>
+                <InputContainer hasError={!!erros.valorSaidas}>
+                  <Input
+                    value={valorSaidas}
+                    onChangeText={handleChangeValorSaidas}
+                    placeholder="0,00"
+                    keyboardType="numeric"
+                    placeholderTextColor="#9E9E9E"
+                  />
+                </InputContainer>
+                {erros.valorSaidas && <ErrorText>{erros.valorSaidas}</ErrorText>}
+              </InputGroup>
+            </Row>
 
-        <Row>
-  <InputGroup style={{ flex: 1 }}>
-    <Label>Custo Unitário (R$)</Label>
-    <InputContainer hasError={!!erros.custoUnitario}>
-      <Input
-        value={custoUnitario}
-        onChangeText={handleChangeCustoUnitario}
-        placeholder="0,00"
-        keyboardType="numeric"
-        placeholderTextColor="#A99B8F"
-      />
-    </InputContainer>
-    {erros.custoUnitario && <ErrorText>{erros.custoUnitario}</ErrorText>}
-  </InputGroup>
-</Row>
+            <Row>
+              <InputGroup style={{ flex: 1 }}>
+                <Label>Custo Unitário (R$)</Label>
+                <InputContainer hasError={!!erros.custoUnitario}>
+                  <Input
+                    value={custoUnitario}
+                    onChangeText={handleChangeCustoUnitario}
+                    placeholder="0,00"
+                    keyboardType="numeric"
+                    placeholderTextColor="#9E9E9E"
+                  />
+                </InputContainer>
+                {erros.custoUnitario && <ErrorText>{erros.custoUnitario}</ErrorText>}
+              </InputGroup>
+            </Row>
 
-        <PreviewBox>
-          <PreviewLabel>SALDO EM ESTOQUE</PreviewLabel>
-          <PreviewValue>{saldoPrevisto}</PreviewValue>
-        </PreviewBox>
+            <PreviewBox>
+              <PreviewLabel>SALDO EM ESTOQUE</PreviewLabel>
+              <PreviewValue>{saldoPrevisto}</PreviewValue>
+            </PreviewBox>
 
-        <InputGroup>
-          <Label>Avisar quando o estoque for menor que</Label>
-          <InputContainer hasError={!!erros.limiteEstoqueBaixo}>
-            <Input
-              value={limiteEstoqueBaixo}
-              onChangeText={setLimiteEstoqueBaixo}
-              placeholder="5"
-              keyboardType="decimal-pad"
-              placeholderTextColor="#A99B8F"
-            />
-          </InputContainer>
-          {erros.limiteEstoqueBaixo && <ErrorText>{erros.limiteEstoqueBaixo}</ErrorText>}
-        </InputGroup>
+            <InputGroup>
+              <Label>Avisar quando o estoque for menor que</Label>
+              <InputContainer hasError={!!erros.limiteEstoqueBaixo}>
+                <Input
+                  value={limiteEstoqueBaixo}
+                  onChangeText={setLimiteEstoqueBaixo}
+                  placeholder="5"
+                  keyboardType="decimal-pad"
+                  placeholderTextColor="#9E9E9E"
+                />
+              </InputContainer>
+              {erros.limiteEstoqueBaixo && <ErrorText>{erros.limiteEstoqueBaixo}</ErrorText>}
+            </InputGroup>
 
-        <InputGroup>
-          <Label>Observações</Label>
-          <TextAreaContainer>
-            <TextArea
-              value={observacoes}
-              onChangeText={setObservacoes}
-              placeholder="Ex: 2 unidades amassadas na entrega"
-              placeholderTextColor="#A99B8F"
-              multiline
-              numberOfLines={3}
-            />
-          </TextAreaContainer>
-        </InputGroup>
+            <InputGroup>
+              <Label>Observações</Label>
+              <TextAreaContainer>
+                <TextArea
+                  value={observacoes}
+                  onChangeText={setObservacoes}
+                  placeholder="Ex: 2 unidades amassadas na entrega"
+                  placeholderTextColor="#9E9E9E"
+                  multiline
+                  numberOfLines={3}
+                />
+              </TextAreaContainer>
+            </InputGroup>
 
-        {erroGeral && (
-          <ErrorBox>
-            <GeneralErrorText>{erroGeral}</GeneralErrorText>
-          </ErrorBox>
+            {erroGeral && (
+              <ErrorBox>
+                <GeneralErrorText>{erroGeral}</GeneralErrorText>
+              </ErrorBox>
+            )}
+
+            <SaveButton onPress={handleSalvar} disabled={salvando}>
+              {salvando ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <>
+                  <Ionicons name="checkmark-circle-outline" size={18} color="#FFFFFF" />
+                  <SaveButtonText>Salvar Produto</SaveButtonText>
+                </>
+              )}
+            </SaveButton>
+          </>
         )}
-
-        <SaveButton onPress={handleSalvar} disabled={salvando}>
-          {salvando ? (
-            <ActivityIndicator color="#FFFFFF" />
-          ) : (
-            <>
-              <Ionicons name="checkmark-circle-outline" size={18} color="#FFFFFF" />
-              <SaveButtonText>Salvar Produto</SaveButtonText>
-            </>
-          )}
-        </SaveButton>
       </ScrollContainer>
     </Container>
   );

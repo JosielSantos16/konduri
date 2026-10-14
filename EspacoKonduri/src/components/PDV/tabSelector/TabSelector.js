@@ -16,7 +16,7 @@ export default function TabSelector({ activeTab, onChange, contagemPorCategoria 
 
         return (
           <TabButton key={tab.key} active={isActive} onPress={() => onChange(tab.key)}>
-            <Ionicons name={tab.icon} size={18} color={isActive ? '#FFF' : '#8C7355'} />
+            <Ionicons name={tab.icon} size={18} color={isActive ? '#1A1A1A' : '#6B6B6B'} />
             <TabText active={isActive}>{tab.label}</TabText>
             <TabCount active={isActive}>({quantidade})</TabCount>
           </TabButton>

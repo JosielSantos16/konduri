@@ -5,13 +5,17 @@ export const METODOS_PAGAMENTO = {
   dinheiro: { label: 'Dinheiro', icone: 'cash-outline', cor: '#27AE60', fundo: '#E9F7EF' },
 };
 
+// Entrada de cortesia (só o admin registra): não é forma de pagamento, R$ 0
+const CORTESIA = { label: 'Cortesia', icone: 'gift-outline', cor: '#8A6A00', fundo: '#FFF7D1' };
+
 export function infoMetodo(metodo) {
+  if (metodo === 'cortesia') return CORTESIA;
   return (
     METODOS_PAGAMENTO[metodo] || {
       label: metodo || '—',
       icone: 'help-circle-outline',
-      cor: '#8C7355',
-      fundo: '#F0EAE1',
+      cor: '#6B6B6B',
+      fundo: '#F1F1EB',
     }
   );
 }

@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const ScrollContainer = styled.ScrollView`
@@ -26,17 +26,17 @@ export const HeaderTitles = styled.View``;
 export const HeaderTitle = styled.Text`
   font-size: 18px;
   font-weight: bold;
-  color: #2E5A1E;
+  color: #1A1A1A;
 `;
 
 export const HeaderDate = styled.Text`
   font-size: 13px;
-  color: #D35400;
+  color: #6B5300;
   font-weight: bold;
 `;
 
 export const TotaisCard = styled.View`
-  background-color: #1E4A3D;
+  background-color: #1A1A1A;
   border-radius: 16px;
   padding: 18px 20px;
   margin-bottom: 20px;
@@ -94,13 +94,13 @@ export const Card = styled.View`
   padding: 18px 20px;
   margin-bottom: 20px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
 `;
 
 export const CardTitle = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-bottom: 16px;
   letter-spacing: 0.5px;
 `;
@@ -112,7 +112,7 @@ export const InputGroup = styled.View`
 export const Label = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-bottom: 6px;
   letter-spacing: 0.5px;
 `;
@@ -121,22 +121,22 @@ export const InputContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   border-radius: 12px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding-horizontal: 14px;
   height: 50px;
 `;
 
 export const InputText = styled.Text`
   font-size: 15px;
-  color: #3D2C22;
+  color: #1A1A1A;
   font-weight: bold;
 `;
 
 export const FinalizeButton = styled.TouchableOpacity`
-  background-color: #D35400;
+  background-color: #E0A800;
   border-radius: 12px;
   height: 54px;
   flex-direction: row;
@@ -149,7 +149,7 @@ export const FinalizeButton = styled.TouchableOpacity`
 export const FinalizeButtonText = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #1A1A1A;
   letter-spacing: 0.5px;
   margin-left: 8px;
 `;

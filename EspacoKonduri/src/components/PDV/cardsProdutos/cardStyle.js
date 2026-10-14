@@ -11,10 +11,10 @@ export const ProductCard = styled.TouchableOpacity`
     props.semEstoque
       ? '#C0392B'
       : props.selecionado
-      ? '#5C4033'
+      ? '#333333'
       : props.estoqueBaixo
-      ? '#E67E22'
-      : '#E6DFD5'};
+      ? '#8A6A00'
+      : '#E6E6E0'};
   elevation: 1;
   overflow: hidden;
   opacity: ${props => (props.semEstoque ? 0.6 : 1)};
@@ -23,13 +23,13 @@ export const ProductCard = styled.TouchableOpacity`
 export const ProductImage = styled.Image`
   width: 100%;
   height: 110px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
 `;
 
 export const ProductImagePlaceholder = styled.View`
   width: 100%;
   height: 110px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   justify-content: center;
   align-items: center;
 `;
@@ -41,14 +41,14 @@ export const CardContent = styled.View`
 export const ProductTitle = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-bottom: 2px;
 `;
 
 export const StockText = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: ${props => (props.semEstoque ? '#C0392B' : props.estoqueBaixo ? '#D35400' : '#8C7355')};
+  color: ${props => (props.semEstoque ? '#C0392B' : props.estoqueBaixo ? '#6B5300' : '#6B6B6B')};
   margin-bottom: 6px;
 `;
 
@@ -61,11 +61,11 @@ export const ProductFooter = styled.View`
 export const ProductPrice = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #D35400;
+  color: #6B5300;
 `;
 
 export const AddButton = styled.TouchableOpacity`
-  background-color: ${props => (props.disabled ? '#E6DFD5' : '#FAF0E6')};
+  background-color: ${props => (props.disabled ? '#E6E6E0' : '#F4F1E6')};
   width: 28px;
   height: 28px;
   border-radius: 14px;
@@ -76,7 +76,7 @@ export const AddButton = styled.TouchableOpacity`
 export const QtyControls = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: #FAF0E6;
+  background-color: #F4F1E6;
   border-radius: 14px;
   padding: 2px;
 `;
@@ -92,7 +92,7 @@ export const QtyButton = styled.TouchableOpacity`
 export const QtyText = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-horizontal: 6px;
   min-width: 14px;
   text-align: center;
@@ -115,7 +115,7 @@ export const DestaqueBadge = styled.View`
   position: absolute;
   top: 8px;
   left: 8px;
-  background-color: #2E5A1E;
+  background-color: #1A1A1A;
   padding-horizontal: 8px;
   padding-vertical: 3px;
   border-radius: 8px;

@@ -9,6 +9,7 @@ import { useVendas } from "../../contexts/VendasContext";
 import { useProdutos } from "../../contexts/ProdutosContext";
 import { useAuth } from "../../hooks/useAuth";
 import NotificacoesBell from "../../components/notificacoes/NotificacoesBell";
+import AtalhoEntradasPainel from "../../components/entradas/AtalhoEntradasPainel";
 import {
   Container,
   ScrollContainer,
@@ -47,7 +48,7 @@ import {
 } from "./painelStyles";
 import NavBar from "../../components/painel/navBar/NavBar";
 
-const RANK_COLORS = ["#F39C12", "#E67E22", "#27AE60"];
+const RANK_COLORS = ["#8A6A00", "#8A6A00", "#27AE60"];
 
 export default function Painel() {
   const router = useRouter();
@@ -81,8 +82,8 @@ export default function Painel() {
           <RefreshControl
             refreshing={atualizando}
             onRefresh={handleRefresh}
-            colors={["#F39C12"]}
-            tintColor="#F39C12"
+            colors={["#8A6A00"]}
+            tintColor="#8A6A00"
           />
         }
       >
@@ -101,7 +102,7 @@ export default function Painel() {
                   resizeMode="cover"
                 />
               ) : (
-                <Ionicons name="person-outline" size={20} color="#3D2C22" />
+                <Ionicons name="person-outline" size={20} color="#1A1A1A" />
               )}
             </UserAvatar>
           </HeaderActions>
@@ -109,7 +110,7 @@ export default function Painel() {
 
         <MainRevenueCard>
           <RevenueCardHeader>
-            <Ionicons name="wallet-outline" size={20} color="#FFFFFF" />
+            <Ionicons name="wallet-outline" size={20} color="#1A1A1A" />
             <RevenueTitle>FATURAMENTO DO DIA</RevenueTitle>
           </RevenueCardHeader>
           <RevenueValue>{formatPrice(faturamentoDia)}</RevenueValue>
@@ -138,10 +139,12 @@ export default function Painel() {
           </StatCard>
         </StatsRow>
 
+        <AtalhoEntradasPainel />
+
         {produtosComEstoqueBaixo.length > 0 && (
           <LowStockBanner onPress={() => router.push("/controle")}>
             <LowStockIconCircle>
-              <Ionicons name="alert-circle-outline" size={20} color="#B85D00" />
+              <Ionicons name="alert-circle-outline" size={20} color="#6B5300" />
             </LowStockIconCircle>
             <LowStockTextGroup>
               <LowStockTitle>
@@ -154,7 +157,7 @@ export default function Painel() {
                 Toque para ver o controle de estoque
               </LowStockSubtitle>
             </LowStockTextGroup>
-            <Ionicons name="chevron-forward" size={18} color="#B85D00" />
+            <Ionicons name="chevron-forward" size={18} color="#6B5300" />
           </LowStockBanner>
         )}
 
@@ -191,7 +194,7 @@ export default function Painel() {
                   />
                 ) : (
                   <RankImagePlaceholder>
-                    <Ionicons name="cube-outline" size={18} color="#C9BBA8" />
+                    <Ionicons name="cube-outline" size={18} color="#C4C4BE" />
                   </RankImagePlaceholder>
                 )}
 
@@ -200,7 +203,7 @@ export default function Painel() {
                   <RankItemSubtitle>{produto.qty} unidades</RankItemSubtitle>
                 </RankInfo>
               </RankingLeft>
-              <Ionicons name="bar-chart-outline" size={20} color="#8C7355" />
+              <Ionicons name="bar-chart-outline" size={20} color="#6B6B6B" />
             </RankingCard>
           ))
         )}

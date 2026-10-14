@@ -113,7 +113,7 @@ export default function RegistrarAjusteModal({ produtoId, onClose, onSalvo }) {
         <Content>
           <Header>
             <Title>Saída de estoque</Title>
-            <Ionicons name="close" size={22} color="#3D2C22" onPress={onClose} />
+            <Ionicons name="close" size={22} color="#1A1A1A" onPress={onClose} />
           </Header>
           <ProdutoNome>{produto?.title}</ProdutoNome>
 
@@ -141,7 +141,7 @@ export default function RegistrarAjusteModal({ produtoId, onClose, onSalvo }) {
               }}
               placeholder="0"
               keyboardType="number-pad"
-              placeholderTextColor="#A99B8F"
+              placeholderTextColor="#9E9E9E"
             />
             {erro && <ErrorText>{erro}</ErrorText>}
           </Campo>
@@ -152,7 +152,7 @@ export default function RegistrarAjusteModal({ produtoId, onClose, onSalvo }) {
               value={observacao}
               onChangeText={setObservacao}
               placeholder="Ex: garrafa quebrada no transporte"
-              placeholderTextColor="#A99B8F"
+              placeholderTextColor="#9E9E9E"
             />
           </Campo>
 

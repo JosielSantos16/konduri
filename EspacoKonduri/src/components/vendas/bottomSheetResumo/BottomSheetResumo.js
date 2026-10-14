@@ -80,7 +80,7 @@ export default function BottomSheetResumo({
           >
             SOMA TOTAL PERÍODO
           </SheetRowLabel>
-          <SheetRowValue style={{ color: "#E67E22", fontSize: 16 }}>
+          <SheetRowValue style={{ color: "#8A6A00", fontSize: 16 }}>
             {qtdVendas} Vendas — {formatPrice(totalPeriodo)}
           </SheetRowValue>
         </SheetCollapsedRow>

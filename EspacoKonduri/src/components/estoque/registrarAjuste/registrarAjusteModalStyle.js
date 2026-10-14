@@ -5,7 +5,7 @@ export * from '../registrarEntrada/registrarEntradaModalStyle';
 
 export const TipoOptions = styled.View`
   flex-direction: row;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   border-radius: 12px;
   padding: 4px;
   margin-bottom: 14px;
@@ -22,11 +22,11 @@ export const TipoButton = styled.TouchableOpacity`
 export const TipoButtonText = styled.Text`
   font-size: 12px;
   font-weight: bold;
-  color: ${(props) => (props.active ? '#E67E22' : '#8C7355')};
+  color: ${(props) => (props.active ? '#8A6A00' : '#6B6B6B')};
 `;
 
 export const DescricaoTipo = styled.Text`
   font-size: 12px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-bottom: 14px;
 `;

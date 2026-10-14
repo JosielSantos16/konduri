@@ -14,6 +14,6 @@ export const ChecklistRow = styled.View`
 
 export const ChecklistText = styled.Text`
   font-size: 12px;
-  color: ${(props) => (props.ok ? "#2E5A1E" : "#A99B8F")};
+  color: ${(props) => (props.ok ? "#2E5A1E" : "#9E9E9E")};
   margin-left: 6px;
 `;

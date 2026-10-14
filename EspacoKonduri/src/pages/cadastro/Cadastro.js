@@ -55,7 +55,7 @@ export default function Cadastro() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: "#FAF8F5", justifyContent: "center", padding: 24 }}
+      style={{ flex: 1, backgroundColor: "#FAFAF7", justifyContent: "center", padding: 24 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <LogoContainer>
@@ -75,7 +75,7 @@ export default function Cadastro() {
             placeholder="Digite seu email"
             autoCapitalize="none"
             keyboardType="email-address"
-            placeholderTextColor="#A99B8F"
+            placeholderTextColor="#9E9E9E"
             returnKeyType="next"
             onSubmitEditing={() => senhaInputRef.current?.focus()}
             blurOnSubmit={false}
@@ -94,7 +94,7 @@ export default function Cadastro() {
             value={senha}
             onChangeText={handleChangeSenha}
             placeholder="Digite sua senha"
-            placeholderTextColor="#A99B8F"
+            placeholderTextColor="#9E9E9E"
             returnKeyType="next"
             onSubmitEditing={() => confirmarSenhaInputRef.current?.focus()}
             blurOnSubmit={false}
@@ -103,7 +103,7 @@ export default function Cadastro() {
             <Ionicons
               name={senhaVisivel ? "eye-off-outline" : "eye-outline"}
               size={20}
-              color="#8C7355"
+              color="#6B6B6B"
             />
           </EyeButton>
         </InputContainer>
@@ -122,7 +122,7 @@ export default function Cadastro() {
             value={confirmarSenha}
             onChangeText={handleChangeConfirmarSenha}
             placeholder="Digite a senha novamente"
-            placeholderTextColor="#A99B8F"
+            placeholderTextColor="#9E9E9E"
             returnKeyType="done"
             onSubmitEditing={handleCadastrar}
           />
@@ -130,7 +130,7 @@ export default function Cadastro() {
             <Ionicons
               name={confirmarSenhaVisivel ? "eye-off-outline" : "eye-outline"}
               size={20}
-              color="#8C7355"
+              color="#6B6B6B"
             />
           </EyeButton>
         </InputContainer>

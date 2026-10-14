@@ -31,7 +31,7 @@ export default function PontoEquilibrioCard({ pontoEquilibrio, faturamento, cust
   return (
     <EquilibrioCard atingido={atingido}>
       <EquilibrioHeader>
-        <Ionicons name="flag-outline" size={18} color="#8C7355" />
+        <Ionicons name="flag-outline" size={18} color="#6B6B6B" />
         <EquilibrioTitulo>PONTO DE EQUILÍBRIO</EquilibrioTitulo>
       </EquilibrioHeader>
 

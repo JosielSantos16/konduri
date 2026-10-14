@@ -34,18 +34,18 @@ const ObservacaoContainer = styled.View`
 const ObservacaoLabel = styled.Text`
   font-size: 12px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-bottom: 6px;
 `;
 
 const ObservacaoInput = styled.TextInput`
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   border-radius: 10px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding: 10px 12px;
   font-size: 13px;
-  color: #3D2C22;
+  color: #1A1A1A;
   min-height: 60px;
   text-align-vertical: top;
 `;
@@ -71,7 +71,7 @@ export default function CartReviewModal({
           <ModalHeader>
             <ModalTitle>Revisar Carrinho</ModalTitle>
             <CloseButton onPress={onClose}>
-              <Ionicons name="close" size={24} color="#3D2C22" />
+              <Ionicons name="close" size={24} color="#1A1A1A" />
             </CloseButton>
           </ModalHeader>
 
@@ -88,11 +88,11 @@ export default function CartReviewModal({
 
                 <ItemQtyControls>
                   <QtyButton onPress={() => onDecrease(item.id)}>
-                    <Ionicons name="remove" size={14} color="#D35400" />
+                    <Ionicons name="remove" size={14} color="#6B5300" />
                   </QtyButton>
                   <QtyText>{item.qty}</QtyText>
                   <QtyButton onPress={() => onIncrease(item.id)}>
-                    <Ionicons name="add" size={14} color="#D35400" />
+                    <Ionicons name="add" size={14} color="#6B5300" />
                   </QtyButton>
                 </ItemQtyControls>
 
@@ -111,7 +111,7 @@ export default function CartReviewModal({
               <ObservacaoLabel>Observações (opcional)</ObservacaoLabel>
               <ObservacaoInput
                 placeholder="Ex: sem gelo, embalar pra viagem..."
-                placeholderTextColor="#A99B8F"
+                placeholderTextColor="#9E9E9E"
                 value={observacoes}
                 onChangeText={onChangeObservacoes}
                 multiline

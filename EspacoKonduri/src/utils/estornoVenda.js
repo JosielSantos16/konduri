@@ -30,6 +30,8 @@ export function agruparItensPorProduto(itens) {
   const semProduto = [];
 
   (itens || []).forEach((item) => {
+    // Entrada (portaria) não tem estoque
+    if (item.tipo === 'entrada') return;
     if (!item.id) {
       semProduto.push(item);
       return;

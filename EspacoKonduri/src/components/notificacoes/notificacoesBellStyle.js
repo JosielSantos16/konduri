@@ -6,7 +6,7 @@ export const BellButton = styled.TouchableOpacity`
   border-radius: 20px;
   background-color: #FFFFFF;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   justify-content: center;
   align-items: center;
 `;

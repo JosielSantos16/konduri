@@ -7,6 +7,7 @@ import {
   query,
   where,
   orderBy,
+  limit,
   arrayUnion,
 } from 'firebase/firestore';
 import { db } from '../../firebase/fireBaseCondig';
@@ -75,40 +76,72 @@ export async function criarNotificacaoPorPerfil({ paraPerfis, tipo, titulo, mens
   );
 }
 
+// Só as mais recentes: cada venda gera uma notificação para o admin, e baixar
+// o histórico inteiro deixava a tela lenta (e cada vez mais lenta)
+export const LIMITE_NOTIFICACOES = 50;
+
+// callback(lista, { carregado }): carregado fica true quando as duas buscas
+// (pessoais e do perfil) já responderam, para a tela saber quando parar de
+// mostrar "carregando" em vez de mostrar "nenhuma notificação" cedo demais
 export function subscribeToNotificacoes(usuario, callback) {
   if (!usuario?.uid) return () => {};
 
   let pessoais = [];
   let porPerfil = [];
+  let recebeuPessoais = false;
+  let recebeuPorPerfil = false;
 
   const emitir = () => {
     const combinadas = [...pessoais, ...porPerfil]
       .filter((n) => !(n.ocultoPara || []).includes(usuario.uid)) // ← filtra ocultadas
-      .sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm));
-    callback(combinadas);
+      .sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm))
+      .slice(0, LIMITE_NOTIFICACOES);
+    callback(combinadas, { carregado: recebeuPessoais && recebeuPorPerfil });
   };
 
   const qPessoal = query(
     collection(db, COLECAO_NOTIFICACOES),
     where('destinatarioUid', '==', usuario.uid),
-    orderBy('criadoEm', 'desc')
+    orderBy('criadoEm', 'desc'),
+    limit(LIMITE_NOTIFICACOES)
   );
 
   const qPerfil = query(
     collection(db, COLECAO_NOTIFICACOES),
     where('paraPerfis', 'array-contains', usuario.perfil),
-    orderBy('criadoEm', 'desc')
+    orderBy('criadoEm', 'desc'),
+    limit(LIMITE_NOTIFICACOES)
   );
 
-  const unsub1 = onSnapshot(qPessoal, (snapshot) => {
-    pessoais = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-    emitir();
-  });
+  // Se uma busca falhar (sem internet, sem permissão), a tela não pode ficar
+  // carregando para sempre: conta como respondida, com o que houver
+  const unsub1 = onSnapshot(
+    qPessoal,
+    (snapshot) => {
+      pessoais = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      recebeuPessoais = true;
+      emitir();
+    },
+    (erro) => {
+      console.error('Erro ao carregar notificações pessoais:', erro);
+      recebeuPessoais = true;
+      emitir();
+    }
+  );
 
-  const unsub2 = onSnapshot(qPerfil, (snapshot) => {
-    porPerfil = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-    emitir();
-  });
+  const unsub2 = onSnapshot(
+    qPerfil,
+    (snapshot) => {
+      porPerfil = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      recebeuPorPerfil = true;
+      emitir();
+    },
+    (erro) => {
+      console.error('Erro ao carregar notificações do perfil:', erro);
+      recebeuPorPerfil = true;
+      emitir();
+    }
+  );
 
   return () => {
     unsub1();

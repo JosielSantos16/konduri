@@ -147,7 +147,7 @@ export default function ControleDoDia() {
         <Header>
           <HeaderLeft>
             <BackButton onPress={() => router.back()}>
-              <Ionicons name="arrow-back" size={22} color="#2E5A1E" />
+              <Ionicons name="arrow-back" size={22} color="#1A1A1A" />
             </BackButton>
             <HeaderTitles>
               <HeaderTitle>Controle do Dia</HeaderTitle>
@@ -156,7 +156,7 @@ export default function ControleDoDia() {
           </HeaderLeft>
 
           <UserBadge>
-            <Ionicons name="person" size={14} color="#2E5A1E" />
+            <Ionicons name="person" size={14} color="#1A1A1A" />
             <UserBadgeText>{primeiroNome}</UserBadgeText>
           </UserBadge>
         </Header>
@@ -174,14 +174,14 @@ export default function ControleDoDia() {
             <RefreshControl
               refreshing={atualizando}
               onRefresh={handleRefresh}
-              colors={["#2E5A1E"]}
-              tintColor="#2E5A1E"
+              colors={["#1A1A1A"]}
+              tintColor="#1A1A1A"
             />
           }
         >
           {!carregando && produtos.length === 0 && (
             <EmptyState>
-              <Ionicons name="cube-outline" size={40} color="#C9BBA8" />
+              <Ionicons name="cube-outline" size={40} color="#C4C4BE" />
               <EmptyStateText>
                 Nenhum produto na operação ainda.{"\n"}Toque no botão + para
                 adicionar.

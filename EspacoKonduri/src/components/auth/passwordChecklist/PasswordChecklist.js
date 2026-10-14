@@ -18,7 +18,7 @@ export default function PasswordChecklist({ checks }) {
           <Ionicons
             name={checks[req.key] ? "checkmark-circle" : "ellipse-outline"}
             size={14}
-            color={checks[req.key] ? "#2E5A1E" : "#A99B8F"}
+            color={checks[req.key] ? "#2E5A1E" : "#9E9E9E"}
           />
           <ChecklistText ok={checks[req.key]}>{req.label}</ChecklistText>
         </ChecklistRow>

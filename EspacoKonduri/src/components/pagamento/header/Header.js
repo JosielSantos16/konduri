@@ -12,7 +12,7 @@ export default function PagamentoHeader({ onBack }) {
   return (
     <Header>
       <BackButton onPress={onBack}>
-        <Ionicons name="chevron-back" size={22} color="#3D2C22" />
+        <Ionicons name="chevron-back" size={22} color="#1A1A1A" />
       </BackButton>
       <HeaderTitleContainer>
         <HeaderTitle>Forma de pagamento</HeaderTitle>

@@ -9,7 +9,7 @@ export const FooterRow = styled.View`
 
 export const FooterText = styled.Text`
   font-size: 14px;
-  color: #8c7355;
+  color: #6B6B6B;
 `;
 
 export const FooterLink = styled.TouchableOpacity`
@@ -19,5 +19,5 @@ export const FooterLink = styled.TouchableOpacity`
 export const FooterLinkText = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #e67e22;
+  color: #8A6A00;
 `;

@@ -10,13 +10,13 @@ export default function AtalhoDespesas({ style }) {
   return (
     <Atalho style={style} activeOpacity={0.8} onPress={() => router.push('/despesas')}>
       <IconeBox>
-        <Ionicons name="wallet-outline" size={20} color="#D35400" />
+        <Ionicons name="wallet-outline" size={20} color="#6B5300" />
       </IconeBox>
       <Textos>
         <Titulo>Custos e Despesas</Titulo>
         <Subtitulo>Aluguel, energia, funcionários, taxas...</Subtitulo>
       </Textos>
-      <Ionicons name="chevron-forward" size={20} color="#A99B8F" />
+      <Ionicons name="chevron-forward" size={20} color="#9E9E9E" />
     </Atalho>
   );
 }

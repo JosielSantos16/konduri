@@ -78,7 +78,7 @@ export default function AberturaCaixa() {
 
         <Card>
           <CardHeaderRow>
-            <Ionicons name="options-outline" size={18} color="#3D2C22" />
+            <Ionicons name="options-outline" size={18} color="#1A1A1A" />
             <CardSectionTitle>DADOS DA OPERAÇÃO</CardSectionTitle>
           </CardHeaderRow>
 
@@ -94,7 +94,7 @@ export default function AberturaCaixa() {
                     <Ionicons
                       name="calendar-outline"
                       size={18}
-                      color="#D35400"
+                      color="#6B5300"
                     />
                   </InputContainer>
                 </TouchableOpacity>
@@ -106,7 +106,7 @@ export default function AberturaCaixa() {
             <Label>RESPONSÁVEL</Label>
             <InputContainer>
               <InputText>{responsavel || "Carregando..."}</InputText>
-              <Ionicons name="person-outline" size={18} color="#A99B8F" />
+              <Ionicons name="person-outline" size={18} color="#9E9E9E" />
             </InputContainer>
           </InputGroup>
 
@@ -115,11 +115,11 @@ export default function AberturaCaixa() {
             <InputContainer>
               <StyledTextInput
                 placeholder="Nome do local ou comunidade"
-                placeholderTextColor="#A99B8F"
+                placeholderTextColor="#9E9E9E"
                 value={local}
                 onChangeText={setLocal}
               />
-              <Ionicons name="location-outline" size={18} color="#A99B8F" />
+              <Ionicons name="location-outline" size={18} color="#9E9E9E" />
             </InputContainer>
           </InputGroup>
         </Card>
@@ -129,7 +129,7 @@ export default function AberturaCaixa() {
             <Ionicons
               name="information-circle-outline"
               size={20}
-              color="#8C5A2E"
+              color="#6B5300"
             />
             <AlertText>
               Os dados de {formatDataHoraComprovante(ultimoFechamento)} foram

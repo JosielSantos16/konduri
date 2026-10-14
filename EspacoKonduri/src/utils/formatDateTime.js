@@ -50,3 +50,11 @@ export const isMesmoDia = (dataISO, referencia = new Date()) => {
     data.getFullYear() === referencia.getFullYear()
   );
 };
+// "AAAA-MM-DD" (data local) → "sáb, 17/10/2026"
+export const formatarDataComDia = (dataISO) => {
+  if (!dataISO) return '';
+  const [ano, mes, dia] = dataISO.split('-').map(Number);
+  const data = new Date(ano, mes - 1, dia);
+  const diaSemana = DIAS[data.getDay()].slice(0, 3).toLowerCase();
+  return `${diaSemana}, ${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${ano}`;
+};

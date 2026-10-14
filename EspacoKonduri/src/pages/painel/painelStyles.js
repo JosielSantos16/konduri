@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const ScrollContainer = styled.ScrollView`
@@ -23,12 +23,12 @@ export const GreetingContainer = styled.View`
 export const GreetingTitle = styled.Text`
   font-size: 23px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const GreetingSubtitle = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const HeaderActions = styled.View`
@@ -44,11 +44,11 @@ export const UserAvatar = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
 `;
 
 export const MainRevenueCard = styled.View`
-  background-color: #F39C12;
+  background-color: #FFD000;
   border-radius: 18px;
   padding: 20px;
   margin-bottom: 15px;
@@ -64,7 +64,7 @@ export const RevenueCardHeader = styled.View`
 export const RevenueTitle = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #1A1A1A;
   letter-spacing: 0.8px;
   margin-left: 8px;
 `;
@@ -72,7 +72,7 @@ export const RevenueTitle = styled.Text`
 export const RevenueValue = styled.Text`
   font-size: 30px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #1A1A1A;
   letter-spacing: 0.5px;
 `;
 
@@ -89,14 +89,14 @@ export const StatCard = styled.View`
   padding: 16px;
   margin-horizontal: 4px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   elevation: 1;
 `;
 
 export const StatLabel = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: ${props => (props.color || '#8C7355')};
+  color: ${props => (props.color || '#6B6B6B')};
   margin-bottom: 6px;
   letter-spacing: 0.5px;
 `;
@@ -104,7 +104,7 @@ export const StatLabel = styled.Text`
 export const StatValue = styled.Text`
   font-size: 17px;
   font-weight: bold;
-  color: ${props => (props.valueColor || '#3D2C22')};
+  color: ${props => (props.valueColor || '#1A1A1A')};
 `;
 
 export const SectionHeader = styled.View`
@@ -117,13 +117,13 @@ export const SectionHeader = styled.View`
 export const SectionTitle = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const SectionLink = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #E67E22;
+  color: #8A6A00;
 `;
 
 export const RankingCard = styled.View`
@@ -135,7 +135,7 @@ export const RankingCard = styled.View`
   justify-content: space-between;
   margin-bottom: 10px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   elevation: 1;
 `;
 
@@ -148,7 +148,7 @@ export const RankBadge = styled.View`
   width: 32px;
   height: 32px;
   border-radius: 16px;
-  background-color: #F39C12;
+  background-color: #FFD000;
   justify-content: center;
   align-items: center;
   margin-right: 14px;
@@ -157,7 +157,7 @@ export const RankBadge = styled.View`
 export const RankBadgeText = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #1A1A1A;
 `;
 
 export const RankInfo = styled.View`
@@ -167,20 +167,20 @@ export const RankInfo = styled.View`
 export const RankItemTitle = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-bottom: 2px;
 `;
 
 export const RankItemSubtitle = styled.Text`
   font-size: 12px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const BottomNavBar = styled.View`
   flex-direction: row;
   background-color: #FFFFFF;
   border-top-width: 1px;
-  border-top-color: #E6DFD5;
+  border-top-color: #E6E6E0;
   padding-vertical: 10px;
   padding-horizontal: 10px;
   justify-content: space-around;
@@ -197,26 +197,26 @@ export const NavItem = styled.TouchableOpacity`
 export const NavText = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: ${props => (props.active ? '#E67E22' : '#8C7355')};
+  color: ${props => (props.active ? '#8A6A00' : '#6B6B6B')};
   margin-top: 4px;
 `;
 
 export const LowStockBanner = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  background-color: #FDF3E7;
+  background-color: #FFF7D1;
   border-radius: 14px;
   padding: 14px 16px;
   margin-bottom: 20px;
   border-width: 1px;
-  border-color: #F0D9A0;
+  border-color: #F2DC7C;
 `;
 
 export const LowStockIconCircle = styled.View`
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  background-color: #FBD9A0;
+  background-color: #F2DC7C;
   justify-content: center;
   align-items: center;
   margin-right: 12px;
@@ -229,12 +229,12 @@ export const LowStockTextGroup = styled.View`
 export const LowStockTitle = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #B85D00;
+  color: #6B5300;
 `;
 
 export const LowStockSubtitle = styled.Text`
   font-size: 12px;
-  color: #8C5A2E;
+  color: #6B5300;
   margin-top: 2px;
 `;
 
@@ -255,7 +255,7 @@ export const RankImagePlaceholder = styled.View`
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   justify-content: center;
   align-items: center;
   margin-right: 12px;

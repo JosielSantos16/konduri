@@ -103,7 +103,7 @@ export default function ComissaoAtendenteCard({
             value={percentualInput}
             onChangeText={handleChangePercentual}
             placeholder="Percentual"
-            placeholderTextColor="#A99B8F"
+            placeholderTextColor="#9E9E9E"
             keyboardType="decimal-pad"
           />
           <ComissaoPercentSymbol>%</ComissaoPercentSymbol>
@@ -128,7 +128,7 @@ export default function ComissaoAtendenteCard({
       {/* O valor salvo é base × % no momento em que foi salvo (é ele que entra na
           Gestão). Se vendas entraram ou foram canceladas depois, avisa. */}
       {comissaoSalva && Math.abs((comissaoSalva.baseCalculo || 0) - baseCalculo) >= 0.01 && (
-        <ComissaoSavedText style={{ color: "#B85D00", marginTop: 6 }}>
+        <ComissaoSavedText style={{ color: "#6B5300", marginTop: 6 }}>
           As vendas do dia mudaram desde que esta comissão foi salva (base salva:{" "}
           {formatPrice(comissaoSalva.baseCalculo || 0)}). Toque em SALVAR para atualizar o valor.
         </ComissaoSavedText>

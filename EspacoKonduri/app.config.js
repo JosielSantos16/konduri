@@ -10,7 +10,7 @@ module.exports = {
     scheme: "espacokonduri",
     userInterfaceStyle: "automatic",
     androidNavigationBar: {
-      backgroundColor: "#FAF8F5",
+      backgroundColor: "#FAFAF7",
       barStyle: "dark-content"
     },
     newArchEnabled: true,

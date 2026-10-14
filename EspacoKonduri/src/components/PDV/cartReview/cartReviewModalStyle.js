@@ -24,7 +24,7 @@ export const ModalHeader = styled.View`
 export const ModalTitle = styled.Text`
   font-size: 18px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const CloseButton = styled.TouchableOpacity`
@@ -36,14 +36,14 @@ export const ItemRow = styled.View`
   align-items: center;
   padding-vertical: 12px;
   border-bottom-width: 1px;
-  border-bottom-color: #F0EAE1;
+  border-bottom-color: #F1F1EB;
 `;
 
 export const ItemImage = styled.Image`
   width: 48px;
   height: 48px;
   border-radius: 10px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   margin-right: 12px;
 `;
 
@@ -54,19 +54,19 @@ export const ItemInfo = styled.View`
 export const ItemTitle = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const ItemPrice = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 2px;
 `;
 
 export const ItemQtyControls = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: #FAF0E6;
+  background-color: #F4F1E6;
   border-radius: 14px;
   padding: 2px;
   margin-right: 10px;
@@ -83,7 +83,7 @@ export const QtyButton = styled.TouchableOpacity`
 export const QtyText = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-horizontal: 8px;
   min-width: 16px;
   text-align: center;
@@ -96,7 +96,7 @@ export const RemoveButton = styled.TouchableOpacity`
 export const ItemSubtotal = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #D35400;
+  color: #6B5300;
   min-width: 70px;
   text-align: right;
 `;
@@ -112,17 +112,17 @@ export const TotalRow = styled.View`
 export const TotalLabel = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const TotalValue = styled.Text`
   font-size: 22px;
   font-weight: bold;
-  color: #D35400;
+  color: #6B5300;
 `;
 
 export const ProceedButton = styled.TouchableOpacity`
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   border-radius: 12px;
   height: 52px;
   flex-direction: row;

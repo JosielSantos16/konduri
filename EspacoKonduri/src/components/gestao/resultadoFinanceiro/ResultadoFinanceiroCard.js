@@ -28,7 +28,7 @@ export default function ResultadoFinanceiroCard({ indicadores: i }) {
   return (
     <Card>
       <CardHeader>
-        <Ionicons name="document-text-outline" size={18} color="#8C7355" />
+        <Ionicons name="document-text-outline" size={18} color="#6B6B6B" />
         <CardTitulo>RESULTADO FINANCEIRO</CardTitulo>
       </CardHeader>
 

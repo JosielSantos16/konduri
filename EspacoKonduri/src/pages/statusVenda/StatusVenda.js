@@ -157,7 +157,7 @@ export default function StatusVenda() {
 
     return (
       <PrintStatusBox status="pendente">
-        <Ionicons name="time-outline" size={18} color="#D3C5B4" />
+        <Ionicons name="time-outline" size={18} color="#C4C4BE" />
         <PrintStatusText status="pendente">Aguardando impressora conectada...</PrintStatusText>
       </PrintStatusBox>
     );
@@ -211,20 +211,20 @@ export default function StatusVenda() {
 
         <DetailRow>
           <DetailLabel>Valor Pago:</DetailLabel>
-          <DetailValue style={{ color: '#E67E22', fontSize: 18 }}>{formatPrice(valorPago)}</DetailValue>
+          <DetailValue style={{ color: '#8A6A00', fontSize: 18 }}>{formatPrice(valorPago)}</DetailValue>
         </DetailRow>
       </DetailsCard>
 
       {renderStatusImpressao()}
 
       <ActionButtonPrimary onPress={handleNewSale}>
-        <Ionicons name="refresh-outline" size={20} color="#FFFFFF" />
+        <Ionicons name="refresh-outline" size={20} color="#1A1A1A" />
         <ActionButtonPrimaryText>Nova Venda</ActionButtonPrimaryText>
       </ActionButtonPrimary>
 
       {statusImpressao === 'erro' && (
         <ActionButtonSecondary onPress={handleReenviarImpressao} disabled={reenviando}>
-          <Ionicons name="print-outline" size={20} color="#E67E22" />
+          <Ionicons name="print-outline" size={20} color="#8A6A00" />
           <ActionButtonSecondaryText>
             {reenviando ? 'Reenviando...' : 'Tentar Imprimir Novamente'}
           </ActionButtonSecondaryText>
@@ -232,7 +232,7 @@ export default function StatusVenda() {
       )}
 
       <ShareButton onPress={handleShare}>
-        <Ionicons name="share-outline" size={18} color="#D3C5B4" />
+        <Ionicons name="share-outline" size={18} color="#C4C4BE" />
         <ShareButtonText>Compartilhar comprovante</ShareButtonText>
       </ShareButton>
     </Container>

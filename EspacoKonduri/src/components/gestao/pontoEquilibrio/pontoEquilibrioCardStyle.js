@@ -4,7 +4,7 @@ export const EquilibrioCard = styled.View`
   background-color: #FFFFFF;
   border-radius: 16px;
   border-width: 1.5px;
-  border-color: ${(props) => (props.atingido ? '#A9D5B5' : '#F8D7A9')};
+  border-color: ${(props) => (props.atingido ? '#A9D5B5' : '#F2DC7C')};
   padding: 18px;
   margin-bottom: 12px;
 `;
@@ -18,19 +18,19 @@ export const EquilibrioLinha = styled.View`
 
 export const EquilibrioLabel = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const EquilibrioValor = styled.Text`
   font-size: 17px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const BarraFundo = styled.View`
   height: 14px;
   border-radius: 7px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   margin-top: 14px;
   overflow: hidden;
 `;
@@ -38,13 +38,13 @@ export const BarraFundo = styled.View`
 export const BarraPreenchida = styled.View`
   height: 14px;
   border-radius: 7px;
-  background-color: ${(props) => (props.atingido ? '#2E9E5B' : '#E67E22')};
+  background-color: ${(props) => (props.atingido ? '#2E9E5B' : '#FFD000')};
 `;
 
 export const BarraLegenda = styled.Text`
   font-size: 12px;
   font-weight: bold;
-  color: #5C4033;
+  color: #333333;
   text-align: right;
   margin-top: 4px;
 `;
@@ -52,20 +52,20 @@ export const BarraLegenda = styled.Text`
 export const EquilibrioMensagem = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: ${(props) => props.cor || '#3D2C22'};
+  color: ${(props) => props.cor || '#1A1A1A'};
   margin-top: 12px;
 `;
 
 export const EquilibrioSubmensagem = styled.Text`
   font-size: 12px;
   line-height: 17px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 4px;
 `;
 
 export const MetaDiariaBox = styled.View`
   flex-direction: row;
-  background-color: #FEF5E7;
+  background-color: #FFF7D1;
   border-radius: 12px;
   padding: 12px;
   margin-top: 12px;
@@ -79,14 +79,14 @@ export const MetaDiariaBloco = styled.View`
 export const MetaDiariaLabel = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: #8C5A2E;
+  color: #6B5300;
   letter-spacing: 0.5px;
 `;
 
 export const MetaDiariaValor = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-top: 2px;
 `;
 
@@ -100,6 +100,6 @@ export const EquilibrioTitulo = styled.Text`
   font-size: 12px;
   font-weight: bold;
   letter-spacing: 0.8px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-left: 8px;
 `;

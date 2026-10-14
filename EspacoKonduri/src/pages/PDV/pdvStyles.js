@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const ProductList = styled.FlatList`
@@ -16,7 +16,7 @@ export const SearchContainer = styled.View`
   background-color: #FFFFFF;
   border-radius: 12px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding-horizontal: 14px;
   height: 46px;
   margin-horizontal: 20px;
@@ -26,7 +26,7 @@ export const SearchContainer = styled.View`
 export const SearchInput = styled.TextInput`
   flex: 1;
   font-size: 14px;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-left: 8px;
 `;
 
@@ -41,7 +41,7 @@ export const EmptyState = styled.View`
 
 export const EmptyStateText = styled.Text`
   font-size: 14px;
-  color: #8C7355;
+  color: #6B6B6B;
   text-align: center;
   margin-top: 10px;
 `;

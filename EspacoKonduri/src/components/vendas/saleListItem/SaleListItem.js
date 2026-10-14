@@ -39,7 +39,7 @@ export default function SaleListItem({ venda, numero, onPress }) {
           {primeiroItem?.image ? (
             <SaleProductImage source={{ uri: primeiroItem.image }} resizeMode="cover" />
           ) : (
-            <Ionicons name="cube-outline" size={20} color="#C9BBA8" />
+            <Ionicons name="cube-outline" size={20} color="#C4C4BE" />
           )}
         </SaleIconContainer>
         <SaleInfo>

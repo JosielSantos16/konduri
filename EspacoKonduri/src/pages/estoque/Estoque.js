@@ -61,7 +61,7 @@ export default function Estoque() {
           style={{ opacity: item.qty === 0 ? 0.4 : 1 }}
           onPress={() => setProdutoAjusteId(item.id)}
         >
-          <Ionicons name="remove" size={18} color="#3D2C22" />
+          <Ionicons name="remove" size={18} color="#1A1A1A" />
         </ActionButtonMinus>
         <ActionButtonPlus onPress={() => setProdutoEntradaId(item.id)}>
           <Ionicons name="add" size={18} color="#FFFFFF" />
@@ -77,10 +77,10 @@ export default function Estoque() {
         <Subtitle>Gerenciamento físico do Boteco</Subtitle>
 
         <SearchContainer>
-          <Ionicons name="search-outline" size={20} color="#8C7355" />
+          <Ionicons name="search-outline" size={20} color="#6B6B6B" />
           <SearchInput
             placeholder="Buscar item no estoque..."
-            placeholderTextColor="#A99B8F"
+            placeholderTextColor="#9E9E9E"
             value={search}
             onChangeText={setSearch}
           />
@@ -89,7 +89,7 @@ export default function Estoque() {
 
       {filteredStock.length === 0 ? (
         <EmptyState>
-          <Ionicons name="cube-outline" size={40} color="#C9BBAC" />
+          <Ionicons name="cube-outline" size={40} color="#C4C4BE" />
           <EmptyStateText>
             {search ? 'Nenhum item encontrado.' : 'Nenhum item cadastrado no estoque.'}
           </EmptyStateText>

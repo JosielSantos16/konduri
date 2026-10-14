@@ -136,7 +136,7 @@ export default function Gestao() {
         <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={{ flex: 1 }}>
           <DataBotao pointerEvents="none">
             <DataBotaoTexto>{formatarDataCurta(paraDataISOLocal(valor))}</DataBotaoTexto>
-            <Ionicons name="calendar-outline" size={16} color="#D35400" />
+            <Ionicons name="calendar-outline" size={16} color="#6B5300" />
           </DataBotao>
         </TouchableOpacity>
       )}
@@ -154,7 +154,7 @@ export default function Gestao() {
       <>
         {!i.cobertura.completa && (
           <AvisoBox>
-            <Ionicons name="warning-outline" size={18} color="#8C5A2E" />
+            <Ionicons name="warning-outline" size={18} color="#6B5300" />
             <AvisoTexto>
               {i.cobertura.vendasSemCusto} {i.cobertura.vendasSemCusto === 1 ? 'venda tem' : 'vendas têm'} itens
               sem custo registrado ({formatPrice(i.cobertura.faturamentoSemCusto)}). Esses itens ficam fora do
@@ -165,8 +165,8 @@ export default function Gestao() {
 
         <FaturamentoCard>
           <CardHeader>
-            <Ionicons name="wallet-outline" size={18} color="#FFFFFF" />
-            <CardTitle cor="#FFFFFF">FATURAMENTO DO PERÍODO</CardTitle>
+            <Ionicons name="wallet-outline" size={18} color="#1A1A1A" />
+            <CardTitle cor="#1A1A1A">FATURAMENTO DO PERÍODO</CardTitle>
           </CardHeader>
           <FaturamentoValor>{formatPrice(i.faturamento)}</FaturamentoValor>
           {!!detalheMetodos && <FaturamentoDetalhe>{detalheMetodos}</FaturamentoDetalhe>}
@@ -200,7 +200,7 @@ export default function Gestao() {
 
         <ResultadoCard>
           <CardHeader>
-            <Ionicons name="analytics-outline" size={18} color="#8C7355" />
+            <Ionicons name="analytics-outline" size={18} color="#6B6B6B" />
             <CardTitle>RESULTADO DO PERÍODO</CardTitle>
           </CardHeader>
           <ResultadoValor cor={i.resultado >= 0 ? '#2E5A1E' : '#C0392B'}>{formatarMoeda(i.resultado)}</ResultadoValor>
@@ -218,9 +218,9 @@ export default function Gestao() {
           </LinhaDetalhe>
         </ResultadoCard>
 
-        <AvisoBox bg="#F4F1EC" borda="#E6DFD5">
-          <Ionicons name="information-circle-outline" size={18} color="#8C7355" />
-          <AvisoTexto cor="#5C4033">{notaCustosFixos(periodo, i.periodo.dias)}</AvisoTexto>
+        <AvisoBox bg="#F4F1E6" borda="#E6E6E0">
+          <Ionicons name="information-circle-outline" size={18} color="#6B6B6B" />
+          <AvisoTexto cor="#333333">{notaCustosFixos(periodo, i.periodo.dias)}</AvisoTexto>
         </AvisoBox>
 
         <PontoEquilibrioCard
@@ -245,9 +245,9 @@ export default function Gestao() {
         <ComparacaoMensalCard competencia={competenciaReferencia} />
 
         <LinkLinha activeOpacity={0.8} onPress={() => router.push('/despesas')}>
-          <Ionicons name="wallet-outline" size={20} color="#D35400" />
+          <Ionicons name="wallet-outline" size={20} color="#6B5300" />
           <LinkTexto>Custos e Despesas</LinkTexto>
-          <Ionicons name="chevron-forward" size={20} color="#A99B8F" />
+          <Ionicons name="chevron-forward" size={20} color="#9E9E9E" />
         </LinkLinha>
       </>
     );
@@ -282,7 +282,7 @@ export default function Gestao() {
         <Conteudo>
           {carregando || !indicadores ? (
             <LoadingBox>
-              <ActivityIndicator size="large" color="#E67E22" />
+              <ActivityIndicator size="large" color="#8A6A00" />
             </LoadingBox>
           ) : (
             renderIndicadores()

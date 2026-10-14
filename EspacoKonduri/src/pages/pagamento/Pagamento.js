@@ -186,7 +186,7 @@ export default function Pagamento() {
 
         {(selectedMethod === "pix" || selectedMethod === "cartao") && (
           <MaquininhaCard>
-            <Ionicons name="card-outline" size={20} color="#8C5A2E" />
+            <Ionicons name="card-outline" size={20} color="#6B5300" />
             <MaquininhaText>
               Processe o pagamento na maquininha e confirme abaixo.
             </MaquininhaText>
@@ -207,7 +207,7 @@ export default function Pagamento() {
           style={{ opacity: podeFinalizar ? 1 : 0.5 }}
           onPress={handleFinalizar}
         >
-          <Ionicons name="checkmark-circle-outline" size={22} color="#FFFFFF" />
+          <Ionicons name="checkmark-circle-outline" size={22} color="#1A1A1A" />
           <FinalizeButtonText>
             {finalizando ? "Registrando..." : "Finalizar e Emitir Comprovante"}
           </FinalizeButtonText>

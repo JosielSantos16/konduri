@@ -20,7 +20,7 @@ export default function NotificacoesBell() {
 
   return (
     <BellButton onPress={() => router.push('/notificacoes')}>
-      <Ionicons name="notifications-outline" size={20} color="#3D2C22" />
+      <Ionicons name="notifications-outline" size={20} color="#1A1A1A" />
       {naoLidas.length > 0 && (
         <Badge>
           <BadgeText>{naoLidas.length > 9 ? '9+' : naoLidas.length}</BadgeText>

@@ -9,7 +9,7 @@ export const SaleCard = styled.TouchableOpacity`
   justify-content: space-between;
   margin-bottom: 10px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   elevation: 1;
 `;
 
@@ -29,7 +29,7 @@ export const SaleIconContainer = styled.View`
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   justify-content: center;
   align-items: center;
   margin-right: 12px;
@@ -59,19 +59,19 @@ export const SaleInfo = styled.View`
 export const SaleTitle = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-bottom: 2px;
 `;
 
 export const SaleDetails = styled.Text`
   font-size: 12px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const SalePrice = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  color: ${(props) => (props.cancelada ? '#A99B8F' : '#3D2C22')};
+  color: ${(props) => (props.cancelada ? '#9E9E9E' : '#1A1A1A')};
   text-decoration-line: ${(props) => (props.cancelada ? 'line-through' : 'none')};
   margin-right: 8px;
 `;

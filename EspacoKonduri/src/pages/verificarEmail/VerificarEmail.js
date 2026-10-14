@@ -103,7 +103,7 @@ export default function VerificarEmail() {
   return (
     <Container>
       <IconCircle>
-        <Ionicons name="mail-outline" size={40} color="#E67E22" />
+        <Ionicons name="mail-outline" size={40} color="#8A6A00" />
       </IconCircle>
 
       <Title>Confirme seu e-mail</Title>
@@ -119,7 +119,7 @@ export default function VerificarEmail() {
       </Subtitle>
 
       <SpamNotice>
-        <Ionicons name="alert-circle-outline" size={16} color="#B85D00" />
+        <Ionicons name="alert-circle-outline" size={16} color="#6B5300" />
         <SpamNoticeText>
           Não encontrou? Verifique também a pasta de{" "}
           <SpamNoticeTextBold>Spam ou Lixo Eletrônico</SpamNoticeTextBold>.
@@ -132,13 +132,13 @@ export default function VerificarEmail() {
         style={{ marginTop: 20 }}
       >
         {verificando ? (
-          <ActivityIndicator color="#FFFFFF" />
+          <ActivityIndicator color="#1A1A1A" />
         ) : (
           <>
             <Ionicons
               name="checkmark-circle-outline"
               size={18}
-              color="#FFFFFF"
+              color="#1A1A1A"
             />
             <PrimaryButtonText>Já confirmei, continuar</PrimaryButtonText>
           </>

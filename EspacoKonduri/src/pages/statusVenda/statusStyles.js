@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   justify-content: center;
   align-items: center;
   padding: 24px;
@@ -22,14 +22,14 @@ export const SuccessIconContainer = styled.View`
 export const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
-  color: #E67E22;
+  color: #8A6A00;
   text-align: center;
   margin-bottom: 8px;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 13px;
-  color: #D3C5B4;
+  color: #C4C4BE;
   text-align: center;
   margin-bottom: 20px;
 `;
@@ -45,7 +45,7 @@ export const ItemsCard = styled.View`
 export const ItemsCardTitle = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: #D3C5B4;
+  color: #C4C4BE;
   letter-spacing: 0.3px;
   margin-bottom: 10px;
 `;
@@ -59,18 +59,18 @@ export const ItemRow = styled.View`
 
 export const ItemName = styled.Text`
   font-size: 13px;
-  color: #FAF8F5;
+  color: #FAFAF7;
   flex: 1;
 `;
 
 export const ItemQtyPrice = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #D3C5B4;
+  color: #C4C4BE;
 `;
 
 export const DetailsCard = styled.View`
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   border-radius: 16px;
   padding: 20px;
   width: 100%;
@@ -88,19 +88,19 @@ export const DetailRow = styled.View`
 export const DetailLabel = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
   letter-spacing: 0.5px;
 `;
 
 export const DetailValue = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const Divider = styled.View`
   height: 1px;
-  background-color: #E6DFD5;
+  background-color: #E6E6E0;
   margin-bottom: 12px;
   border-style: dashed;
 `;
@@ -125,12 +125,12 @@ export const PrintStatusText = styled.Text`
   color: ${(props) =>
     props.status === 'impresso' ? '#2ECC71' :
     props.status === 'erro' ? '#E74C3C' :
-    '#D3C5B4'};
+    '#C4C4BE'};
   margin-left: 8px;
 `;
 
 export const ActionButtonPrimary = styled.TouchableOpacity`
-  background-color: #E67E22;
+  background-color: #FFD000;
   border-radius: 14px;
   height: 54px;
   width: 100%;
@@ -144,14 +144,14 @@ export const ActionButtonPrimary = styled.TouchableOpacity`
 export const ActionButtonPrimaryText = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #1A1A1A;
   margin-left: 8px;
 `;
 
 export const ActionButtonSecondary = styled.TouchableOpacity`
   background-color: transparent;
   border-width: 1.5px;
-  border-color: #8C7355;
+  border-color: #6B6B6B;
   border-radius: 14px;
   height: 54px;
   width: 100%;
@@ -165,7 +165,7 @@ export const ActionButtonSecondary = styled.TouchableOpacity`
 export const ActionButtonSecondaryText = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  color: #E67E22;
+  color: #8A6A00;
   margin-left: 8px;
 `;
 
@@ -180,6 +180,6 @@ export const ShareButton = styled.TouchableOpacity`
 export const ShareButtonText = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #D3C5B4;
+  color: #C4C4BE;
   margin-left: 6px;
 `;

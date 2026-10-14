@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const ScrollContainer = styled.ScrollView`
@@ -24,20 +24,20 @@ export const BackButton = styled.TouchableOpacity`
 export const HeaderTitle = styled.Text`
   font-size: 19px;
   font-weight: bold;
-  color: #2E5A1E;
+  color: #1A1A1A;
 `;
 
 export const PhotoPicker = styled.TouchableOpacity`
   width: 120px;
   height: 120px;
   border-radius: 16px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   justify-content: center;
   align-items: center;
   align-self: center;
   margin-bottom: 24px;
   border-width: 1.5px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   border-style: dashed;
   overflow: hidden;
 `;
@@ -50,7 +50,7 @@ export const PhotoPreview = styled.Image`
 export const PhotoPickerText = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 6px;
   text-align: center;
 `;
@@ -62,7 +62,7 @@ export const InputGroup = styled.View`
 export const Label = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #5C4033;
+  color: #333333;
   margin-bottom: 6px;
 `;
 
@@ -72,7 +72,7 @@ export const InputContainer = styled.View`
   background-color: #FFFFFF;
   border-radius: 12px;
   border-width: 1px;
-  border-color: ${props => (props.hasError ? '#C0392B' : '#E6DFD5')};
+  border-color: ${props => (props.hasError ? '#C0392B' : '#E6E6E0')};
   padding-horizontal: 14px;
   height: 52px;
 `;
@@ -80,7 +80,7 @@ export const InputContainer = styled.View`
 export const Input = styled.TextInput`
   flex: 1;
   font-size: 15px;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const Row = styled.View`
@@ -95,7 +95,7 @@ export const ErrorText = styled.Text`
 
 export const CategoryOptions = styled.View`
   flex-direction: row;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   border-radius: 12px;
   padding: 4px;
 `;
@@ -112,12 +112,12 @@ export const CategoryButton = styled.TouchableOpacity`
 export const CategoryButtonText = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: ${props => (props.selected ? '#B85D00' : '#8C7355')};
+  color: ${props => (props.selected ? '#6B5300' : '#6B6B6B')};
 `;
 
 export const TextArea = styled.TextInput`
   font-size: 15px;
-  color: #3D2C22;
+  color: #1A1A1A;
   padding: 14px;
   min-height: 80px;
   text-align-vertical: top;
@@ -127,11 +127,11 @@ export const TextAreaContainer = styled.View`
   background-color: #FFFFFF;
   border-radius: 12px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
 `;
 
 export const PreviewBox = styled.View`
-  background-color: #E6F4EA;
+  background-color: #FFF7D1;
   border-radius: 12px;
   padding: 14px 16px;
   margin-bottom: 20px;
@@ -140,19 +140,19 @@ export const PreviewBox = styled.View`
 export const PreviewLabel = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: #2E5A1E;
+  color: #1A1A1A;
   letter-spacing: 0.5px;
 `;
 
 export const PreviewValue = styled.Text`
   font-size: 20px;
   font-weight: bold;
-  color: #2E5A1E;
+  color: #1A1A1A;
   margin-top: 4px;
 `;
 
 export const SaveButton = styled.TouchableOpacity`
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   border-radius: 12px;
   height: 54px;
   flex-direction: row;
@@ -196,12 +196,12 @@ export const Chip = styled.TouchableOpacity`
   margin-right: 8px;
   margin-bottom: 8px;
   border-width: 1px;
-  border-color: ${props => (props.selected ? '#E67E22' : '#E6DFD5')};
-  background-color: ${props => (props.selected ? '#FEF5E7' : '#FFFFFF')};
+  border-color: ${props => (props.selected ? '#E0A800' : '#E6E6E0')};
+  background-color: ${props => (props.selected ? '#FFF7D1' : '#FFFFFF')};
 `;
 
 export const ChipText = styled.Text`
   font-size: 13px;
   font-weight: ${props => (props.selected ? 'bold' : 'normal')};
-  color: ${props => (props.selected ? '#B85D00' : '#5C4033')};
+  color: ${props => (props.selected ? '#6B5300' : '#333333')};
 `;

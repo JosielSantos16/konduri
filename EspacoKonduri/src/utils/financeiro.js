@@ -127,7 +127,8 @@ export function resumirVendas(vendas) {
     const competencia = venda.data.slice(0, 7);
 
     resumo.faturamento += total;
-    resumo.quantidadeVendas += 1;
+    // Cortesia de entrada (R$ 0) não é venda: não pode baixar o ticket médio
+    if (venda.metodo !== 'cortesia') resumo.quantidadeVendas += 1;
     resumo.porMetodo[venda.metodo] = (resumo.porMetodo[venda.metodo] || 0) + total;
     resumo.porCompetencia[competencia] = (resumo.porCompetencia[competencia] || 0) + total;
 
@@ -326,6 +327,8 @@ export function rentabilidadePorProduto(vendas) {
 
   vendas.filter(vendaValida).forEach((venda) => {
     (venda.itens || []).forEach((item) => {
+      // Entradas têm relatório próprio; aqui só produtos do catálogo
+      if (item.tipo === 'entrada') return;
       const chave = item.id || item.title;
       if (!porProduto[chave]) {
         porProduto[chave] = { produtoId: item.id || null, nome: item.title, quantidade: 0, receita: 0, cmv: 0, temItemSemCusto: false };

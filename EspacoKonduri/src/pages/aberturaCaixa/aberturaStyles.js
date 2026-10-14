@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const ScrollContainer = styled.ScrollView`
@@ -12,14 +12,14 @@ export const ScrollContainer = styled.ScrollView`
 export const MainTitle = styled.Text`
   font-size: 24px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-top: 60px;
   margin-bottom: 6px;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-bottom: 20px;
   line-height: 18px;
 `;
@@ -29,7 +29,7 @@ export const Card = styled.View`
   border-radius: 20px;
   padding: 20px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   margin-bottom: 16px;
   elevation: 1;
 `;
@@ -43,7 +43,7 @@ export const CardHeaderRow = styled.View`
 export const CardSectionTitle = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-left: 8px;
   letter-spacing: 0.5px;
 `;
@@ -55,7 +55,7 @@ export const InputGroup = styled.View`
 export const Label = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-bottom: 6px;
   letter-spacing: 0.8px;
 `;
@@ -64,47 +64,47 @@ export const InputContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   border-radius: 12px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding-horizontal: 14px;
   height: 50px;
 `;
 
 export const InputText = styled.Text`
   font-size: 14px;
-  color: #3D2C22;
+  color: #1A1A1A;
   font-weight: 500;
 `;
 
 export const StyledTextInput = styled.TextInput`
   flex: 1;
   font-size: 14px;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const AlertBox = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: #FDF3F0;
+  background-color: #FFF7D1;
   border-radius: 14px;
   padding: 14px;
   border-width: 1px;
-  border-color: #F0DCC9;
+  border-color: #F2DC7C;
   margin-bottom: 25px;
 `;
 
 export const AlertText = styled.Text`
   flex: 1;
   font-size: 13px;
-  color: #8C5A2E;
+  color: #6B5300;
   margin-left: 10px;
   line-height: 18px;
 `;
 
 export const StartButton = styled.TouchableOpacity`
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   border-radius: 14px;
   height: 56px;
   flex-direction: row;

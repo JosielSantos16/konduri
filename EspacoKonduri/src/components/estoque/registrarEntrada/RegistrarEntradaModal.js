@@ -108,7 +108,7 @@ export default function RegistrarEntradaModal({ produtoId, onClose, onSalvo }) {
         <Content>
           <Header>
             <Title>Registrar entrada</Title>
-            <Ionicons name="close" size={22} color="#3D2C22" onPress={onClose} />
+            <Ionicons name="close" size={22} color="#1A1A1A" onPress={onClose} />
           </Header>
           <ProdutoNome>{produto?.title}</ProdutoNome>
 
@@ -123,7 +123,7 @@ export default function RegistrarEntradaModal({ produtoId, onClose, onSalvo }) {
               }}
               placeholder="0"
               keyboardType="number-pad"
-              placeholderTextColor="#A99B8F"
+              placeholderTextColor="#9E9E9E"
               autoFocus
             />
             {erros.quantidade && <ErrorText>{erros.quantidade}</ErrorText>}
@@ -140,7 +140,7 @@ export default function RegistrarEntradaModal({ produtoId, onClose, onSalvo }) {
               }}
               placeholder="0,00"
               keyboardType="numeric"
-              placeholderTextColor="#A99B8F"
+              placeholderTextColor="#9E9E9E"
             />
             {erros.custoUnitario && <ErrorText>{erros.custoUnitario}</ErrorText>}
           </Campo>
@@ -151,7 +151,7 @@ export default function RegistrarEntradaModal({ produtoId, onClose, onSalvo }) {
               value={observacao}
               onChangeText={setObservacao}
               placeholder="Ex: fornecedor, nota fiscal..."
-              placeholderTextColor="#A99B8F"
+              placeholderTextColor="#9E9E9E"
             />
           </Campo>
 
@@ -172,7 +172,7 @@ export default function RegistrarEntradaModal({ produtoId, onClose, onSalvo }) {
 
           <SaveButton onPress={handleSalvar} disabled={salvando}>
             {salvando ? (
-              <ActivityIndicator color="#FFFFFF" />
+              <ActivityIndicator color="#1A1A1A" />
             ) : (
               <SaveButtonText>Registrar entrada</SaveButtonText>
             )}

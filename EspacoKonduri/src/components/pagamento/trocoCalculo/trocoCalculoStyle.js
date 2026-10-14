@@ -5,7 +5,7 @@ export const ChangeContainer = styled.View`
   border-radius: 16px;
   padding: 16px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   margin-bottom: 25px;
 `;
 
@@ -19,7 +19,7 @@ export const ChangeHeader = styled.View`
 export const ChangeTitle = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const ChangeBadge = styled.View`
@@ -47,20 +47,20 @@ export const InputWrapper = styled.View`
 
 export const InputLabel = styled.Text`
   font-size: 11px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-bottom: 5px;
 `;
 
 export const StyledInput = styled.TextInput`
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   border-radius: 10px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   height: 45px;
   padding-horizontal: 12px;
   font-size: 15px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const ChangeOutputWrapper = styled.View`

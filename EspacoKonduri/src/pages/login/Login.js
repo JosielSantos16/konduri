@@ -67,7 +67,7 @@ export default function Login() {
             placeholder="Digite seu email"
             autoCapitalize="none"
             keyboardType="email-address"
-            placeholderTextColor="#A99B8F"
+            placeholderTextColor="#9E9E9E"
             returnKeyType="next"
             onSubmitEditing={() => senhaInputRef.current?.focus()}
             blurOnSubmit={false}
@@ -86,7 +86,7 @@ export default function Login() {
             value={senha}
             onChangeText={handleChangeSenha}
             placeholder="Digite a sua senha"
-            placeholderTextColor="#A99B8F"
+            placeholderTextColor="#9E9E9E"
             returnKeyType="done"
             onSubmitEditing={handleLogin}
           />
@@ -94,7 +94,7 @@ export default function Login() {
             <Ionicons
               name={senhaVisivel ? "eye-off-outline" : "eye-outline"}
               size={20}
-              color="#8C7355"
+              color="#6B6B6B"
             />
           </EyeButton>
         </InputContainer>
@@ -115,7 +115,7 @@ export default function Login() {
 
       <EnterButton onPress={handleLogin} disabled={carregando}>
         {carregando ? (
-          <ActivityIndicator color="#3D2C22" />
+          <ActivityIndicator color="#1A1A1A" />
         ) : (
           <EnterButtonText>ENTRAR</EnterButtonText>
         )}

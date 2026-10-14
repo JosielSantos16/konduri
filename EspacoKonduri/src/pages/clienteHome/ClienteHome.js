@@ -12,6 +12,7 @@ import { useVendas } from "../../contexts/VendasContext";
 import { useProdutos } from "../../contexts/ProdutosContext";
 import { useCart } from "../../hooks/useCart";
 import NotificacoesBell from "../../components/notificacoes/NotificacoesBell";
+import BannerEntrada from "../../components/entradas/BannerEntrada";
 import NavBarCliente from "../../components/cliente/navBar/NavBarCliente";
 import CardProd from "../../components/PDV/cardsProdutos/CardProdutos";
 import CartBar from "../../components/PDV/cartBar/CartBar";
@@ -244,13 +245,15 @@ export default function ClienteHome() {
           <NotificacoesBell />
         </HeaderTop>
 
+        <BannerEntrada />
+
         <Subtitle>O que você quer pedir hoje?</Subtitle>
 
         <SearchContainer>
-          <Ionicons name="search-outline" size={18} color="#8C7355" />
+          <Ionicons name="search-outline" size={18} color="#6B6B6B" />
           <SearchInput
             placeholder="Buscar produto..."
-            placeholderTextColor="#A99B8F"
+            placeholderTextColor="#9E9E9E"
             value={busca}
             onChangeText={setBusca}
           />
@@ -259,7 +262,7 @@ export default function ClienteHome() {
 
       {!caixaAberto && (
         <ClosedOperationBanner>
-          <Ionicons name="lock-closed-outline" size={16} color="#B85D00" />
+          <Ionicons name="lock-closed-outline" size={16} color="#6B5300" />
           <ClosedOperationText>
             Caixa fechado no momento — seu pedido pode demorar mais pra ser
             aceito.
@@ -295,7 +298,7 @@ export default function ClienteHome() {
             <Ionicons
               name={opcao.icon}
               size={12}
-              color={ordenacao === opcao.key ? "#FFFFFF" : "#8C7355"}
+              color={ordenacao === opcao.key ? "#FFFFFF" : "#6B6B6B"}
             />
             <SortChipText active={ordenacao === opcao.key}>
               {opcao.label}
@@ -324,13 +327,13 @@ export default function ClienteHome() {
           <RefreshControl
             refreshing={atualizando}
             onRefresh={handleRefresh}
-            colors={["#E67E22"]}
-            tintColor="#E67E22"
+            colors={["#8A6A00"]}
+            tintColor="#8A6A00"
           />
         }
         ListEmptyComponent={
           <EmptyState>
-            <Ionicons name="cube-outline" size={40} color="#C9BBA8" />
+            <Ionicons name="cube-outline" size={40} color="#C4C4BE" />
             <EmptyStateText>
               {busca
                 ? `Nenhum produto encontrado para "${busca}".`

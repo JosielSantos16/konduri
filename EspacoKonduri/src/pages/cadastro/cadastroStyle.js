@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.KeyboardAvoidingView`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   justify-content: center;
   padding: 24px;
 `;
@@ -17,20 +17,20 @@ export const LogoImage = styled.Image`
   height: 90px;
   border-radius: 45px;
   border-width: 2px;
-  border-color: #2E5A1E;
+  border-color: #1A1A1A;
 `;
 
 export const Title = styled.Text`
   font-size: 26px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   text-align: center;
   letter-spacing: 1px;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 13px;
-  color: #7A6555;
+  color: #5E5E5E;
   text-align: center;
   margin-bottom: 25px;
 `;
@@ -42,7 +42,7 @@ export const InputGroup = styled.View`
 export const Label = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #5C4033;
+  color: #333333;
   margin-bottom: 6px;
 `;
 
@@ -52,7 +52,7 @@ export const InputContainer = styled.View`
   background-color: #FFFFFF;
   border-radius: 12px;
   border-width: 1px;
-  border-color: ${props => (props.hasError ? '#C0392B' : '#E6DFD5')};
+  border-color: ${props => (props.hasError ? '#C0392B' : '#E6E6E0')};
   padding-horizontal: 14px;
   height: 52px;
 `;
@@ -60,7 +60,7 @@ export const InputContainer = styled.View`
 export const Input = styled.TextInput`
   flex: 1;
   font-size: 15px;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const EyeButton = styled.TouchableOpacity`
@@ -75,7 +75,7 @@ export const ErrorText = styled.Text`
 `;
 
 export const CreateButton = styled.TouchableOpacity`
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   border-radius: 12px;
   height: 52px;
   justify-content: center;

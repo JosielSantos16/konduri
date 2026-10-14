@@ -23,24 +23,24 @@ export const Header = styled.View`
 export const Title = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const Input = styled.TextInput`
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   border-radius: 12px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding: 12px 14px;
   font-size: 14px;
-  color: #3D2C22;
+  color: #1A1A1A;
   min-height: 90px;
   text-align-vertical: top;
   margin-bottom: 16px;
 `;
 
 export const SaveButton = styled.TouchableOpacity`
-  background-color: #E67E22;
+  background-color: #FFD000;
   border-radius: 12px;
   height: 48px;
   justify-content: center;
@@ -50,5 +50,5 @@ export const SaveButton = styled.TouchableOpacity`
 export const SaveButtonText = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #1A1A1A;
 `;

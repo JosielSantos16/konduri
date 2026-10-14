@@ -2,12 +2,12 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
   padding-horizontal: 20px;
 `;
 
 export const FinalizeButton = styled.TouchableOpacity`
-  background-color: #E67E22;
+  background-color: #FFD000;
   border-radius: 14px;
   height: 56px;
   flex-direction: row;
@@ -19,7 +19,7 @@ export const FinalizeButton = styled.TouchableOpacity`
 export const FinalizeButtonText = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #1A1A1A;
   letter-spacing: 0.5px;
   margin-left: 8px;
 `;
@@ -30,13 +30,13 @@ export const ItemsSummaryCard = styled.View`
   padding: 14px 16px;
   margin-bottom: 20px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
 `;
 
 export const ItemsSummaryTitle = styled.Text`
   font-size: 12px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
   letter-spacing: 0.3px;
   margin-bottom: 10px;
 `;
@@ -50,20 +50,20 @@ export const ItemRow = styled.View`
 
 export const ItemName = styled.Text`
   font-size: 13px;
-  color: #3D2C22;
+  color: #1A1A1A;
   flex: 1;
 `;
 
 export const ItemQtyPrice = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const QrCodeCard = styled.View`
   background-color: #FFFFFF;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   border-radius: 14px;
   padding: 18px;
   margin-bottom: 20px;
@@ -72,7 +72,7 @@ export const QrCodeCard = styled.View`
 
 export const QrCodeLoadingText = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 10px;
 `;
 
@@ -86,7 +86,7 @@ export const QrCodeCopyRow = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color: #8C5A2E;
+  background-color: #6B5300;
   border-radius: 10px;
   padding: 10px 16px;
   margin-top: 4px;
@@ -102,7 +102,7 @@ export const QrCodeCopyText = styled.Text`
 export const QrCodeStatusRow = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: #FDF3E7;
+  background-color: #FFF7D1;
   border-radius: 10px;
   padding: 10px 14px;
   margin-top: 14px;
@@ -113,7 +113,7 @@ export const QrCodeStatusRow = styled.View`
 export const QrCodeStatusText = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #B85D00;
+  color: #6B5300;
   margin-left: 8px;
 `;
 
@@ -131,7 +131,7 @@ export const QrCodePaidBox = styled.View`
 export const QrCodePaidText = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #2E5A1E;
+  color: #1A1A1A;
   margin-left: 8px;
 `;
 
@@ -157,15 +157,15 @@ export const RetryButton = styled.TouchableOpacity`
 export const RetryButtonText = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #E67E22;
+  color: #8A6A00;
 `;
 
 export const MaquininhaCard = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: #FFF8E7;
+  background-color: #FFF7D1;
   border-width: 1px;
-  border-color: #F0D9A0;
+  border-color: #F2DC7C;
   border-radius: 14px;
   padding: 14px 16px;
   margin-bottom: 20px;
@@ -174,6 +174,6 @@ export const MaquininhaCard = styled.View`
 export const MaquininhaText = styled.Text`
   flex: 1;
   font-size: 13px;
-  color: #8C5A2E;
+  color: #6B5300;
   margin-left: 10px;
 `;

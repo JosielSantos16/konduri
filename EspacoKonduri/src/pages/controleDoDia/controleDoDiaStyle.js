@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const Header = styled.View`
@@ -26,12 +26,12 @@ export const HeaderTitles = styled.View``;
 export const HeaderTitle = styled.Text`
   font-size: 19px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const HeaderDate = styled.Text`
   font-size: 13px;
-  color: #3D2C22;
+  color: #1A1A1A;
   font-weight: bold;
   margin-top: 2px;
 `;
@@ -48,7 +48,7 @@ export const UserBadge = styled.View`
 export const UserBadgeText = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-left: 6px;
 `;
 
@@ -64,7 +64,7 @@ export const SectionHeader = styled.View`
 export const SectionTitle = styled.Text`
   font-size: 12px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
   letter-spacing: 0.5px;
 `;
 
@@ -80,13 +80,13 @@ export const EmptyState = styled.View`
 
 export const EmptyStateText = styled.Text`
   font-size: 14px;
-  color: #8C7355;
+  color: #6B6B6B;
   text-align: center;
   margin-top: 10px;
 `;
 
 export const FecharCaixaButton = styled.TouchableOpacity`
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   border-radius: 12px;
   height: 52px;
   flex-direction: row;
@@ -110,7 +110,7 @@ export const FAB = styled.TouchableOpacity`
   width: 60px;
   height: 60px;
   border-radius: 30px;
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   justify-content: center;
   align-items: center;
   elevation: 6;
@@ -124,7 +124,7 @@ export const FABLabel = styled.Text`
   position: absolute;
   bottom: 168px;
   right: 20px;
-  background-color: #3D2C22;
+  background-color: #1A1A1A;
   color: #FFFFFF;
   font-size: 11px;
   font-weight: bold;

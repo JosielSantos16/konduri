@@ -117,7 +117,7 @@ export default function Despesas() {
               <Ionicons
                 name={pago ? 'checkmark-circle' : 'time-outline'}
                 size={13}
-                color={pago ? '#2E5A1E' : '#D35400'}
+                color={pago ? '#2E5A1E' : '#6B5300'}
               />
               <PagoChipText pago={pago}>{pago ? 'Pago' : 'Em aberto'}</PagoChipText>
             </PagoChip>
@@ -131,7 +131,7 @@ export default function Despesas() {
     <Container style={{ paddingTop: insets.top }}>
       <Header>
         <BackButton onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={22} color="#3D2C22" />
+          <Ionicons name="arrow-back" size={22} color="#1A1A1A" />
         </BackButton>
         <HeaderTitles>
           <HeaderTitle>Custos e Despesas</HeaderTitle>
@@ -141,11 +141,11 @@ export default function Despesas() {
 
       <MonthSelector>
         <MonthArrow onPress={() => setCompetencia(deslocarCompetencia(competencia, -1))}>
-          <Ionicons name="chevron-back" size={20} color="#3D2C22" />
+          <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
         </MonthArrow>
         <MonthLabel>{formatarCompetencia(competencia)}</MonthLabel>
         <MonthArrow onPress={() => setCompetencia(deslocarCompetencia(competencia, 1))}>
-          <Ionicons name="chevron-forward" size={20} color="#3D2C22" />
+          <Ionicons name="chevron-forward" size={20} color="#1A1A1A" />
         </MonthArrow>
       </MonthSelector>
 
@@ -166,7 +166,7 @@ export default function Despesas() {
           </ResumoRow>
           {resumo.emAberto > 0 && (
             <ResumoRodape>
-              <Ionicons name="time-outline" size={15} color="#8C5A2E" />
+              <Ionicons name="time-outline" size={15} color="#6B5300" />
               <ResumoRodapeTexto>Em aberto neste mês: {formatPrice(resumo.emAberto)}</ResumoRodapeTexto>
             </ResumoRodape>
           )}

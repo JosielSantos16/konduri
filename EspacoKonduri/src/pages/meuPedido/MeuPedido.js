@@ -302,7 +302,7 @@ export default function MeuPedido() {
 
         {!carregando && pedidos.length === 0 ? (
           <EmptyState>
-            <Ionicons name="receipt-outline" size={40} color="#C9BBA8" />
+            <Ionicons name="receipt-outline" size={40} color="#C4C4BE" />
             <EmptyStateText>Você ainda não fez nenhum pedido.</EmptyStateText>
           </EmptyState>
         ) : (
@@ -313,8 +313,8 @@ export default function MeuPedido() {
               <RefreshControl
                 refreshing={atualizando}
                 onRefresh={handleRefresh}
-                colors={["#E67E22"]}
-                tintColor="#E67E22"
+                colors={["#8A6A00"]}
+                tintColor="#8A6A00"
               />
             }
           >
@@ -348,7 +348,7 @@ export default function MeuPedido() {
                           <Ionicons
                             name="cube-outline"
                             size={16}
-                            color="#C9BBA8"
+                            color="#C4C4BE"
                           />
                         </ItemImagePlaceholder>
                       )}
@@ -388,14 +388,14 @@ export default function MeuPedido() {
                             params: { pedidoId: pedido.id },
                           })
                         }
-                        style={{ borderColor: "#E67E22", marginBottom: 8 }}
+                        style={{ borderColor: "#E0A800", marginBottom: 8 }}
                       >
                         <Ionicons
                           name="create-outline"
                           size={16}
-                          color="#E67E22"
+                          color="#8A6A00"
                         />
-                        <CancelButtonText style={{ color: "#E67E22" }}>
+                        <CancelButtonText style={{ color: "#8A6A00" }}>
                           Editar Pedido
                         </CancelButtonText>
                       </CancelButton>
@@ -426,7 +426,7 @@ export default function MeuPedido() {
                       <Ionicons
                         name="refresh-outline"
                         size={16}
-                        color="#FFFFFF"
+                        color="#1A1A1A"
                       />
                       <RefazerButtonText>
                         {refazendoId === pedido.id

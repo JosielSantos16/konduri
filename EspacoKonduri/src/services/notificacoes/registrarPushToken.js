@@ -47,7 +47,7 @@ export async function registrarPushToken(usuarioUid) {
       name: 'default',
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#E67E22',
+      lightColor: '#8A6A00',
     });
   }
 

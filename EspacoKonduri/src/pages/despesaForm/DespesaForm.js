@@ -332,7 +332,7 @@ export default function DespesaForm() {
   if (carregando) {
     return (
       <LoadingContainer>
-        <ActivityIndicator size="large" color="#2E5A1E" />
+        <ActivityIndicator size="large" color="#1A1A1A" />
       </LoadingContainer>
     );
   }
@@ -343,7 +343,7 @@ export default function DespesaForm() {
         <Header>
           <HeaderLeft>
             <BackButton onPress={() => router.back()}>
-              <Ionicons name="arrow-back" size={22} color="#2E5A1E" />
+              <Ionicons name="arrow-back" size={22} color="#1A1A1A" />
             </BackButton>
             <HeaderTitle>{editando ? 'Editar despesa' : 'Nova despesa'}</HeaderTitle>
           </HeaderLeft>
@@ -370,7 +370,7 @@ export default function DespesaForm() {
                 limparErro('descricao');
               }}
               placeholder="Ex: Energia elétrica"
-              placeholderTextColor="#A99B8F"
+              placeholderTextColor="#9E9E9E"
             />
           </InputContainer>
           {erros.descricao && <ErrorText>{erros.descricao}</ErrorText>}
@@ -449,7 +449,7 @@ export default function DespesaForm() {
                 }}
                 placeholder="Ex: 2,5"
                 keyboardType="decimal-pad"
-                placeholderTextColor="#A99B8F"
+                placeholderTextColor="#9E9E9E"
               />
               <InputPrefix>%</InputPrefix>
             </InputContainer>
@@ -468,7 +468,7 @@ export default function DespesaForm() {
                 }}
                 placeholder="0,00"
                 keyboardType="numeric"
-                placeholderTextColor="#A99B8F"
+                placeholderTextColor="#9E9E9E"
               />
             </InputContainer>
             {erros.valor && <ErrorText>{erros.valor}</ErrorText>}
@@ -502,11 +502,11 @@ export default function DespesaForm() {
           ) : (
             <MonthSelector>
               <MonthArrow onPress={() => setCompetencia(deslocarCompetencia(competencia, -1))}>
-                <Ionicons name="chevron-back" size={18} color="#3D2C22" />
+                <Ionicons name="chevron-back" size={18} color="#1A1A1A" />
               </MonthArrow>
               <MonthLabel>{formatarCompetencia(competencia)}</MonthLabel>
               <MonthArrow onPress={() => setCompetencia(deslocarCompetencia(competencia, 1))}>
-                <Ionicons name="chevron-forward" size={18} color="#3D2C22" />
+                <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
               </MonthArrow>
             </MonthSelector>
           )}
@@ -524,9 +524,9 @@ export default function DespesaForm() {
                     {dataVencimento ? formatarDataCurta(dataVencimento) : 'Sem vencimento'}
                   </InputText>
                   {dataVencimento ? (
-                    <Ionicons name="close-circle" size={20} color="#A99B8F" onPress={() => setDataVencimento(null)} />
+                    <Ionicons name="close-circle" size={20} color="#9E9E9E" onPress={() => setDataVencimento(null)} />
                   ) : (
-                    <Ionicons name="calendar-outline" size={18} color="#D35400" />
+                    <Ionicons name="calendar-outline" size={18} color="#6B5300" />
                   )}
                 </InputContainer>
               </TouchableOpacity>
@@ -548,7 +548,7 @@ export default function DespesaForm() {
               <Switch
                 value={pago}
                 onValueChange={setPago}
-                trackColor={{ false: '#E6DFD5', true: '#A9D5B5' }}
+                trackColor={{ false: '#E6E6E0', true: '#A9D5B5' }}
                 thumbColor={pago ? '#2E5A1E' : '#FFFFFF'}
               />
             </SwitchRow>
@@ -562,7 +562,7 @@ export default function DespesaForm() {
               value={observacao}
               onChangeText={setObservacao}
               placeholder="Opcional"
-              placeholderTextColor="#A99B8F"
+              placeholderTextColor="#9E9E9E"
               multiline
             />
           </TextAreaContainer>

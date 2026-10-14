@@ -183,7 +183,7 @@ export default function Pedido() {
 
         {pedidos.length === 0 ? (
           <Content>
-            <Ionicons name="receipt-outline" size={48} color="#C9BBA8" />
+            <Ionicons name="receipt-outline" size={48} color="#C4C4BE" />
             <EmptyTitle>Nenhum pedido no momento</EmptyTitle>
             <EmptySubtitle>Assim que um cliente enviar um pedido, ele aparece aqui automaticamente.</EmptySubtitle>
           </Content>
@@ -192,7 +192,7 @@ export default function Pedido() {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 100 }}
             refreshControl={
-              <RefreshControl refreshing={atualizando} onRefresh={handleRefresh} colors={["#2E5A1E"]} tintColor="#2E5A1E" />
+              <RefreshControl refreshing={atualizando} onRefresh={handleRefresh} colors={["#1A1A1A"]} tintColor="#1A1A1A" />
             }
           >
             {pedidosOrdenados.map((pedido) => {
@@ -210,7 +210,7 @@ export default function Pedido() {
                         </TouchableOpacity>
                       ) : (
                         <ClienteAvatarPlaceholder>
-                          <Ionicons name="person" size={16} color="#8C7355" />
+                          <Ionicons name="person" size={16} color="#6B6B6B" />
                         </ClienteAvatarPlaceholder>
                       )}
                       <View>
@@ -232,7 +232,7 @@ export default function Pedido() {
                         <ItemImage source={{ uri: item.image }} resizeMode="cover" />
                       ) : (
                         <ItemImagePlaceholder>
-                          <Ionicons name="cube-outline" size={16} color="#C9BBA8" />
+                          <Ionicons name="cube-outline" size={16} color="#C4C4BE" />
                         </ItemImagePlaceholder>
                       )}
                       <ItemName numberOfLines={1}>
@@ -244,7 +244,7 @@ export default function Pedido() {
 
                   {!!pedido.observacoes && (
                     <ObservacaoBox>
-                      <Ionicons name="chatbubble-ellipses-outline" size={16} color="#8C5A2E" />
+                      <Ionicons name="chatbubble-ellipses-outline" size={16} color="#6B5300" />
                       <ObservacaoText>Mensagem: {pedido.observacoes}</ObservacaoText>
                     </ObservacaoBox>
                   )}
@@ -270,7 +270,7 @@ export default function Pedido() {
                   {proximo && (
                     <ActionsRow>
                       <ActionButton onPress={() => handleAvancarStatus(pedido)} disabled={processando}>
-                        <Ionicons name={proximo.icon} size={16} color="#FFFFFF" />
+                        <Ionicons name={proximo.icon} size={16} color="#1A1A1A" />
                         <ActionButtonText>{processando ? "Atualizando..." : proximo.label}</ActionButtonText>
                       </ActionButton>
                     </ActionsRow>

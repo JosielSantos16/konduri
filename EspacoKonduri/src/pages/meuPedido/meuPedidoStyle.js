@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const Header = styled.View`
@@ -12,12 +12,12 @@ export const Header = styled.View`
 export const Title = styled.Text`
   font-size: 22px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 2px;
 `;
 
@@ -32,7 +32,7 @@ export const PedidoCard = styled.View`
   padding: 16px;
   margin-bottom: 14px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
 `;
 
 export const PedidoHeader = styled.View`
@@ -44,11 +44,11 @@ export const PedidoHeader = styled.View`
 
 export const PedidoData = styled.Text`
   font-size: 12px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const StatusBadge = styled.View`
-  background-color: ${(props) => STATUS_CORES[props.status]?.bg || '#F0EAE1'};
+  background-color: ${(props) => STATUS_CORES[props.status]?.bg || '#F1F1EB'};
   padding-horizontal: 10px;
   padding-vertical: 4px;
   border-radius: 10px;
@@ -57,15 +57,15 @@ export const StatusBadge = styled.View`
 export const StatusBadgeText = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: ${(props) => STATUS_CORES[props.status]?.text || '#8C7355'};
+  color: ${(props) => STATUS_CORES[props.status]?.text || '#6B6B6B'};
 `;
 
 export const STATUS_CORES = {
-  pendente: { bg: '#FDF3E7', text: '#B85D00' },
+  pendente: { bg: '#FFF7D1', text: '#6B5300' },
   aceito: { bg: '#E8F4FD', text: '#1A73C0' },
-  preparando: { bg: '#FDEBD3', text: '#D35400' },
+  preparando: { bg: '#FFF7D1', text: '#6B5300' },
   pronto: { bg: '#E6F4EA', text: '#2E5A1E' },
-  entregue: { bg: '#F0EAE1', text: '#8C7355' },
+  entregue: { bg: '#F1F1EB', text: '#6B6B6B' },
   cancelado: { bg: '#FDEDEC', text: '#C0392B' },
 };
 
@@ -77,14 +77,14 @@ export const ItemRow = styled.View`
 
 export const ItemName = styled.Text`
   font-size: 13px;
-  color: #3D2C22;
+  color: #1A1A1A;
   flex: 1;
 `;
 
 export const ItemQtyPrice = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const TotalRow = styled.View`
@@ -94,19 +94,19 @@ export const TotalRow = styled.View`
   padding-top: 10px;
   margin-top: 8px;
   border-top-width: 1px;
-  border-top-color: #F0EAE1;
+  border-top-color: #F1F1EB;
 `;
 
 export const TotalLabel = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const TotalValue = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  color: #D35400;
+  color: #6B5300;
 `;
 
 export const EmptyState = styled.View`
@@ -118,7 +118,7 @@ export const EmptyState = styled.View`
 
 export const EmptyStateText = styled.Text`
   font-size: 14px;
-  color: #8C7355;
+  color: #6B6B6B;
   text-align: center;
   margin-top: 10px;
 `;
@@ -163,7 +163,7 @@ export const ItemImage = styled.Image`
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   margin-right: 10px;
 `;
 
@@ -171,7 +171,7 @@ export const ItemImagePlaceholder = styled.View`
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background-color: #F0EAE1;
+  background-color: #F1F1EB;
   margin-right: 10px;
   justify-content: center;
   align-items: center;
@@ -181,7 +181,7 @@ export const RefazerButton = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color: #E67E22;
+  background-color: #FFD000;
   border-radius: 10px;
   padding-vertical: 10px;
   margin-top: 10px;
@@ -190,7 +190,7 @@ export const RefazerButton = styled.TouchableOpacity`
 export const RefazerButtonText = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #1A1A1A;
   margin-left: 6px;
 `;
 

@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #FAF8F5;
+  background-color: #FAFAF7;
 `;
 
 export const Header = styled.View`
@@ -25,7 +25,7 @@ export const Avatar = styled.Image`
   width: 44px;
   height: 44px;
   border-radius: 22px;
-  background-color: #FDEBD3;
+  background-color: #FFF7D1;
   margin-right: 10px;
 `;
 
@@ -33,7 +33,7 @@ export const AvatarPlaceholder = styled.View`
   width: 44px;
   height: 44px;
   border-radius: 22px;
-  background-color: #FDEBD3;
+  background-color: #FFF7D1;
   margin-right: 10px;
   justify-content: center;
   align-items: center;
@@ -42,12 +42,12 @@ export const AvatarPlaceholder = styled.View`
 export const Greeting = styled.Text`
   font-size: 20px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
   margin-top: 2px;
 `;
 
@@ -80,7 +80,7 @@ export const SearchContainer = styled.View`
   background-color: #FFFFFF;
   border-radius: 12px;
   border-width: 1px;
-  border-color: #E6DFD5;
+  border-color: #E6E6E0;
   padding-horizontal: 14px;
   height: 46px;
   margin-top: 16px;
@@ -89,14 +89,14 @@ export const SearchContainer = styled.View`
 export const SearchInput = styled.TextInput`
   flex: 1;
   font-size: 14px;
-  color: #3D2C22;
+  color: #1A1A1A;
   margin-left: 8px;
 `;
 
 export const ClosedOperationBanner = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: #FDF3E7;
+  background-color: #FFF7D1;
   border-radius: 10px;
   padding: 10px 14px;
   margin-horizontal: 20px;
@@ -107,7 +107,7 @@ export const ClosedOperationText = styled.Text`
   flex: 1;
   font-size: 12px;
   font-weight: bold;
-  color: #B85D00;
+  color: #6B5300;
   margin-left: 8px;
 `;
 
@@ -141,7 +141,7 @@ export const SectionHeader = styled.View`
 export const SectionTitle = styled.Text`
   font-size: 13px;
   font-weight: bold;
-  color: #8C7355;
+  color: #6B6B6B;
   letter-spacing: 0.3px;
 `;
 
@@ -154,7 +154,7 @@ export const SortRow = styled.View`
 export const SortChip = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  background-color: ${(props) => (props.active ? '#E67E22' : '#F0EAE1')};
+  background-color: ${(props) => (props.active ? '#FFD000' : '#F1F1EB')};
   padding-horizontal: 10px;
   padding-vertical: 6px;
   border-radius: 12px;
@@ -164,7 +164,7 @@ export const SortChip = styled.TouchableOpacity`
 export const SortChipText = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: ${(props) => (props.active ? '#FFFFFF' : '#8C7355')};
+  color: ${(props) => (props.active ? '#1A1A1A' : '#6B6B6B')};
   margin-left: 4px;
 `;
 
@@ -180,7 +180,7 @@ export const EmptyState = styled.View`
 
 export const EmptyStateText = styled.Text`
   font-size: 14px;
-  color: #8C7355;
+  color: #6B6B6B;
   text-align: center;
   margin-top: 10px;
 `;

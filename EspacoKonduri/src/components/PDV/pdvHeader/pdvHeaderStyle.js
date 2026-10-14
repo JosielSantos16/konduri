@@ -16,12 +16,12 @@ export const UserInfo = styled.View`
 export const UserName = styled.Text`
   font-size: 22px;
   font-weight: bold;
-  color: #3D2C22;
+  color: #1A1A1A;
 `;
 
 export const UserRole = styled.Text`
   font-size: 13px;
-  color: #8C7355;
+  color: #6B6B6B;
 `;
 
 export const HeaderRight = styled.View`

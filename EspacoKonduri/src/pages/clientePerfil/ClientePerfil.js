@@ -230,7 +230,7 @@ export default function ClientePerfil() {
       <ScrollContainer
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={atualizando} onRefresh={handleRefresh} colors={["#E67E22"]} tintColor="#E67E22" />
+          <RefreshControl refreshing={atualizando} onRefresh={handleRefresh} colors={["#8A6A00"]} tintColor="#8A6A00" />
         }
       >
         <Header>
@@ -240,7 +240,7 @@ export default function ClientePerfil() {
             </TouchableOpacity>
           ) : (
             <AvatarPlaceholder onTouchEnd={handleTrocarFoto}>
-              <Ionicons name="camera-outline" size={28} color="#E67E22" />
+              <Ionicons name="camera-outline" size={28} color="#8A6A00" />
             </AvatarPlaceholder>
           )}
           <Nome>{usuario?.nome || "Cliente"}</Nome>
@@ -249,7 +249,7 @@ export default function ClientePerfil() {
 
         <InfoCard>
           <InfoRow>
-            <Ionicons name="mail-outline" size={20} color="#8C7355" />
+            <Ionicons name="mail-outline" size={20} color="#6B6B6B" />
             <InfoTextGroup>
               <InfoLabel>E-MAIL</InfoLabel>
               <InfoValue>{usuario?.email || "—"}</InfoValue>
@@ -257,7 +257,7 @@ export default function ClientePerfil() {
           </InfoRow>
 
           <InfoRow>
-            <Ionicons name="call-outline" size={20} color="#8C7355" />
+            <Ionicons name="call-outline" size={20} color="#6B6B6B" />
             <InfoTextGroup>
               <InfoLabel>TELEFONE / WHATSAPP</InfoLabel>
               <InfoValue>{usuario?.telefone || "Não informado"}</InfoValue>
@@ -265,7 +265,7 @@ export default function ClientePerfil() {
           </InfoRow>
 
           <InfoRowLast>
-            <Ionicons name="calendar-outline" size={20} color="#8C7355" />
+            <Ionicons name="calendar-outline" size={20} color="#6B6B6B" />
             <InfoTextGroup>
               <InfoLabel>CLIENTE DESDE</InfoLabel>
               <InfoValue>
@@ -284,24 +284,24 @@ export default function ClientePerfil() {
             <Switch
               value={notificacoesAtivadas}
               onValueChange={handleToggleNotificacoes}
-              trackColor={{ false: '#E6DFD5', true: '#F5C99B' }}
-              thumbColor={notificacoesAtivadas ? '#E67E22' : '#FFFFFF'}
+              trackColor={{ false: '#E6E6E0', true: '#F2DC7C' }}
+              thumbColor={notificacoesAtivadas ? '#8A6A00' : '#FFFFFF'}
             />
           </ToggleRow>
         </InfoCard>
 
         <EditButton onPress={() => setModalNomeVisivel(true)}>
-          <Ionicons name="pencil-outline" size={16} color="#E67E22" />
+          <Ionicons name="pencil-outline" size={16} color="#8A6A00" />
           <EditButtonText>Editar Nome</EditButtonText>
         </EditButton>
 
         <EditButton onPress={() => setModalTelefoneVisivel(true)}>
-          <Ionicons name="call-outline" size={16} color="#E67E22" />
+          <Ionicons name="call-outline" size={16} color="#8A6A00" />
           <EditButtonText>Editar Telefone</EditButtonText>
         </EditButton>
 
         <EditButton onPress={() => setModalSenhaVisivel(true)}>
-          <Ionicons name="lock-closed-outline" size={16} color="#E67E22" />
+          <Ionicons name="lock-closed-outline" size={16} color="#8A6A00" />
           <EditButtonText>Alterar Senha</EditButtonText>
         </EditButton>
 
@@ -324,14 +324,14 @@ export default function ClientePerfil() {
           <ModalContent>
             <ModalHeader>
               <ModalTitle>Editar Nome</ModalTitle>
-              <Ionicons name="close" size={22} color="#3D2C22" onPress={() => setModalNomeVisivel(false)} />
+              <Ionicons name="close" size={22} color="#1A1A1A" onPress={() => setModalNomeVisivel(false)} />
             </ModalHeader>
             <ModalLabel>Nome</ModalLabel>
             <ModalInputRow>
               <ModalInput value={novoNome} onChangeText={setNovoNome} placeholder="Seu nome" maxLength={60} />
             </ModalInputRow>
             <ModalSaveButton onPress={handleSalvarNome} disabled={salvando}>
-              {salvando ? <ActivityIndicator color="#FFFFFF" /> : <ModalSaveButtonText>Salvar</ModalSaveButtonText>}
+              {salvando ? <ActivityIndicator color="#1A1A1A" /> : <ModalSaveButtonText>Salvar</ModalSaveButtonText>}
             </ModalSaveButton>
           </ModalContent>
         </ModalOverlay>
@@ -343,7 +343,7 @@ export default function ClientePerfil() {
           <ModalContent>
             <ModalHeader>
               <ModalTitle>Editar Telefone</ModalTitle>
-              <Ionicons name="close" size={22} color="#3D2C22" onPress={() => setModalTelefoneVisivel(false)} />
+              <Ionicons name="close" size={22} color="#1A1A1A" onPress={() => setModalTelefoneVisivel(false)} />
             </ModalHeader>
             <ModalLabel>Telefone / WhatsApp</ModalLabel>
             <ModalInputRow>
@@ -356,7 +356,7 @@ export default function ClientePerfil() {
               />
             </ModalInputRow>
             <ModalSaveButton onPress={handleSalvarTelefone} disabled={salvando}>
-              {salvando ? <ActivityIndicator color="#FFFFFF" /> : <ModalSaveButtonText>Salvar</ModalSaveButtonText>}
+              {salvando ? <ActivityIndicator color="#1A1A1A" /> : <ModalSaveButtonText>Salvar</ModalSaveButtonText>}
             </ModalSaveButton>
           </ModalContent>
         </ModalOverlay>
@@ -368,7 +368,7 @@ export default function ClientePerfil() {
           <ModalContent>
             <ModalHeader>
               <ModalTitle>Alterar Senha</ModalTitle>
-              <Ionicons name="close" size={22} color="#3D2C22" onPress={() => setModalSenhaVisivel(false)} />
+              <Ionicons name="close" size={22} color="#1A1A1A" onPress={() => setModalSenhaVisivel(false)} />
             </ModalHeader>
             <ModalLabel>Senha atual</ModalLabel>
             <ModalInputRow>
@@ -383,7 +383,7 @@ export default function ClientePerfil() {
               <ModalInput value={confirmarNovaSenha} onChangeText={setConfirmarNovaSenha} placeholder="Digite novamente" secureTextEntry autoCapitalize="none" />
             </ModalInputRow>
             <ModalSaveButton onPress={handleSalvarSenha} disabled={salvando}>
-              {salvando ? <ActivityIndicator color="#FFFFFF" /> : <ModalSaveButtonText>Salvar</ModalSaveButtonText>}
+              {salvando ? <ActivityIndicator color="#1A1A1A" /> : <ModalSaveButtonText>Salvar</ModalSaveButtonText>}
             </ModalSaveButton>
           </ModalContent>
         </ModalOverlay>
@@ -395,7 +395,7 @@ export default function ClientePerfil() {
           <ModalContent>
             <ModalHeader>
               <ModalTitle>Confirmar Exclusão</ModalTitle>
-              <Ionicons name="close" size={22} color="#3D2C22" onPress={() => setModalExcluirVisivel(false)} />
+              <Ionicons name="close" size={22} color="#1A1A1A" onPress={() => setModalExcluirVisivel(false)} />
             </ModalHeader>
             <ModalLabel>Digite sua senha para confirmar</ModalLabel>
             <ModalInputRow>
@@ -408,7 +408,7 @@ export default function ClientePerfil() {
               />
             </ModalInputRow>
             <ModalSaveButton onPress={handleExcluirConta} disabled={excluindo} style={{ backgroundColor: '#C0392B' }}>
-              {excluindo ? <ActivityIndicator color="#FFFFFF" /> : <ModalSaveButtonText>Excluir Conta</ModalSaveButtonText>}
+              {excluindo ? <ActivityIndicator color="#FFFFFF" /> : <ModalSaveButtonText style={{ color: '#FFFFFF' }}>Excluir Conta</ModalSaveButtonText>}
             </ModalSaveButton>
           </ModalContent>
         </ModalOverlay>

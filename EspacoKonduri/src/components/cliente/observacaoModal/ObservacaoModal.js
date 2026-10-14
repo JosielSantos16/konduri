@@ -18,12 +18,12 @@ export default function ObservacaoModal({ visible, onClose, value, onChangeText 
         <Content>
           <Header>
             <Title>Alguma mensagem?</Title>
-            <Ionicons name="close" size={22} color="#3D2C22" onPress={onClose} />
+            <Ionicons name="close" size={22} color="#1A1A1A" onPress={onClose} />
           </Header>
 
           <Input
             placeholder="Ex: sem gelo, embalar pra viagem..."
-            placeholderTextColor="#A99B8F"
+            placeholderTextColor="#9E9E9E"
             value={value}
             onChangeText={onChangeText}
             multiline

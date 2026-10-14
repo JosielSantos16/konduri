@@ -114,7 +114,7 @@ const minhasVendas = vendasDoDia.filter((v) => v.responsavelUid === usuario?.uid
       <ScrollContainer showsVerticalScrollIndicator={false}>
         <Header>
           <BackButton onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color="#2E5A1E" />
+            <Ionicons name="arrow-back" size={22} color="#1A1A1A" />
           </BackButton>
           <HeaderTitles>
             <HeaderTitle>Meu Resumo</HeaderTitle>
@@ -127,16 +127,16 @@ const minhasVendas = vendasDoDia.filter((v) => v.responsavelUid === usuario?.uid
           onChange={setDataSelecionada}
           renderTrigger={({ onPress }) => (
             <DateSelectorButton onPress={onPress}>
-              <Ionicons name="calendar-outline" size={16} color="#3D2C22" />
+              <Ionicons name="calendar-outline" size={16} color="#1A1A1A" />
               <DateSelectorText>{formatDataFiltro(dataSelecionada)}</DateSelectorText>
-              <Ionicons name="chevron-down" size={14} color="#3D2C22" />
+              <Ionicons name="chevron-down" size={14} color="#1A1A1A" />
             </DateSelectorButton>
           )}
         />
 
         <TotalCard>
           <TotalCardHeader>
-            <Ionicons name="wallet-outline" size={20} color="#FFFFFF" />
+            <Ionicons name="wallet-outline" size={20} color="#1A1A1A" />
             <TotalLabel>TOTAL VENDIDO NESSE DIA</TotalLabel>
           </TotalCardHeader>
           <TotalValue>{formatPrice(totalDia)}</TotalValue>
@@ -166,7 +166,7 @@ const minhasVendas = vendasDoDia.filter((v) => v.responsavelUid === usuario?.uid
 
         {qtdVendas === 0 && (
           <EmptyState>
-            <Ionicons name="receipt-outline" size={32} color="#C9BBA8" />
+            <Ionicons name="receipt-outline" size={32} color="#C4C4BE" />
             <EmptyStateText>Nenhuma venda registrada nesse dia.</EmptyStateText>
           </EmptyState>
         )}
@@ -179,7 +179,7 @@ const minhasVendas = vendasDoDia.filter((v) => v.responsavelUid === usuario?.uid
 
           {carregandoComissao ? (
             <StatusBox definida={false}>
-              <Ionicons name="time-outline" size={18} color="#8C7355" />
+              <Ionicons name="time-outline" size={18} color="#6B6B6B" />
               <StatusText definida={false}>Carregando...</StatusText>
             </StatusBox>
           ) : comissao ? (
@@ -191,7 +191,7 @@ const minhasVendas = vendasDoDia.filter((v) => v.responsavelUid === usuario?.uid
             </CommissionResultBox>
           ) : (
             <StatusBox definida={false}>
-              <Ionicons name="information-circle-outline" size={18} color="#8C7355" />
+              <Ionicons name="information-circle-outline" size={18} color="#6B6B6B" />
               <StatusText definida={false}>
                 O administrador ainda não definiu a comissão desse dia.
               </StatusText>

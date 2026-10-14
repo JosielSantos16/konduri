@@ -94,7 +94,7 @@ export default function Vendas() {
           {buscaVisivel ? (
             <InlineSearchInput
               placeholder="Buscar por produto ou atendente..."
-              placeholderTextColor="#A99B8F"
+              placeholderTextColor="#9E9E9E"
               value={busca}
               onChangeText={setBusca}
               autoFocus
@@ -105,7 +105,7 @@ export default function Vendas() {
           )}
 
           <SearchIconButton onPress={handleToggleBusca}>
-            <Ionicons name={buscaVisivel ? "close" : "search-outline"} size={18} color="#3D2C22" />
+            <Ionicons name={buscaVisivel ? "close" : "search-outline"} size={18} color="#1A1A1A" />
           </SearchIconButton>
         </HeaderTopRow>
 
@@ -120,9 +120,9 @@ export default function Vendas() {
             onMonthChange={carregarDadosDoMes}
             renderTrigger={({ onPress }) => (
               <DateFilterButton onPress={onPress}>
-                <Ionicons name="calendar-outline" size={16} color="#3D2C22" />
+                <Ionicons name="calendar-outline" size={16} color="#1A1A1A" />
                 <DateFilterText>{formatDataFiltro(filtroData)}</DateFilterText>
-                <Ionicons name="chevron-down" size={14} color="#3D2C22" />
+                <Ionicons name="chevron-down" size={14} color="#1A1A1A" />
               </DateFilterButton>
             )}
           />
@@ -145,7 +145,7 @@ export default function Vendas() {
             <Ionicons
               name={ordemAscendente ? "arrow-up-outline" : "arrow-down-outline"}
               size={14}
-              color="#8C7355"
+              color="#6B6B6B"
             />
             <OrderToggleText>{ordemAscendente ? "Mais antigas" : "Mais recentes"}</OrderToggleText>
           </OrderToggleButton>
@@ -174,18 +174,18 @@ export default function Vendas() {
 
       {operacaoDoDia?.status === "fechada" && (
         <ClosedOperationBanner>
-          <Ionicons name="lock-closed-outline" size={16} color="#B85D00" />
+          <Ionicons name="lock-closed-outline" size={16} color="#6B5300" />
           <ClosedOperationText>O caixa desse dia já foi fechado.</ClosedOperationText>
         </ClosedOperationBanner>
       )}
 
       {carregando ? (
         <EmptyState>
-          <ActivityIndicator size="large" color="#2E5A1E" />
+          <ActivityIndicator size="large" color="#1A1A1A" />
         </EmptyState>
       ) : vendasExibidas.length === 0 ? (
         <EmptyState>
-          <Ionicons name="receipt-outline" size={40} color="#C9BBAC" />
+          <Ionicons name="receipt-outline" size={40} color="#C4C4BE" />
           <EmptyStateText>
             {vendasFiltradas.length === 0
               ? "Nenhuma venda registrada nessa data."
@@ -209,8 +209,8 @@ export default function Vendas() {
             <RefreshControl
               refreshing={atualizando}
               onRefresh={handleRefresh}
-              colors={["#2E5A1E"]}
-              tintColor="#2E5A1E"
+              colors={["#1A1A1A"]}
+              tintColor="#1A1A1A"
             />
           }
         />

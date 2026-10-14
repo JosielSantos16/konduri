@@ -4,7 +4,7 @@ export const BottomNavBar = styled.View`
   flex-direction: row;
   background-color: #FFFFFF;
   border-top-width: 1px;
-  border-top-color: #E6DFD5;
+  border-top-color: #E6E6E0;
   padding-vertical: 10px;
   padding-horizontal: 10px;
   justify-content: space-around;
@@ -21,6 +21,6 @@ export const NavItem = styled.TouchableOpacity`
 export const NavText = styled.Text`
   font-size: 11px;
   font-weight: bold;
-  color: ${props => (props.active ? '#E67E22' : '#8C7355')};
+  color: ${props => (props.active ? '#8A6A00' : '#6B6B6B')};
   margin-top: 4px;
 `;

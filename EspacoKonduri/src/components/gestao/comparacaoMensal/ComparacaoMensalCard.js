@@ -56,7 +56,7 @@ function descreverRecorte(intervaloAtual, intervaloAnterior) {
 
 // CMV subir junto com as vendas é esperado, então ele não ganha cor de bom/ruim
 function corVariacao(linha) {
-  if (linha.variacao === null || linha.variacao === 0 || linha.chave === 'cmv') return '#5C4033';
+  if (linha.variacao === null || linha.variacao === 0 || linha.chave === 'cmv') return '#333333';
   return linha.variacao > 0 ? '#2E5A1E' : '#C0392B';
 }
 
@@ -67,14 +67,14 @@ export default function ComparacaoMensalCard({ competencia }) {
   return (
     <Card>
       <CardHeader>
-        <Ionicons name="git-compare-outline" size={18} color="#8C7355" />
+        <Ionicons name="git-compare-outline" size={18} color="#6B6B6B" />
         <CardTitulo>
           {mesLongo(competencia).toUpperCase()} x {mesLongo(competenciaAnterior).toUpperCase()}
         </CardTitulo>
       </CardHeader>
 
       {carregando || !linhas ? (
-        <ActivityIndicator color="#E67E22" style={{ marginVertical: 16 }} />
+        <ActivityIndicator color="#8A6A00" style={{ marginVertical: 16 }} />
       ) : (
         <>
           <TabelaCabecalho>
